@@ -56,6 +56,7 @@ export const core = {
     resetConfirm: 'Reset demo workspace?', resetConfirmDesc: 'All changes in the demo workspace will be lost.', resetDone: 'Demo workspace reset',
   },
   auth: {
+    waking: 'Waking up the server… free hosting can take up to a minute.',
     welcome: 'Welcome back', create: 'Create your workspace', signInSub: 'Sign in to your sales workspace.',
     signUpSub: 'Start managing your B2B pipeline in minutes.', demo: 'Explore the demo workspace', or: 'or',
     fullName: 'Full name', email: 'Work email', password: 'Password', signIn: 'Sign in', signUp: 'Create account',

@@ -51,3 +51,22 @@ export async function http<T>(method: string, path: string, body?: unknown): Pro
   if (!response.ok) throw new ApiError(response.status, readDetail(data), (data as { code?: string } | null)?.code)
   return data as T
 }
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+/**
+ * Retries a request while the server is unreachable or failing (5xx), e.g. a free-tier instance waking up.
+ * Client errors (4xx such as 401) are final and rethrown immediately.
+ */
+export async function withRetry<T>(request: () => Promise<T>, onRetry?: () => void, delays = [2000, 3000, 5000, 8000, 10000, 15000, 15000]): Promise<T> {
+  for (const delay of delays) {
+    try {
+      return await request()
+    } catch (error) {
+      if (error instanceof ApiError && error.status < 500) throw error
+      onRetry?.()
+      await sleep(delay)
+    }
+  }
+  return request()
+}

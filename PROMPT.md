@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/006-flags-no-sparkles.md](docs/prompts/006-flags-no-sparkles.md)
+Latest: [docs/prompts/007-cold-start-session-supabase.md](docs/prompts/007-cold-start-session-supabase.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -11,3 +11,4 @@ History:
 
 Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [006 — Flag-only language switcher, no sparkles icon](docs/prompts/006-flags-no-sparkles.md)
+- [007 — Cold-start-safe session, Supabase Postgres](docs/prompts/007-cold-start-session-supabase.md)

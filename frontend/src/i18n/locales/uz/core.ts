@@ -59,6 +59,7 @@ export const core: Locale<typeof en> = {
     resetConfirm: 'Demo ish maydoni tiklansinmi?', resetConfirmDesc: 'Demo ish maydonidagi barcha oʻzgarishlar yoʻqoladi.', resetDone: 'Demo ish maydoni tiklandi',
   },
   auth: {
+    waking: 'Server ishga tushmoqda… bepul hostingda bu bir daqiqagacha choʻzilishi mumkin.',
     welcome: 'Xush kelibsiz', create: 'Ish maydoningizni yarating', signInSub: 'Savdo ish maydoningizga kiring.',
     signUpSub: 'B2B pipelineʼingizni bir necha daqiqada boshqarishni boshlang.', demo: 'Demo ish maydonini koʻrish', or: 'yoki',
     fullName: 'Toʻliq ism', email: 'Ish emaili', password: 'Parol', signIn: 'Kirish', signUp: 'Akkaunt yaratish',

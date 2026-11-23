@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { LoginShowcase } from '@/features/auth/LoginShowcase'
 import { authApi } from '@/lib/api'
+import { withRetry } from '@/lib/http'
 import { fadeUp, stagger } from '@/lib/motion'
 import type { Token } from '@/lib/types'
 import { errorMessage } from '@/lib/utils'
@@ -28,7 +29,8 @@ export default function LoginPage() {
   const run = async (request: () => Promise<Token>) => {
     setBusy(true)
     try {
-      signIn(await request())
+      // A sleeping free-tier API may refuse the first attempts; wrong credentials (401) fail at once.
+      signIn(await withRetry(request))
     } catch (e) {
       toast.error(errorMessage(e))
     } finally {

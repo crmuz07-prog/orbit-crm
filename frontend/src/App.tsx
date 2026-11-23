@@ -22,11 +22,16 @@ const ROUTES: [path: string, Component: React.ComponentType][] = [
 ]
 const Dashboard = page(() => import('@/pages/Dashboard'))
 
+function ServerWaking() {
+  const { t } = useTranslation()
+  return <p className="glass mb-6 rounded-xl px-4 py-3 text-sm text-muted-foreground">{t('auth.waking')}</p>
+}
+
 export default function App() {
-  const { session, loading } = useAuth()
+  const { session, loading, waking } = useAuth()
   // Remount routes on language change so every formatted date / number re-renders.
   const { i18n } = useTranslation()
-  if (loading) return <div className="p-8"><PageSkeleton /></div>
+  if (loading) return <div className="p-8">{waking && <ServerWaking />}<PageSkeleton /></div>
   if (!session) return <LoginPage />
 
   return (
