@@ -1,0 +1,38 @@
+export const engage = {
+  activities: {
+    title: 'Activities', description: 'Calls, meetings, emails and tasks across your pipeline', newActivity: 'New activity',
+    overdue: 'Overdue', today: 'Today', upcoming: 'Upcoming', done: 'Completed', all: 'All', allTypes: 'All types',
+    emptyOverdue: 'Nothing overdue 🎉', empty: 'Nothing here', emptyDesc: 'Schedule follow-ups so no deal goes cold.',
+    type: 'Type', due: 'Due', when: 'When', subject: 'Subject', subjectRequired: 'Subject *', details: 'Details',
+    deal: 'Deal', company: 'Company', contact: 'Contact', remind: 'Remind me', subjectPlaceholder: 'Follow up on proposal',
+    timeline: 'Activity', upcomingCount: 'Upcoming · {{count}}', history: 'History', pinned: 'Pinned',
+    timelineEmpty: 'No activity yet', timelineEmptyDesc: 'Log a call, email or note to start the history of this record.',
+    markDone: 'Mark done', markedDone: 'Marked as done', deleted: 'Activity deleted', pin: 'Pin', unpin: 'Unpin',
+    logged: '{{type}} logged',
+    placeholder: {
+      note: 'Write a note… (only your team can see it)', call: 'Call outcome, next steps…', email: 'Summary of the email…',
+      meeting: 'Agenda or meeting notes…', task: 'Task details…',
+    },
+    submit: { note: 'Save note', call: 'Log call', email: 'Log email', meeting: 'Log meeting', task: 'Create task' },
+  },
+  reminder: {
+    none: 'No reminder', atTime: 'At due time', min15: '15 minutes before', hour1: '1 hour before', day1: '1 day before',
+    title: 'Reminders', empty: 'No reminders', emptyDesc: 'Reminders on tasks and follow-ups show up here.',
+    due: 'Due now', upcoming: 'Upcoming', snooze: 'Snooze', snooze10: '10 minutes', snooze60: '1 hour',
+    tomorrow: 'Tomorrow 9:00', done: 'Done', snoozed: 'Snoozed until {{time}}', toast: 'Reminder',
+    enableNotifications: 'Enable desktop notifications', open: 'Open reminders',
+    dueCount_one: '{{count}} reminder is due', dueCount_other: '{{count}} reminders are due',
+  },
+  calls: {
+    title: 'Calls', description: 'Every conversation with your customers, on record', logCall: 'Log call',
+    today: 'Calls today', week: 'This week', connectRate: 'Connect rate', avgDuration: 'Avg talk time',
+    talkTime: 'Talk time', last30: 'Last 30 days', allOutcomes: 'All outcomes', allDirections: 'All directions',
+    empty: 'No calls logged yet', emptyDesc: 'Call a contact and log what was discussed.',
+    dialogTitle: 'Call {{name}}', dialogTitleBlank: 'Log a call', dial: 'Dial', start: 'Start call', end: 'End call',
+    live: 'On call', ready: 'Ready', direction: 'Direction', outcome: 'Outcome', contact: 'Contact', noPhone: 'No phone number',
+    discussed: 'What was discussed', discussedPlaceholder: 'Key points, objections, decisions, who joined…',
+    nextSteps: 'Next steps', nextStepsPlaceholder: 'e.g. Send revised quote by Friday',
+    followUp: 'Schedule a follow-up', followUpSubject: 'Follow-up task', followUpDefault: 'Follow up with {{name}}',
+    followUpDue: 'Due', save: 'Save call', saved: 'Call logged', subject: 'Call with {{name}}', duration: 'Duration',
+  },
+}

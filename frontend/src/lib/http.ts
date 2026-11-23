@@ -1,0 +1,53 @@
+const TOKEN_KEY = 'orbit:token'
+
+/** API origin; empty in local dev (Vite proxies /api), the Render URL in production builds. */
+const API_ORIGIN = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '')
+export const API_BASE = `${API_ORIGIN}/api`
+
+/** Public URL of an API path — what an external PBX must call. */
+export const publicApiUrl = (path: string) => `${API_ORIGIN || window.location.origin}${path}`
+
+export const tokenStore = {
+  get: () => safe(() => localStorage.getItem(TOKEN_KEY)),
+  set: (token: string) => safe(() => localStorage.setItem(TOKEN_KEY, token)),
+  clear: () => safe(() => localStorage.removeItem(TOKEN_KEY)),
+}
+
+function safe<T>(fn: () => T): T | null {
+  try {
+    return fn()
+  } catch {
+    return null
+  }
+}
+
+export class ApiError extends Error {
+  constructor(public status: number, message: string, public code?: string) {
+    super(message)
+  }
+}
+
+/** FastAPI returns `detail` as a string, or a list of validation issues for 422. */
+function readDetail(body: unknown): string {
+  const detail = (body as { detail?: unknown } | null)?.detail
+  if (typeof detail === 'string') return detail
+  if (Array.isArray(detail)) return detail.map((d: { msg?: string }) => d.msg).join(', ')
+  return 'Request failed'
+}
+
+let onUnauthorized: () => void = () => {}
+export const setUnauthorizedHandler = (fn: () => void) => (onUnauthorized = fn)
+
+export async function http<T>(method: string, path: string, body?: unknown): Promise<T> {
+  const token = tokenStore.get()
+  const response = await fetch(`${API_BASE}${path}`, {
+    method,
+    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  })
+  if (response.status === 401) onUnauthorized()
+  if (response.status === 204) return undefined as T
+  const data: unknown = await response.json().catch(() => null)
+  if (!response.ok) throw new ApiError(response.status, readDetail(data), (data as { code?: string } | null)?.code)
+  return data as T
+}

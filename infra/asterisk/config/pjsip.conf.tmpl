@@ -1,0 +1,51 @@
+; Orbit test PBX — two SIP extensions on the local Wi-Fi.
+; Docker Desktop NATs traffic, so we advertise the host's LAN IP and force symmetric RTP.
+
+[transport-udp]
+type = transport
+protocol = udp
+bind = 0.0.0.0:5060
+external_media_address = ${HOST_IP}
+external_signaling_address = ${HOST_IP}
+local_net = 10.77.0.0/24
+
+[endpoint-defaults](!)
+type = endpoint
+context = internal
+disallow = all
+allow = ulaw,alaw,gsm
+direct_media = no
+rtp_symmetric = yes
+force_rport = yes
+rewrite_contact = yes
+dtmf_mode = rfc4733
+
+[auth-defaults](!)
+type = auth
+auth_type = userpass
+
+[aor-defaults](!)
+type = aor
+max_contacts = 2
+remove_existing = yes
+qualify_frequency = 30
+
+; 101 — second device (e.g. a softphone on the computer)
+[101](endpoint-defaults)
+auth = 101
+aors = 101
+callerid = "Orbit 101" <101>
+[101](auth-defaults)
+username = 101
+password = ${SIP_PASSWORD_101}
+[101](aor-defaults)
+
+; 102 — your phone (Zoiper)
+[102](endpoint-defaults)
+auth = 102
+aors = 102
+callerid = "Orbit 102" <102>
+[102](auth-defaults)
+username = 102
+password = ${SIP_PASSWORD_102}
+[102](aor-defaults)

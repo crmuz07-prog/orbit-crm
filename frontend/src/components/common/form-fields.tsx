@@ -1,0 +1,91 @@
+import type { InputHTMLAttributes, ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Button } from '@/components/ui/button'
+import { Input, Textarea } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { cn } from '@/lib/utils'
+
+// Radix Select cannot use "" as an item value, so "no selection" maps to a sentinel.
+const NONE = '__none__'
+
+export type Option = { value: string; label: ReactNode }
+
+export const toOptions = (values: readonly string[]): Option[] => values.map((v) => ({ value: v, label: v }))
+
+function Field({ label, wide, children }: { label?: string; wide?: boolean; children: ReactNode }) {
+  return (
+    <div className={cn('space-y-1.5', wide && 'sm:col-span-2')}>
+      {label && <Label>{label}</Label>}
+      {children}
+    </div>
+  )
+}
+
+type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> & {
+  label: string
+  value: string
+  onChange: (value: string) => void
+  wide?: boolean
+}
+
+export function TextField({ label, value, onChange, wide, ...props }: TextFieldProps) {
+  return (
+    <Field label={label} wide={wide}>
+      <Input value={value} onChange={(e) => onChange(e.target.value)} {...props} />
+    </Field>
+  )
+}
+
+export function TextareaField({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
+  return (
+    <Field label={label} wide>
+      <Textarea value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} />
+    </Field>
+  )
+}
+
+interface SelectBoxProps {
+  value: string
+  onChange: (value: string) => void
+  options: Option[]
+  emptyLabel?: string
+  className?: string
+}
+
+/** Select whose empty value is `""`; pass `emptyLabel` to make "nothing selected" a choice. */
+export function SelectBox({ value, onChange, options, emptyLabel, className }: SelectBoxProps) {
+  return (
+    <Select value={value || NONE} onValueChange={(v) => onChange(v === NONE ? '' : v)}>
+      <SelectTrigger className={className}>
+        <SelectValue placeholder={emptyLabel ?? '—'} />
+      </SelectTrigger>
+      <SelectContent>
+        {emptyLabel && <SelectItem value={NONE}>{emptyLabel}</SelectItem>}
+        {options.map((o) => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
+      </SelectContent>
+    </Select>
+  )
+}
+
+export function SelectField({ label, wide, ...props }: SelectBoxProps & { label: string; wide?: boolean }) {
+  return (
+    <Field label={label} wide={wide}>
+      <SelectBox {...props} />
+    </Field>
+  )
+}
+
+/** Two-column responsive form body with a sticky action footer. */
+export function FormLayout({ onSubmit, onCancel, submitLabel, busy, children }: { onSubmit: () => void; onCancel: () => void; submitLabel: string; busy: boolean; children: ReactNode }) {
+  const { t } = useTranslation()
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); onSubmit() }} className="space-y-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">{children}</div>
+      <div className="flex justify-end gap-2 border-t border-foreground/[0.06] pt-4">
+        <Button variant="outline" onClick={onCancel}>{t('common.cancel')}</Button>
+        <Button type="submit" disabled={busy}>{submitLabel}</Button>
+      </div>
+    </form>
+  )
+}

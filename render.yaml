@@ -1,0 +1,31 @@
+# Render Blueprint — FastAPI backend + managed Postgres on the free plan.
+# Secrets are never typed by hand: DATABASE_URL comes from the database, JWT_SECRET is generated.
+services:
+  - type: web
+    name: orbit-crm-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips='*'
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: DATABASE_URL
+        fromDatabase:
+          name: orbit-crm-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DEMO_ENABLED
+        value: "true"
+      # Production frontend + its preview deployments on Vercel.
+      - key: CORS_ORIGIN_REGEX
+        value: https://orbit-crm[a-z0-9-]*\.vercel\.app
+
+databases:
+  - name: orbit-crm-db
+    plan: free
+    databaseName: orbit
+    user: orbit

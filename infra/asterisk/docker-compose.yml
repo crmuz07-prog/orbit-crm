@@ -1,0 +1,44 @@
+name: orbit-pbx
+
+services:
+  asterisk:
+    build: .
+    env_file: .env
+    ports:
+      - "5060:5060/udp"
+      - "10000-10050:10000-10050/udp"
+    volumes:
+      - recordings:/var/spool/asterisk/monitor/orbit
+    networks:
+      pbx:
+        ipv4_address: 10.77.0.10
+    restart: unless-stopped
+
+  bridge:
+    image: python:3.12-slim
+    env_file: .env
+    environment:
+      AMI_HOST: asterisk
+    command: ["python", "-u", "/app/bridge.py"]
+    volumes:
+      - ./bridge:/app:ro
+      - recordings:/recordings:ro
+    ports:
+      - "8090:8090"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - asterisk
+    networks:
+      - pbx
+    restart: unless-stopped
+
+# Fixed subnet so it never overlaps the office Wi-Fi (172.16.x) — PJSIP's local_net relies on it.
+networks:
+  pbx:
+    ipam:
+      config:
+        - subnet: 10.77.0.0/24
+
+volumes:
+  recordings:

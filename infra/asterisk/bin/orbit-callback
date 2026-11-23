@@ -1,0 +1,16 @@
+#!/bin/sh
+# Usage: orbit-callback <agent-extension> <customer-number>
+# Drops an Asterisk call file a few seconds later, so the agent has hung up before the call-back rings.
+set -eu
+AGENT="$1"
+CUSTOMER=$(echo "$2" | tr -cd '0-9')
+TMP=$(mktemp /tmp/orbit-XXXXXX)
+cat > "$TMP" <<CALL
+Channel: Local/${AGENT}-${CUSTOMER}@orbit-inbound-demo/n
+MaxRetries: 0
+WaitTime: 45
+Context: orbit-virtual-customer
+Extension: s
+Priority: 1
+CALL
+( sleep 4 && mv "$TMP" /var/spool/asterisk/outgoing/ ) >/dev/null 2>&1 &

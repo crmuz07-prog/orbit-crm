@@ -1,0 +1,61 @@
+import { Building2, CalendarCheck, ChevronDown, Handshake, Menu, Moon, Phone, Plus, Search, Sun, Users } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Tooltip } from '@/components/ui/tooltip'
+import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
+import { ReminderBell } from '@/features/reminders/ReminderBell'
+import { useTheme } from '@/hooks/useTheme'
+import { LanguageSwitcher } from './LanguageSwitcher'
+
+const CREATE_ITEMS = [
+  { kind: 'deal', icon: Handshake },
+  { kind: 'company', icon: Building2 },
+  { kind: 'contact', icon: Users },
+  { kind: 'call', icon: Phone },
+  { kind: 'activity', icon: CalendarCheck },
+] as const
+
+function NewMenu() {
+  const openModal = useEntityModal()
+  const { t } = useTranslation()
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button><Plus /> <span className="hidden sm:inline">{t('nav.new')}</span> <ChevronDown className="opacity-70" /></Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-44">
+        <DropdownMenuLabel>{t('nav.create')}</DropdownMenuLabel>
+        {CREATE_ITEMS.map(({ kind, icon: Icon }) => (
+          <DropdownMenuItem key={kind} onSelect={() => openModal({ kind })}><Icon /> {t(`dialog.new.${kind}`)}</DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
+export function Topbar({ onOpenNav, onOpenPalette }: { onOpenNav: () => void; onOpenPalette: () => void }) {
+  const { theme, toggle } = useTheme()
+  const { t } = useTranslation()
+  return (
+    <header className="glass sticky top-0 z-10 flex h-14 items-center gap-3 rounded-none border-x-0 border-t-0 px-4 sm:px-6">
+      <Button variant="ghost" size="icon" className="lg:hidden" onClick={onOpenNav} aria-label={t('nav.openMenu')}><Menu /></Button>
+      <button
+        onClick={onOpenPalette}
+        className="glass-subtle flex h-9 w-full max-w-md items-center gap-2 rounded-lg px-3 text-sm text-muted-foreground transition hover:text-foreground"
+      >
+        <Search className="size-4" />
+        <span className="flex-1 text-left">{t('nav.search')}</span>
+        <kbd className="hidden rounded border px-1.5 font-mono text-[10px] sm:inline">⌘K</kbd>
+      </button>
+      <div className="ml-auto flex items-center gap-2">
+        <LanguageSwitcher />
+        <ReminderBell />
+        <Tooltip content={theme === 'dark' ? t('nav.lightMode') : t('nav.darkMode')}>
+          <Button variant="ghost" size="icon" onClick={toggle} aria-label={t('nav.darkMode')}>{theme === 'dark' ? <Sun /> : <Moon />}</Button>
+        </Tooltip>
+        <NewMenu />
+      </div>
+    </header>
+  )
+}

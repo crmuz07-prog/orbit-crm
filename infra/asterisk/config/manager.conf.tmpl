@@ -1,0 +1,12 @@
+; AMI is reachable only from the internal Docker network (port 5038 is not published).
+[general]
+enabled = yes
+port = 5038
+bindaddr = 0.0.0.0
+
+[orbit]
+secret = ${AMI_SECRET}
+deny = 0.0.0.0/0.0.0.0
+permit = 10.77.0.0/255.255.255.0
+read = call,user
+write = system

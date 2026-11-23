@@ -1,0 +1,68 @@
+export const core = {
+  common: {
+    save: 'Save', cancel: 'Cancel', delete: 'Delete', edit: 'Edit', add: 'Add', back: 'Back', reset: 'Reset',
+    saveChanges: 'Save changes', pleaseWait: 'Please wait…', deleted: 'Deleted', viewAll: 'View all', none: '—',
+    noResults: 'No results found.', cannotUndo: 'This action cannot be undone.', notFound: '{{label}} not found',
+    notFoundDesc: 'It may have been deleted.', created: '{{entity}} created', updated: '{{entity}} updated',
+    today: 'Today, {{time}}', tomorrow: 'Tomorrow, {{time}}', yesterday: 'Yesterday, {{time}}', overdue: 'Overdue',
+  },
+  entity: { deal: 'Deal', company: 'Company', contact: 'Contact', activity: 'Activity', call: 'Call' },
+  dialog: {
+    new: { deal: 'New deal', company: 'New company', contact: 'New contact', activity: 'New activity', call: 'Log a call', wrapUp: 'Call summary' },
+    edit: { deal: 'Edit deal', company: 'Edit company', contact: 'Edit contact', activity: 'Edit activity', call: 'Edit call', wrapUp: 'Call summary' },
+  },
+  nav: {
+    workspace: 'Workspace', dashboard: 'Dashboard', deals: 'Deals', companies: 'Companies', contacts: 'Contacts',
+    activities: 'Activities', calls: 'Calls', settings: 'Settings', signOut: 'Sign out', openMenu: 'Open menu',
+    search: 'Search or jump to…', lightMode: 'Light mode', darkMode: 'Dark mode', language: 'Language',
+    create: 'Create', new: 'New', demoBanner: 'You are exploring the demo workspace — changes are shared and can be reset in Settings.',
+  },
+  palette: {
+    placeholder: 'Search deals, companies, contacts or type a command…', create: 'Create', goTo: 'Go to',
+    deals: 'Deals', companies: 'Companies', contacts: 'Contacts', logCall: 'Log a call',
+    navigate: '↑↓ navigate', open: '↵ open', close: 'esc close',
+  },
+  enums: {
+    lifecycle: { lead: 'Lead', prospect: 'Prospect', customer: 'Customer', churned: 'Churned' },
+    priority: { low: 'Low', medium: 'Medium', high: 'High' },
+    priorityFilter: '{{label}} priority',
+    activity: { note: 'Note', call: 'Call', email: 'Email', meeting: 'Meeting', task: 'Task' },
+    status: { open: 'Open', won: 'Won', lost: 'Lost' },
+    outcome: { connected: 'Connected', no_answer: 'No answer', voicemail: 'Voicemail', busy: 'Busy', wrong_number: 'Wrong number' },
+    direction: { outbound: 'Outbound', inbound: 'Inbound' },
+    lostReason: {
+      price: 'Price too high', competitor: 'Chose competitor', budget: 'No budget',
+      stalled: 'No decision / stalled', features: 'Missing features', timing: 'Bad timing',
+    },
+  },
+  validation: {
+    dealName: 'Deal name is required', stage: 'Pick a pipeline stage', companyName: 'Company name is required',
+    firstName: 'First name is required', email: 'Email looks invalid', subject: 'Subject is required', writeSomething: 'Write something first',
+  },
+  errors: {
+    generic: 'Something went wrong', not_found: 'Record not found', stage_has_deals: 'Move the deals out of this stage before deleting it',
+    email_taken: 'An account with this email already exists', invalid_credentials: 'Invalid email or password', invalid_signature: 'Invalid webhook signature', invalid_payload: 'Invalid call event',
+    no_workspace: 'Your account has no workspace', demo_disabled: 'The demo is disabled', not_authenticated: 'Please sign in again',
+    reset_demo_only: 'Only demo workspaces can be reset', network: 'Cannot reach the server',
+  },
+  settings: {
+    title: 'Settings', description: 'Workspace, pipeline and preferences', profile: 'Profile',
+    pipeline: 'Sales pipeline', pipelineDesc: 'Stages and win probability drive the weighted forecast.', addStage: 'Add stage',
+    newStage: 'New stage', stageSaved: 'Stage saved', dealCount_one: '{{count}} deal', dealCount_other: '{{count}} deals',
+    wonStage: 'Won stage', lostStage: 'Lost stage', moveUp: 'Move up', moveDown: 'Move down', deleteStage: 'Delete stage',
+    appearance: 'Appearance', theme: 'Theme', light: 'Light', dark: 'Dark', language: 'Language', data: 'Data',
+    sampleTitle: 'Load sample data', sampleDesc: 'Adds 15 international companies with contacts, deals, calls and activities.',
+    sampleDone: 'Sample data loaded', resetTitle: 'Reset demo workspace', resetDesc: 'Deletes everything in the demo and restores the sample data.',
+    resetConfirm: 'Reset demo workspace?', resetConfirmDesc: 'All changes in the demo workspace will be lost.', resetDone: 'Demo workspace reset',
+  },
+  auth: {
+    welcome: 'Welcome back', create: 'Create your workspace', signInSub: 'Sign in to your sales workspace.',
+    signUpSub: 'Start managing your B2B pipeline in minutes.', demo: 'Explore the demo workspace', or: 'or',
+    fullName: 'Full name', email: 'Work email', password: 'Password', signIn: 'Sign in', signUp: 'Create account',
+    newHere: 'New to Orbit?', createAccount: 'Create an account', haveAccount: 'Already have an account?',
+    tagline: 'The CRM built for B2B teams that close.',
+    f1: 'Visual pipeline', f1Text: 'Drag deals across stages and spot stalled opportunities instantly.',
+    f2: 'Every call on record', f2Text: 'Log calls, what was discussed and follow-ups with reminders.',
+    f3: 'Secure by default', f3Text: 'Every workspace is isolated at the API layer.',
+  },
+}
