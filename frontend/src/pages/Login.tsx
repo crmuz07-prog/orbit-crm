@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useAuth } from '@/auth/AuthProvider'
@@ -53,7 +53,7 @@ export default function LoginPage() {
 
           <motion.div variants={fadeUp} className="mt-8">
             <Button variant="outline" className="w-full" disabled={busy} onClick={() => run(authApi.demo)}>
-              <Sparkles className="text-primary" /> {t('auth.demo')} <ArrowRight className="ml-auto" />
+              {t('auth.demo')} <ArrowRight className="ml-auto" />
             </Button>
           </motion.div>
           <motion.div variants={fadeUp} className="my-6 flex items-center gap-3 text-xs text-muted-foreground">

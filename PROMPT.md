@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/005-asterisk-local-test.md](docs/prompts/005-asterisk-local-test.md)
+Latest: [docs/prompts/006-flags-no-sparkles.md](docs/prompts/006-flags-no-sparkles.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -10,3 +10,4 @@ History:
 - [005 — Local Asterisk PBX test bench with recordings](docs/prompts/005-asterisk-local-test.md)
 
 Engineering rules: [CLAUDE.md](CLAUDE.md)
+- [006 — Flag-only language switcher, no sparkles icon](docs/prompts/006-flags-no-sparkles.md)

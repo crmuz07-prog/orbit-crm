@@ -2,6 +2,7 @@ import { Moon, Sun } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/auth/AuthProvider'
 import { PersonAvatar } from '@/components/common/avatars'
+import { Flag } from '@/components/common/flags'
 import { Page } from '@/components/common/page'
 import { PageSkeleton } from '@/components/common/states'
 import { Badge } from '@/components/ui/badge'
@@ -59,7 +60,7 @@ function AppearanceCard() {
       <PreferenceRow label={t('settings.language')}>
         <Tabs value={i18n.language} onValueChange={(v) => setLanguage(v as Language)}>
           <TabsList>
-            {LANGUAGES.map((l) => <TabsTrigger key={l.code} value={l.code}>{l.label}</TabsTrigger>)}
+            {LANGUAGES.map((l) => <TabsTrigger key={l.code} value={l.code} aria-label={l.label} className="px-3"><Flag code={l.code} /></TabsTrigger>)}
           </TabsList>
         </Tabs>
       </PreferenceRow>
