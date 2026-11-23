@@ -10,7 +10,12 @@ UX va funksionallik HubSpot, Salesforce, Pipedrive, Attio va Linear'dan olingan.
 | [PROMPT.md](PROMPT.md) | Joriy prompt va promptlar tarixi (`docs/prompts/`) |
 | [docs/architecture.md](docs/architecture.md) | Arxitektura, qatlamlar, API, qayta ishlatiladigan komponentlar |
 | [docs/telephony.md](docs/telephony.md) | Qo'ng'iroqlarni avtomatik yozib olish: algoritm, PBX ulash, webhook formati |
+| [docs/deploy.md](docs/deploy.md) | Jonli sayt: Vercel + Render (bepul), sozlash va cheklovlar |
 | [docs/asterisk-test.md](docs/asterisk-test.md) | O'z Asterisk ATS'ingiz bilan telefoningizdan haqiqiy qo'ng'iroq sinovi (`make pbx-up`) |
+
+## Jonli versiya
+- Sayt: https://orbit-crm-ashy-phi.vercel.app → **Explore the demo workspace**
+- API: https://orbit-crm-api-bs1i.onrender.com/docs
 
 ## Tez start
 
