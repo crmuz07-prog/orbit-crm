@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/auth/AuthProvider'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
+import { VerifyBanner } from '@/features/auth/VerifyBanner'
 import { CallEventsProvider } from '@/features/telephony/CallEventsProvider'
 import { CallScreenPop } from '@/features/telephony/CallScreenPop'
 import { CommandPalette } from './CommandPalette'
@@ -26,7 +27,7 @@ function useHotkey(key: string, handler: () => void) {
 function DemoBanner() {
   const { session } = useAuth()
   const { t } = useTranslation()
-  if (!session?.workspace.is_demo) return null
+  if (!session?.workspace?.is_demo) return null
   return (
     <div className="border-b border-primary/15 bg-primary/10 px-4 py-1.5 text-center text-xs text-primary backdrop-blur">
       {t('nav.demoBanner')}
@@ -57,6 +58,7 @@ export function AppShell() {
 
       <div className="lg:pl-60">
         <DemoBanner />
+        <VerifyBanner />
         <Topbar onOpenNav={() => setMobileNav(true)} onOpenPalette={() => setPalette(true)} />
         <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
           <AnimatePresence mode="wait">

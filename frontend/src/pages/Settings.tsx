@@ -1,6 +1,6 @@
 import { Moon, Sun } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useAuth } from '@/auth/AuthProvider'
+import { useWorkspaceSession } from '@/auth/AuthProvider'
 import { PersonAvatar } from '@/components/common/avatars'
 import { Flag } from '@/components/common/flags'
 import { Page } from '@/components/common/page'
@@ -8,17 +8,18 @@ import { PageSkeleton } from '@/components/common/states'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardHeader } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { AccountCard } from '@/features/settings/AccountCard'
 import { DataCard } from '@/features/settings/DataCard'
 import { StageEditor } from '@/features/settings/StageEditor'
+import { TeamCard } from '@/features/team/TeamCard'
 import { TelephonyCard } from '@/features/telephony/TelephonyCard'
 import { useCrm } from '@/hooks/useData'
 import { useTheme } from '@/hooks/useTheme'
 import { LANGUAGES, setLanguage, type Language } from '@/i18n'
 
 function ProfileCard() {
-  const { session } = useAuth()
+  const session = useWorkspaceSession()
   const { t } = useTranslation()
-  if (!session) return null
   return (
     <Card>
       <CardHeader title={t('settings.profile')} />
@@ -28,7 +29,10 @@ function ProfileCard() {
           <p className="font-medium">{session.user.full_name}</p>
           <p className="text-sm text-muted-foreground">{session.user.email}</p>
         </div>
-        <Badge tone={session.workspace.is_demo ? 'amber' : 'green'} className="ml-auto">{session.workspace.name}</Badge>
+        <div className="ml-auto flex gap-2">
+          <Badge tone={session.workspace.is_demo ? 'amber' : 'green'}>{session.workspace.name}</Badge>
+          <Badge tone="violet">{t(`roles.${session.role}`)}</Badge>
+        </div>
       </div>
     </Card>
   )
@@ -71,14 +75,18 @@ function AppearanceCard() {
 export default function SettingsPage() {
   const { isLoading } = useCrm()
   const { t } = useTranslation()
+  // Pipeline and telephony are workspace configuration: owners and admins only (mirrors the API).
+  const isAdmin = useWorkspaceSession().role !== 'member'
   if (isLoading) return <PageSkeleton />
   return (
     <Page title={t('settings.title')} description={t('settings.description')}>
       <div className="grid max-w-4xl gap-5">
         <ProfileCard />
+        <AccountCard />
+        <TeamCard />
         <AppearanceCard />
-        <TelephonyCard />
-        <StageEditor />
+        {isAdmin && <TelephonyCard />}
+        {isAdmin && <StageEditor />}
         <DataCard />
       </div>
     </Page>

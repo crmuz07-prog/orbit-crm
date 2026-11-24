@@ -40,6 +40,8 @@ export const core = {
     firstName: 'First name is required', email: 'Email looks invalid', subject: 'Subject is required', writeSomething: 'Write something first',
   },
   errors: {
+    registration_disabled: 'Accounts are created by your administrator', account_disabled: 'This account has been deactivated — contact your administrator', self_lockout: 'You cannot deactivate or demote yourself',
+    forbidden: 'You do not have permission to do this', invalid_token: 'This link is invalid or has expired', invite_email_mismatch: 'This invitation was sent to a different email', last_owner: 'A workspace needs at least one owner', demo_read_only: 'This cannot be changed in the demo', already_member: 'This person is already in the workspace', wrong_password: 'The current password is incorrect',
     generic: 'Something went wrong', not_found: 'Record not found', stage_has_deals: 'Move the deals out of this stage before deleting it',
     email_taken: 'An account with this email already exists', invalid_credentials: 'Invalid email or password', invalid_signature: 'Invalid webhook signature', invalid_payload: 'Invalid call event',
     no_workspace: 'Your account has no workspace', demo_disabled: 'The demo is disabled', not_authenticated: 'Please sign in again',

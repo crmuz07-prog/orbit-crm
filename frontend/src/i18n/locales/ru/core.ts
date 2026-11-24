@@ -43,6 +43,8 @@ export const core: Locale<typeof en> = {
     firstName: 'Укажите имя', email: 'Похоже, email указан неверно', subject: 'Укажите тему', writeSomething: 'Сначала напишите что-нибудь',
   },
   errors: {
+    registration_disabled: 'Аккаунты создаёт администратор', account_disabled: 'Аккаунт отключён — обратитесь к администратору', self_lockout: 'Нельзя отключить себя или снять с себя права',
+    forbidden: 'Недостаточно прав для этого действия', invalid_token: 'Ссылка недействительна или устарела', invite_email_mismatch: 'Приглашение отправлено на другой email', last_owner: 'В пространстве должен быть хотя бы один владелец', demo_read_only: 'В демо это изменить нельзя', already_member: 'Этот человек уже в пространстве', wrong_password: 'Текущий пароль неверный',
     generic: 'Что-то пошло не так', not_found: 'Запись не найдена', stage_has_deals: 'Перед удалением перенесите сделки из этого этапа',
     email_taken: 'Аккаунт с таким email уже существует', invalid_credentials: 'Неверный email или пароль', invalid_signature: 'Неверная подпись webhook', invalid_payload: 'Неверное событие звонка',
     no_workspace: 'У аккаунта нет рабочего пространства', demo_disabled: 'Демо отключено', not_authenticated: 'Пожалуйста, войдите снова',

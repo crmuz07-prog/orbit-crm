@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 import { useQueryClient } from '@tanstack/react-query'
 import { authApi } from '@/lib/api'
 import { ApiError, setUnauthorizedHandler, tokenStore, withRetry } from '@/lib/http'
-import type { Session, Token } from '@/lib/types'
+import type { Session, Token, User } from '@/lib/types'
 
 interface AuthState {
   session: Session | null
@@ -10,6 +10,9 @@ interface AuthState {
   /** True while the API is not answering yet (cold start); the UI explains the wait. */
   waking: boolean
   signIn: (token: Token) => void
+  /** Signs into another workspace: the cached data of the previous one is dropped. */
+  switchTo: (token: Token) => void
+  updateUser: (user: User) => void
   signOut: () => void
 }
 
@@ -27,10 +30,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     qc.clear()
   }, [qc])
 
-  const signIn = useCallback(({ access_token, user, workspace }: Token) => {
+  const signIn = useCallback(({ access_token, user, workspace, role }: Token) => {
     tokenStore.set(access_token)
-    setSession({ user, workspace })
+    setSession({ user, workspace, role })
   }, [])
+
+  const switchTo = useCallback((token: Token) => {
+    qc.clear()
+    signIn(token)
+  }, [qc, signIn])
+
+  const updateUser = useCallback((user: User) => setSession((s) => (s ? { ...s, user } : s)), [])
 
   useEffect(() => {
     setUnauthorizedHandler(signOut)
@@ -45,11 +55,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
   }, [signOut])
 
-  return <AuthContext.Provider value={{ session, loading, waking, signIn, signOut }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ session, loading, waking, signIn, switchTo, updateUser, signOut }}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {
   const ctx = useContext(AuthContext)
   if (!ctx) throw new Error('useAuth must be used inside <AuthProvider>')
   return ctx
+}
+
+export type WorkspaceSession = Session & { workspace: NonNullable<Session['workspace']>; role: NonNullable<Session['role']> }
+
+/** For screens inside a company: App only renders them when the session has a workspace. */
+export function useWorkspaceSession(): WorkspaceSession {
+  const { session } = useAuth()
+  if (!session?.workspace || !session.role) throw new Error('useWorkspaceSession needs a session with a workspace')
+  return session as WorkspaceSession
 }

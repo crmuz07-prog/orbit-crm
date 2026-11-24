@@ -8,7 +8,7 @@ from app.services.rules import apply_deal_stage_rules, guard_stage_delete
 SPECS = [
     EntitySpec(
         path="stages", model=Stage, create=s.StageIn, patch=s.StagePatch, read=s.StageOut,
-        order_by=Stage.position, before_delete=guard_stage_delete,
+        order_by=Stage.position, before_delete=guard_stage_delete, write_role="admin",
     ),
     EntitySpec(
         path="companies", model=Company, create=s.CompanyIn, patch=s.CompanyPatch, read=s.CompanyOut,

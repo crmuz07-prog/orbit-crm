@@ -1,0 +1,25 @@
+export const account = {
+  roles: { owner: 'Owner', admin: 'Admin', member: 'Member' },
+  account: {
+    forgot: 'Forgot password?', forgotTitle: 'Reset your password', forgotSub: 'Enter your work email and we will send you a reset link.',
+    sendLink: 'Send reset link', sentTitle: 'Check your inbox', backToSignIn: 'Back to sign in',
+    sentSub: 'If an account exists for {{email}}, a reset link is on its way. No email? Ask your workspace admin for a reset link.',
+    resetTitle: 'Set a new password', newPassword: 'New password', confirmPassword: 'Confirm password', mismatch: 'Passwords do not match',
+    savePassword: 'Save password', resetDone: 'Password updated — you are signed in',
+    verifyTitle: 'Confirming your email…', verified: 'Email confirmed', verifiedSub: 'Thanks! Your email address is confirmed.',
+    verifyFailed: 'This link is invalid or has expired', openApp: 'Open Orbit',
+    banner: 'Please confirm your email address — we sent a link to {{email}}.', resend: 'Resend', resent: 'Confirmation email sent',
+    profile: 'Profile', name: 'Full name', saveProfile: 'Save', profileSaved: 'Profile updated', security: 'Password',
+    currentPassword: 'Current password', changePassword: 'Change password', passwordChanged: 'Password changed', setFirstPassword: 'Set a password',
+    workspaces: 'Workspaces', switched: 'Switched to {{workspace}}',
+  },
+  team: {
+    title: 'Team', description: 'Give colleagues a login and manage their access.', member: 'Member', role: 'Role',
+    addUser: 'Add user', added: 'User added', fullName: 'Full name', email: 'Login (email)', tempPassword: 'Temporary password',
+    generate: 'Generate', credentials: 'Login details to hand over', credentialsHint: 'They will be asked to set their own password at the first sign-in.',
+    you: 'you', temporary: 'temporary password', inactive: 'deactivated', remove: 'Remove from workspace', removeConfirm: 'Remove {{name}}?',
+    removeConfirmDesc: 'They lose access to this workspace immediately.', removed: 'Member removed', roleChanged: 'Role updated',
+    setPassword: 'Set password', setPasswordHint: 'Issue a temporary password for {{name}}; they must change it at the next sign-in.',
+    passwordSet: 'Password updated', readOnly: 'Only owners and admins can manage the team.', demoReadOnly: 'Team management is disabled in the demo workspace.',
+  },
+}

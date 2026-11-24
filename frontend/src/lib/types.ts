@@ -91,7 +91,13 @@ export interface User {
   id: string
   email: string
   full_name: string
+  email_verified: boolean
+  has_password: boolean
+  is_superadmin: boolean
+  must_change_password: boolean
 }
+
+export type Role = 'owner' | 'admin' | 'member'
 
 export interface Workspace {
   id: string
@@ -101,8 +107,37 @@ export interface Workspace {
 
 export interface Session {
   user: User
-  workspace: Workspace
+  /** Null for a platform superadmin who does not belong to any company. */
+  workspace: Workspace | null
+  role: Role | null
 }
+
+export interface WorkspaceChoice extends Workspace {
+  role: Role
+}
+
+export interface AuthConfig {
+  demo_enabled: boolean
+  email_enabled: boolean
+  registration_enabled: boolean
+}
+
+export interface TeamMember {
+  user_id: string
+  full_name: string
+  email: string
+  role: Role
+  is_active: boolean
+  must_change_password: boolean
+  joined_at: string
+}
+
+
+export interface Team {
+  members: TeamMember[]
+  can_manage: boolean
+}
+
 
 export interface Token extends Session {
   access_token: string
@@ -163,3 +198,29 @@ export interface CallEvent {
 }
 
 export type ProviderStatus = 'answered' | 'no_answer' | 'busy' | 'voicemail' | 'failed'
+
+export interface Company {
+  id: string
+  name: string
+  is_demo: boolean
+  created_at: string
+  member_count: number
+  owners: string[]
+}
+
+export interface AdminUser {
+  id: string
+  full_name: string
+  email: string
+  is_active: boolean
+  is_superadmin: boolean
+  must_change_password: boolean
+  created_at: string
+  memberships: { workspace_id: string; workspace_name: string; role: Role }[]
+}
+
+export interface NewLogin {
+  full_name: string
+  email: string
+  password: string
+}

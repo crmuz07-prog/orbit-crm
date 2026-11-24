@@ -1,4 +1,7 @@
-import type { Activity, CallDirection, CallLog, CallStats, Dashboard, ProviderStatus, Session, TableMap, TableName, TelephonySettings, Token } from './types'
+import type {
+  Activity, AdminUser, AuthConfig, CallDirection, CallLog, CallStats, Company, Dashboard, NewLogin, ProviderStatus, Role, Session, TableMap, TableName,
+  Team, TeamMember, TelephonySettings, Token, User, WorkspaceChoice,
+} from './types'
 import { http } from './http'
 
 export type Draft<K extends TableName> = Partial<TableMap[K]>
@@ -44,4 +47,33 @@ export const authApi = {
   register: (full_name: string, email: string, password: string) => http<Token>('POST', '/auth/register', { full_name, email, password }),
   demo: () => http<Token>('POST', '/auth/demo'),
   me: () => http<Session>('GET', '/auth/me'),
+  config: () => http<AuthConfig>('GET', '/auth/config'),
+  workspaces: () => http<WorkspaceChoice[]>('GET', '/auth/workspaces'),
+  switch: (workspace_id: string) => http<Token>('POST', '/auth/switch', { workspace_id }),
+  forgot: (email: string) => http<void>('POST', '/auth/forgot', { email }),
+  reset: (token: string, password: string) => http<Token>('POST', '/auth/reset', { token, password }),
+  verify: (token: string) => http<User>('POST', '/auth/verify', { token }),
+  resendVerification: () => http<void>('POST', '/auth/verify/resend'),
+  updateProfile: (full_name: string) => http<User>('PATCH', '/auth/me', { full_name }),
+  changePassword: (current_password: string | null, new_password: string) => http<void>('POST', '/auth/password', { current_password, new_password }),
+}
+
+export const teamApi = {
+  get: () => http<Team>('GET', '/team'),
+  add: (login: NewLogin & { role: Role }) => http<TeamMember & { account_created: boolean }>('POST', '/team/members', login),
+  changeRole: (userId: string, role: Role) => http<TeamMember>('PATCH', `/team/members/${userId}`, { role }),
+  remove: (userId: string) => http<void>('DELETE', `/team/members/${userId}`),
+  setPassword: (userId: string, password: string) => http<void>('POST', `/team/members/${userId}/password`, { password }),
+}
+
+export const adminApi = {
+  companies: () => http<Company[]>('GET', '/admin/companies'),
+  createCompany: (name: string, owner: NewLogin) => http<Company>('POST', '/admin/companies', { name, owner }),
+  renameCompany: (id: string, name: string) => http<void>('PATCH', `/admin/companies/${id}`, { name }),
+  users: () => http<AdminUser[]>('GET', '/admin/users'),
+  createUser: (login: NewLogin & { workspace_id: string | null; role: Role }) => http<AdminUser>('POST', '/admin/users', login),
+  updateUser: (id: string, patch: Partial<Pick<AdminUser, 'full_name' | 'is_active' | 'is_superadmin'>>) => http<AdminUser>('PATCH', `/admin/users/${id}`, patch),
+  setPassword: (id: string, password: string) => http<void>('POST', `/admin/users/${id}/password`, { password }),
+  addMembership: (id: string, workspace_id: string, role: Role) => http<AdminUser>('POST', `/admin/users/${id}/memberships`, { workspace_id, role }),
+  removeMembership: (id: string, workspaceId: string) => http<AdminUser>('DELETE', `/admin/users/${id}/memberships/${workspaceId}`),
 }

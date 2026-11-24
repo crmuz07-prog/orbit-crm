@@ -16,7 +16,23 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     cors_origin_regex: str | None = None
     demo_enabled: bool = True
+    # Closed (ERP-style) access: when false only admins create accounts.
+    registration_enabled: bool = True
+    # Bootstraps the platform operator on start-up (set in the hosting dashboard, never in git).
+    superadmin_email: str | None = None
+    superadmin_password: str | None = None
     demo_email: str = "demo@orbit.dev"
+    # Public frontend URL used in emailed links (invites, password reset, verification).
+    frontend_url: str = "http://localhost:5173"
+    # Optional SMTP; without it links are logged and admins copy them from the UI.
+    smtp_host: str | None = None
+    smtp_port: int = 587
+    smtp_user: str | None = None
+    smtp_password: str | None = None
+    smtp_from: str = "Orbit CRM <no-reply@orbit.dev>"
+    invite_ttl_days: int = 7
+    reset_ttl_minutes: int = 60
+    verify_ttl_hours: int = 72
 
     @property
     def cors_origin_list(self) -> list[str]:

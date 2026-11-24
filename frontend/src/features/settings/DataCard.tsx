@@ -48,7 +48,7 @@ export function DataCard() {
       <DataAction title={t('settings.sampleTitle')} description={t('settings.sampleDesc')}>
         <Button variant="outline" disabled={busy} onClick={() => run(api.seed, t('settings.sampleDone'))}><Database /> {t('settings.sampleTitle')}</Button>
       </DataAction>
-      {session?.workspace.is_demo && (
+      {session?.workspace?.is_demo && (
         <DataAction title={t('settings.resetTitle')} description={t('settings.resetDesc')}>
           <Button variant="destructive" disabled={busy} onClick={() => setConfirmReset(true)}><RotateCcw /> {t('common.reset')}</Button>
         </DataAction>

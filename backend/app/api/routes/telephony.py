@@ -8,14 +8,13 @@ from fastapi.responses import StreamingResponse
 from pydantic import ValidationError
 from starlette.concurrency import run_in_threadpool
 
-from app.api.deps import DB, Ctx
-from app.core.errors import DomainError, Unauthorized
-from app.core.security import decode_access_token
-from app.models import TelephonyIntegration, User
+from app.api.deps import DB, Ctx, context_for_token
+from app.services.workspaces import require_role
+from app.core.errors import DomainError
+from app.models import TelephonyIntegration
 from app.schemas.crm import ActivityOut
 from app.schemas.telephony import SimulateIn, TelephonyEventIn, TelephonySettingsOut, TelephonySettingsPatch
 from app.services import telephony
-from app.services.auth import primary_workspace
 from app.services.events import broker
 
 router = APIRouter(prefix="/telephony", tags=["telephony"])
@@ -30,11 +29,13 @@ def settings_out(integration: TelephonyIntegration) -> TelephonySettingsOut:
 
 @router.get("", response_model=TelephonySettingsOut)
 def get_settings(ctx: Ctx) -> TelephonySettingsOut:
+    require_role(ctx.membership, "admin")  # exposes the webhook signing secret
     return settings_out(telephony.integration_for(ctx.db, ctx.workspace_id))
 
 
 @router.patch("", response_model=TelephonySettingsOut)
 def update_settings(payload: TelephonySettingsPatch, ctx: Ctx) -> TelephonySettingsOut:
+    require_role(ctx.membership, "admin")
     integration = telephony.integration_for(ctx.db, ctx.workspace_id)
     for field, value in payload.model_dump(exclude_none=True).items():
         setattr(integration, field, value)
@@ -44,6 +45,7 @@ def update_settings(payload: TelephonySettingsPatch, ctx: Ctx) -> TelephonySetti
 
 @router.post("/rotate", response_model=TelephonySettingsOut)
 def rotate(ctx: Ctx) -> TelephonySettingsOut:
+    require_role(ctx.membership, "admin")
     return settings_out(telephony.rotate(ctx.db, telephony.integration_for(ctx.db, ctx.workspace_id)))
 
 
@@ -78,10 +80,7 @@ def simulate(payload: SimulateIn, ctx: Ctx) -> dict[str, Any]:
 
 
 def _workspace_for_token(db: DB, token: str) -> str:
-    user_id = decode_access_token(token)
-    if not user_id or db.get(User, user_id) is None:
-        raise Unauthorized("Not authenticated", "not_authenticated")
-    return primary_workspace(db, user_id).id
+    return context_for_token(db, token).workspace_id
 
 
 @router.get("/stream")

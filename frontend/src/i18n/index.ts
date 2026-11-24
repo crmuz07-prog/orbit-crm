@@ -1,19 +1,25 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
+import { account as enAccount } from './locales/en/account'
+import { admin as enAdmin } from './locales/en/admin'
 import { core as enCore } from './locales/en/core'
 import { engage as enEngage } from './locales/en/engage'
 import { sales as enSales } from './locales/en/sales'
 import { telephony as enTelephony } from './locales/en/telephony'
+import { account as ruAccount } from './locales/ru/account'
+import { admin as ruAdmin } from './locales/ru/admin'
 import { core as ruCore } from './locales/ru/core'
 import { engage as ruEngage } from './locales/ru/engage'
 import { sales as ruSales } from './locales/ru/sales'
 import { telephony as ruTelephony } from './locales/ru/telephony'
+import { account as uzAccount } from './locales/uz/account'
+import { admin as uzAdmin } from './locales/uz/admin'
 import { core as uzCore } from './locales/uz/core'
 import { engage as uzEngage } from './locales/uz/engage'
 import { sales as uzSales } from './locales/uz/sales'
 import { telephony as uzTelephony } from './locales/uz/telephony'
 
-export const en = { ...enCore, ...enSales, ...enEngage, ...enTelephony }
+export const en = { ...enCore, ...enSales, ...enEngage, ...enTelephony, ...enAccount, ...enAdmin }
 
 export const LANGUAGES = [
   { code: 'uz', label: 'Oʻzbekcha', short: 'UZ', intl: 'uz-UZ' },
@@ -51,8 +57,8 @@ i18n.on('languageChanged', (code) => document.documentElement.setAttribute('lang
 void i18n.use(initReactI18next).init({
   resources: {
     en: { translation: en },
-    uz: { translation: { ...uzCore, ...uzSales, ...uzEngage, ...uzTelephony } },
-    ru: { translation: { ...ruCore, ...ruSales, ...ruEngage, ...ruTelephony } },
+    uz: { translation: { ...uzCore, ...uzSales, ...uzEngage, ...uzTelephony, ...uzAccount, ...uzAdmin } },
+    ru: { translation: { ...ruCore, ...ruSales, ...ruEngage, ...ruTelephony, ...ruAccount, ...ruAdmin } },
   },
   lng: detectLanguage(),
   fallbackLng: 'en',

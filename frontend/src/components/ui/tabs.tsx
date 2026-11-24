@@ -24,3 +24,10 @@ export const TabsTrigger = React.forwardRef<React.ElementRef<typeof TabsPrimitiv
   ),
 )
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
+
+export const TabsContent = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Content>, React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>>(
+  ({ className, ...props }, ref) => (
+    <TabsPrimitive.Content ref={ref} className={cn('focus-visible:outline-none data-[state=active]:animate-in data-[state=active]:fade-in-0', className)} {...props} />
+  ),
+)
+TabsContent.displayName = TabsPrimitive.Content.displayName

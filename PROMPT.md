@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/007-cold-start-session-supabase.md](docs/prompts/007-cold-start-session-supabase.md)
+Latest: [docs/prompts/009-closed-access-superadmin.md](docs/prompts/009-closed-access-superadmin.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -12,3 +12,5 @@ History:
 Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [006 — Flag-only language switcher, no sparkles icon](docs/prompts/006-flags-no-sparkles.md)
 - [007 — Cold-start-safe session, Supabase Postgres](docs/prompts/007-cold-start-session-supabase.md)
+- [008 — Teams, invites, roles, password reset, email verification, migrations](docs/prompts/008-teams-accounts-migrations.md)
+- [009 — Closed access: admin-issued credentials, superadmin panel](docs/prompts/009-closed-access-superadmin.md)

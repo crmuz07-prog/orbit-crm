@@ -43,6 +43,8 @@ export const core: Locale<typeof en> = {
     firstName: 'Ism majburiy', email: 'Email notoʻgʻri koʻrinadi', subject: 'Mavzu majburiy', writeSomething: 'Avval biror narsa yozing',
   },
   errors: {
+    registration_disabled: 'Akkauntlarni administrator yaratadi', account_disabled: 'Bu akkaunt faolsizlantirilgan — administratorga murojaat qiling', self_lockout: 'Oʻzingizni faolsizlantira yoki huquqingizni tushira olmaysiz',
+    forbidden: 'Bu amal uchun ruxsatingiz yoʻq', invalid_token: 'Havola notoʻgʻri yoki muddati oʻtgan', invite_email_mismatch: 'Bu taklif boshqa emailga yuborilgan', last_owner: 'Ish maydonida kamida bitta egasi boʻlishi kerak', demo_read_only: 'Demoda buni oʻzgartirib boʻlmaydi', already_member: 'Bu kishi allaqachon ish maydonida', wrong_password: 'Joriy parol notoʻgʻri',
     generic: 'Nimadir xato ketdi', not_found: 'Yozuv topilmadi', stage_has_deals: 'Oʻchirishdan oldin bu bosqichdagi bitimlarni koʻchiring',
     email_taken: 'Bu email bilan akkaunt allaqachon mavjud', invalid_credentials: 'Email yoki parol notoʻgʻri', invalid_signature: 'Webhook imzosi notoʻgʻri', invalid_payload: 'Qoʻngʻiroq hodisasi notoʻgʻri',
     no_workspace: 'Akkauntingizda ish maydoni yoʻq', demo_disabled: 'Demo oʻchirilgan', not_authenticated: 'Iltimos, qayta kiring',

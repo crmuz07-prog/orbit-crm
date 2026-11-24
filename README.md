@@ -57,4 +57,7 @@ DEMO_ENABLED=false
 - **Calls** — qo'lda qayd etish oynasi: click-to-dial, jonli taymer, yo'nalish, natija, **nimalar gaplashildi**, keyingi qadamlar, eslatmali follow-up; Calls sahifasi (bugun/hafta, dozvon %, o'rtacha va umumiy suhbat vaqti)
 - **Eslatmalar (Reminders)** — har bir vazifa/uchrashuvga "Eslatish" (vaqtida, 15 daq, 1 soat, 1 kun oldin); top bar'da qo'ng'iroqcha, toast va brauzer bildirishnomasi, Snooze / Done
 - **Pinned notes** — muhim eslatmalar timeline tepasida
+- **Yopiq kirish (ERP uslubi)** — ro'yxatdan o'tish yo'q: superadmin `/admin` panelida kompaniya va loginlar yaratadi, kompaniya administratori xodimlarga login + vaqtinchalik parol beradi; birinchi kirishda parol almashtiriladi, faolsizlantirish, bir nechta workspace
+- **Jamoa** — rollar (Egasi / Administrator / A'zo), a'zolarni boshqarish, parol o'rnatish
+- **Akkaunt** — parolni tiklash (email yoki administrator havolasi), email tasdiqlash, profil va parolni o'zgartirish
 - **⌘K palette**, glass dizayn (light/dark), til almashtirish (UZ/RU/EN), mobil drawer, Settings: pipeline editor, sample data, demo reset

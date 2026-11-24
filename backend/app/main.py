@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -6,17 +7,29 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.routes import auth, calls, entities, telephony, workspace
+from app.api.routes import account, admin, auth, calls, entities, team, telephony, workspace
 from app.core.config import get_settings
-from app.core.db import Base, engine
+from app.core.db import SessionLocal, engine
 from app.core.errors import DomainError
+from app.core.migrate import migrate
+from app.services.admin import ensure_superadmin
 from app.services.events import broker
+
+# App loggers (e.g. links logged when SMTP is not configured) must reach the platform logs.
+logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
+
+
+def bootstrap_superadmin() -> None:
+    settings = get_settings()
+    if settings.superadmin_email and settings.superadmin_password:
+        with SessionLocal() as db:
+            ensure_superadmin(db, settings.superadmin_email, settings.superadmin_password)
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-    # Schema is created on boot for zero-setup local dev; use migrations for production.
-    Base.metadata.create_all(engine)
+    migrate(engine)
+    bootstrap_superadmin()
     broker.bind(asyncio.get_running_loop())
     yield
 
@@ -40,7 +53,7 @@ def create_app() -> FastAPI:
     def health() -> dict[str, str]:
         return {"status": "ok"}
 
-    for module in (auth, calls, entities, telephony, workspace):
+    for module in (auth, account, team, admin, calls, entities, telephony, workspace):
         app.include_router(module.router, prefix="/api")
     return app
 

@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Building2, CalendarCheck, Handshake, LayoutDashboard, LogOut, Phone, Settings, Users, type LucideIcon } from 'lucide-react'
+import { Building2, CalendarCheck, Handshake, LayoutDashboard, LogOut, Phone, Settings, ShieldCheck, Users, type LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/auth/AuthProvider'
 import { PersonAvatar } from '@/components/common/avatars'
 import { Button } from '@/components/ui/button'
+import { WorkspaceSwitcher } from '@/features/auth/WorkspaceSwitcher'
 import { Tooltip } from '@/components/ui/tooltip'
 import { useCrm } from '@/hooks/useData'
 import { dueBucket } from '@/lib/metrics'
@@ -39,7 +40,7 @@ function UserCard() {
       <PersonAvatar name={session.user.full_name} />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">{session.user.full_name}</p>
-        <p className="truncate text-xs text-muted-foreground">{session.workspace.name}</p>
+        <p className="truncate text-xs text-muted-foreground">{session.user.email}</p>
       </div>
       <Tooltip content={t('nav.signOut')}>
         <Button variant="ghost" size="icon" onClick={signOut} aria-label={t('nav.signOut')}><LogOut /></Button>
@@ -51,6 +52,7 @@ function UserCard() {
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { activities } = useCrm()
   const { t } = useTranslation()
+  const { session } = useAuth()
   const overdue = activities.filter((a) => dueBucket(a) === 'overdue').length
   const items: NavItem[] = [
     { to: '/', label: t('nav.dashboard'), icon: LayoutDashboard, end: true },
@@ -64,11 +66,13 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <div className="flex h-full flex-col gap-6 px-3 py-4">
       <div className="px-2"><Logo /></div>
+      <WorkspaceSwitcher />
       <nav className="flex flex-col gap-0.5">
         <p className="mb-1 px-2 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{t('nav.workspace')}</p>
         {items.map((item) => <NavItemLink key={item.to} {...item} onNavigate={onNavigate} />)}
       </nav>
       <div className="mt-auto flex flex-col gap-0.5">
+        {session?.user.is_superadmin && <NavItemLink to="/admin" label={t('admin.nav')} icon={ShieldCheck} onNavigate={onNavigate} />}
         <NavItemLink to="/settings" label={t('nav.settings')} icon={Settings} onNavigate={onNavigate} />
         <UserCard />
       </div>

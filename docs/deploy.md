@@ -18,6 +18,26 @@
 - GitHub ilovalari (Render, Vercel) **faqat `orbit-crm` repo'siga** ruxsat bilan o'rnatilgan.
 - `main` branch'ga har bir push ikkala xizmatni avtomatik qayta deploy qiladi.
 
+## Kirish: faqat administrator bergan login va parol (ERP uslubi)
+- Production'da `REGISTRATION_ENABLED=false` va `DEMO_ENABLED=false`: o'zi ro'yxatdan o'tish yo'q.
+- **Superadmin** (platforma operatori): Render → Environment'da `SUPERADMIN_EMAIL` va `SUPERADMIN_PASSWORD`ni
+  o'zingiz kiriting. Backend ishga tushganda shu akkaunt yaratiladi (mavjud bo'lsa superadmin qilinadi, parol o'zgartirilmaydi).
+  Lokal: `make superadmin EMAIL=siz@kompaniya.uz` (parolni so'raydi).
+- Superadmin `/admin` panelida kompaniya yaratadi va uning egasiga login + vaqtinchalik parol beradi.
+- Kompaniya egasi/administratori Settings → Team'da xodimlarga login beradi, rolini o'zgartiradi, parolini tiklaydi.
+- Vaqtinchalik parol bilan birinchi kirishda foydalanuvchi o'z parolini o'rnatmaguncha CRM ochilmaydi.
+- Faolsizlantirilgan foydalanuvchi kira olmaydi, eski sessiyasi ham darhol to'xtaydi.
+
+## Email (ixtiyoriy)
+Parolni tiklash va email tasdiqlash xatlari uchun Render → Environment'ga SMTP qo'shiladi:
+`SMTP_HOST`, `SMTP_PORT` (587), `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`.
+SMTP bo'lmasa login sahifasida "parolni unutdingizmi" o'rniga "administratoringizga murojaat qiling" ko'rinadi.
+
+## Ma'lumotlar bazasi migratsiyalari
+Backend ishga tushganda Alembic `upgrade head` bajaradi (`backend/migrations`). Eski `create_all` bilan
+yaratilgan baza avval baseline (`0001`) deb belgilanadi — mavjud ma'lumotlar saqlanadi.
+Yangi migratsiya: `cd backend && .venv/bin/alembic revision --autogenerate -m "..."`.
+
 ## Lokal Asterisk'ni bulutdagi CRM'ga ulash
 ```bash
 ORBIT_API=https://orbit-crm-api-bs1i.onrender.com python3 scripts/pbx-env.py
@@ -29,6 +49,5 @@ docker compose -f infra/asterisk/docker-compose.yml up -d
   (bridge webhook'larni qayta yuboradi, shuning uchun qo'ng'iroqlar yo'qolmaydi).
 - Supabase free loyiha bir hafta ishlatilmasa pauzaga tushadi (panelda "Restore" bilan qaytariladi); bepul tarifda
   kunlik zaxira nusxa yo'q. Haqiqiy mijoz ma'lumotlarini bepul tarifda saqlamang.
-- Demo workspace ochiq: havolani bilgan har kim kira oladi. Real ishga o'tishda Render'da `DEMO_ENABLED=false` qiling.
 - Suhbat yozuvlari lokal bridge'da (`localhost:8090`) — faqat ATS ishlayotgan kompyuterda tinglanadi.
   Hamma joyda tinglash uchun yozuvlarni bulut storage'ga yuklash kerak (keyingi qadam).

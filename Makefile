@@ -1,4 +1,4 @@
-.PHONY: install dev api web test build lines check pbx-env pbx-up pbx-down pbx-logs
+.PHONY: install dev api web test build lines check superadmin pbx-env pbx-up pbx-down pbx-logs
 
 PY := backend/.venv/bin/python
 
@@ -20,6 +20,10 @@ test:
 
 build:
 	cd frontend && npm run build
+
+# Usage: make superadmin EMAIL=you@company.com (asks for the password)
+superadmin:
+	cd backend && .venv/bin/python -m app.cli create-superadmin $(EMAIL)
 
 lines:
 	./scripts/check-lines.sh

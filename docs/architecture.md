@@ -13,7 +13,9 @@ React (Vite) ──/api proxy──▶ FastAPI ──SQLAlchemy──▶ SQLite 
 | schemas | `schemas/*.py` | Pydantic I/O. `partial()` builds every PATCH schema from its create schema (DRY) |
 | services | `services/crud.py` | **Generic** workspace-scoped list/get/create/update/delete plus FK tenant checks |
 | | `services/rules.py` | Hooks: deal closing rules, stage delete guard |
-| | `services/auth.py`, `onboarding.py` | Register / login / demo, workspace + default pipeline |
+| | `services/auth.py`, `onboarding.py`, `users.py` | Register / login / demo / switch workspace, workspace + default pipeline |
+| | `services/workspaces.py`, `team.py` | Memberships, roles (owner > admin > member), admin-issued logins, last-owner guard |
+| | `services/account.py`, `tokens.py`, `mailer.py` | Password reset, email verification, profile; hashed single-use tokens; SMTP or log |
 | | `services/metrics.py` | Dashboard analytics |
 | | `services/calls.py` | Call logging (call + follow-up task in one transaction), call stats, pending reminders |
 | | `services/telephony.py`, `phone_match.py`, `events.py` | PBX webhook ingestion (HMAC, idempotent, caller matching, missed-call task) and the SSE event broker — see `docs/telephony.md` |
@@ -22,8 +24,14 @@ React (Vite) ──/api proxy──▶ FastAPI ──SQLAlchemy──▶ SQLite 
 | | `api/routes/entities.py` | 5 entities declared as specs, with no repeated code |
 | | `api/routes/auth.py`, `workspace.py` | Auth, dashboard, seed/reset |
 
-### Multi-tenancy
-`RequestContext` (from the JWT) carries the workspace. Every query filters on `workspace_id`.
+### Multi-tenancy & roles
+The JWT carries the active workspace (`wid`); `RequestContext` re-checks the membership on every request and exposes the role.
+`AdminCtx` guards team management; `EntitySpec.write_role` makes pipeline stages admin-only; telephony settings are admin-only.
+`SuperCtx` guards the platform `/admin` API (companies, users, passwords, memberships). A superadmin may have no workspace
+(`wid` is null), so the session's workspace and role are optional; CRM routes still require a membership. Inactive users get
+`account_disabled` on every request, and `must_change_password` gates the UI after an admin-issued password.
+SQLite migrations run with foreign keys off, because batch mode rebuilds tables and would otherwise cascade-delete child rows.
+`RequestContext` carries the workspace. Every query filters on `workspace_id`.
 `assert_references` blocks links to another tenant's records. Tests check this (`test_tenant_isolation`).
 
 ### Business rules
@@ -78,5 +86,6 @@ tailwindcss-animate handles Radix enter/exit states. `MotionConfig reducedMotion
 
 ## Quality gates
 - `scripts/check-lines.sh` enforces a maximum of 250 lines per file.
-- `pytest`: 24 tests covering auth, isolation, CRUD, rules, dashboard, calls, reminders, telephony and error codes.
+- `pytest`: 46 tests covering auth, isolation, CRUD, rules, dashboard, calls, reminders, telephony, teams, superadmin, closed access, accounts, migrations and error codes.
+- Alembic migrations (`backend/migrations`) run on boot; legacy databases are stamped at the baseline first.
 - `tsc` strict, with no `any`.
