@@ -8,10 +8,11 @@ interface ConfirmDialogProps {
   title: string
   description: ReactNode
   confirmLabel?: string
+  cancelLabel?: string
   onConfirm: () => void
 }
 
-export function ConfirmDialog({ open, onOpenChange, title, description, confirmLabel, onConfirm }: ConfirmDialogProps) {
+export function ConfirmDialog({ open, onOpenChange, title, description, confirmLabel, cancelLabel, onConfirm }: ConfirmDialogProps) {
   const { t } = useTranslation()
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -21,7 +22,7 @@ export function ConfirmDialog({ open, onOpenChange, title, description, confirmL
           <AlertDialogDescription>{description} {t('common.cannotUndo')}</AlertDialogDescription>
         </div>
         <div className="flex justify-end gap-2">
-          <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+          <AlertDialogCancel>{cancelLabel ?? t('common.cancel')}</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm}>{confirmLabel ?? t('common.delete')}</AlertDialogAction>
         </div>
       </AlertDialogContent>

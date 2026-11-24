@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { SelectField, TextField } from '@/components/common/form-fields'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { GuardedDialog } from '@/components/common/guarded-dialog'
 import { Textarea } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useCreateRow, useUpdateRow } from '@/hooks/useData'
@@ -30,17 +31,20 @@ export function CustomFieldDialog({ field, open, onOpenChange, position }: { fie
     setWarn(field?.warn_options ?? [])
   }, [open, field])
   const isList = type === 'select' || type === 'multiselect'
+  const dirty = open && (label !== (field?.label ?? '') || type !== (field?.type ?? 'select') || options !== (field?.options ?? []).join('\n')
+    || warn.join() !== (field?.warn_options ?? []).join())
   const list = lines(options)
   const submit = () => {
     if (!label.trim()) return
     const draft = { label: label.trim(), type, options: isList ? list : [], warn_options: isList ? warn.filter((w) => list.includes(w)) : [] }
+    // Saved: close without the unsaved-changes prompt.
     const done = { onSuccess: () => { toast.success(t('customFields.saved')); onOpenChange(false) } }
     if (field) update.mutate({ id: field.id, patch: draft }, done)
     else create.mutate({ ...draft, position }, done)
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <GuardedDialog open={open} onOpenChange={onOpenChange} dirty={dirty}>
       <DialogContent className="max-w-md">
         <DialogHeader><DialogTitle>{field ? field.label : t('customFields.add')}</DialogTitle></DialogHeader>
         <form className="space-y-3" onSubmit={(e) => { e.preventDefault(); submit() }}>
@@ -73,6 +77,6 @@ export function CustomFieldDialog({ field, open, onOpenChange, position }: { fie
           </DialogFooter>
         </form>
       </DialogContent>
-    </Dialog>
+    </GuardedDialog>
   )
 }

@@ -1,8 +1,11 @@
 import type { ReactNode } from 'react'
 import { CredentialsCard } from '@/components/common/credentials-card'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { GuardedDialog } from '@/components/common/guarded-dialog'
 
 interface Props {
+  /** Typed but not yet created: closing asks first. */
+  dirty?: boolean
   open: boolean
   onOpenChange: (open: boolean) => void
   title: string
@@ -13,9 +16,9 @@ interface Props {
 }
 
 /** Dialog shared by every "issue a login" action: company owner, new user, password reset. */
-export function IssueDialog({ open, onOpenChange, title, description, issued, children }: Props) {
+export function IssueDialog({ open, onOpenChange, title, description, issued, dirty = false, children }: Props) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <GuardedDialog open={open} onOpenChange={onOpenChange} dirty={dirty && !issued}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
@@ -23,6 +26,6 @@ export function IssueDialog({ open, onOpenChange, title, description, issued, ch
         </DialogHeader>
         {issued ? <CredentialsCard email={issued.email} password={issued.password} /> : children}
       </DialogContent>
-    </Dialog>
+    </GuardedDialog>
   )
 }

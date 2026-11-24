@@ -1,6 +1,8 @@
-import { useId, type InputHTMLAttributes, type ReactNode } from 'react'
+import { useId, useState, type InputHTMLAttributes, type ReactNode } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { IconButton } from './icon-button'
 import { DatePicker, DateTimePicker } from '@/components/ui/date-picker'
 import { Input, Textarea } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -41,12 +43,25 @@ type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | '
   error?: string
 }
 
-export function TextField({ label, value, onChange, wide, error, className, ...props }: TextFieldProps) {
+export function TextField({ label, value, onChange, wide, error, className, type, ...props }: TextFieldProps) {
   const id = useId()
   const invalid = errorProps(id, error)
+  const { t } = useTranslation()
+  // Every password field can be shown while typing (fewer failed sign-ins, as in Google / Microsoft sign-in).
+  const [shown, setShown] = useState(false)
+  const secret = type === 'password'
   return (
     <Field label={label} wide={wide} error={error} errorId={`${id}-error`}>
-      <Input value={value} onChange={(e) => onChange(e.target.value)} {...props} {...invalid} className={cn(className, invalid.className)} />
+      <div className="relative">
+        <Input value={value} onChange={(e) => onChange(e.target.value)} type={secret && shown ? 'text' : type} {...props} {...invalid}
+          className={cn(secret && 'pr-9', className, invalid.className)} />
+        {secret && (
+          <IconButton label={shown ? t('auth.hidePassword') : t('auth.showPassword')} onClick={() => setShown((v) => !v)} aria-pressed={shown}
+            className="absolute right-0.5 top-1/2 size-8 -translate-y-1/2 text-muted-foreground">
+            {shown ? <EyeOff /> : <Eye />}
+          </IconButton>
+        )}
+      </div>
     </Field>
   )
 }

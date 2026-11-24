@@ -3,7 +3,7 @@ import type { engage as en } from '../en/engage'
 
 export const engage: Locale<typeof en> = {
   activities: {
-    title: 'Faoliyatlar', description: 'Pipeline boʻyicha qoʻngʻiroqlar, uchrashuvlar, emaillar va vazifalar', newActivity: 'Yangi faoliyat',
+    deleteTitle: 'Bu faoliyat oʻchirilsinmi?', title: 'Faoliyatlar', description: 'Pipeline boʻyicha qoʻngʻiroqlar, uchrashuvlar, emaillar va vazifalar', newActivity: 'Yangi faoliyat',
     overdue: 'Muddati oʻtgan', today: 'Bugun', upcoming: 'Kelgusi', done: 'Bajarilgan', all: 'Barchasi', allTypes: 'Barcha turlar',
     emptyOverdue: 'Muddati oʻtgan narsa yoʻq 🎉', empty: 'Bu yerda hech narsa yoʻq', emptyDesc: 'Bitimlar sovib qolmasligi uchun keyingi qadamlarni rejalashtiring.',
     type: 'Turi', due: 'Muddat', when: 'Qachon', subject: 'Mavzu', subjectRequired: 'Mavzu *', details: 'Tafsilotlar',

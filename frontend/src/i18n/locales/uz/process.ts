@@ -15,7 +15,7 @@ export const process = {
     types: { text: 'Matn', number: 'Raqam', select: 'Roʻyxat', multiselect: 'Koʻp tanlovli', date: 'Sana' },
   },
   lostReasons: {
-    title: 'Rad etish sabablari', description: 'Qatʼiy roʻyxat yutish/yutqazish hisobotini aniq qiladi.', add: 'Sabab qoʻshish', placeholder: 'masalan, Narx qimmat',
+    deleteTitle: 'Bu sabab oʻchirilsinmi?', title: 'Rad etish sabablari', description: 'Qatʼiy roʻyxat yutish/yutqazish hisobotini aniq qiladi.', add: 'Sabab qoʻshish', placeholder: 'masalan, Narx qimmat',
     empty: 'Oʻz sabablaringizni qoʻshmaguningizcha standart sabablar ishlatiladi', saved: 'Sabab qoʻshildi', deleted: 'Sabab oʻchirildi',
   },
   importer: {

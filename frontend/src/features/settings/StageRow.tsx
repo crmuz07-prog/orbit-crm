@@ -4,7 +4,10 @@ import { useTranslation } from 'react-i18next'
 import { ArrowDown, ArrowUp, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
+import { ConfirmDialog } from '@/components/common/confirm-dialog'
+import { SaveBar } from '@/components/common/save-bar'
 import { Input } from '@/components/ui/input'
+import { useBeforeUnload } from '@/hooks/useUnsaved'
 import { useRemoveRow, useUpdateRow } from '@/hooks/useData'
 import { useLabels } from '@/hooks/useLabels'
 import { STAGE_COLORS } from '@/lib/constants'
@@ -50,32 +53,41 @@ export function StageRow({ stage, dealCount, onMove, canUp, canDown }: Props) {
   const [maxDays, setMaxDays] = useState(stage.max_days?.toString() ?? '')
   const closed = stage.is_won || stage.is_lost
 
-  const save = () => {
-    const p = Math.max(0, Math.min(100, Number(probability) || 0))
-    if (!name.trim()) return setName(shown)
-    const renamed = name.trim() !== shown
-    if (!renamed && p === stage.probability) return
-    update.mutate({ id: stage.id, patch: { ...(renamed ? { name: name.trim() } : {}), probability: p } })
-    setProbability(String(p))
-    toast.success(t('settings.stageSaved'))
-  }
+  const days = maxDays ? Math.max(1, Math.min(365, Number(maxDays) || 1)) : null
+  const percent = Math.max(0, Math.min(100, Number(probability) || 0))
+  const renamed = !!name.trim() && name.trim() !== shown
+  const dirty = renamed || percent !== stage.probability || (rule.trim() || null) !== stage.description || days !== stage.max_days
+  useBeforeUnload(dirty)
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
-  // The rule text and the day limit drive the board column note and the overdue flag on cards.
-  const saveRule = () => {
-    const days = maxDays ? Math.max(1, Math.min(365, Number(maxDays) || 1)) : null
-    if ((rule.trim() || null) === stage.description && days === stage.max_days) return
-    update.mutate({ id: stage.id, patch: { description: rule.trim() || null, max_days: days } })
+  const cancel = () => {
+    setName(shown)
+    setProbability(String(stage.probability))
+    setRule(stage.description ?? '')
+    setMaxDays(stage.max_days?.toString() ?? '')
+  }
+  // One explicit save for the row: name, probability, the column rule and the day limit (board note + overdue flag).
+  const save = () => {
+    if (!dirty) return
+    update.mutate(
+      { id: stage.id, patch: { ...(renamed ? { name: name.trim() } : {}), probability: percent, description: rule.trim() || null, max_days: days } },
+      { onSuccess: () => toast.success(t('settings.stageSaved')) },
+    )
+    setProbability(String(percent))
     setMaxDays(days?.toString() ?? '')
-    toast.success(t('settings.stageSaved'))
+  }
+  const keys = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') save()
+    if (e.key === 'Escape') cancel()
   }
 
   return (
     <motion.li layout transition={spring} className="space-y-2 px-5 py-3">
       <div className="flex flex-wrap items-center gap-3">
       <ColorPicker stage={stage} />
-      <Input value={name} onChange={(e) => setName(e.target.value)} onBlur={save} onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()} className="h-8 min-w-[160px] flex-1" />
+      <Input value={name} onChange={(e) => setName(e.target.value)} onKeyDown={keys} className="h-8 min-w-[160px] flex-1" />
       <div className="flex items-center gap-1.5">
-        <Input type="number" min={0} max={100} value={probability} disabled={closed} onChange={(e) => setProbability(e.target.value)} onBlur={save} className="h-8 w-20 text-right" />
+        <Input type="number" min={0} max={100} value={probability} disabled={closed} onChange={(e) => setProbability(e.target.value)} onKeyDown={keys} className="h-8 w-20 text-right" />
         <span className="text-xs text-muted-foreground">%</span>
       </div>
       <span className="w-20 text-right text-xs text-muted-foreground">{t('settings.dealCount', { count: dealCount })}</span>
@@ -85,18 +97,21 @@ export function StageRow({ stage, dealCount, onMove, canUp, canDown }: Props) {
         <div className="flex w-[100px] justify-end gap-0.5">
           <IconButton label={t('settings.moveUp')} disabled={!canUp} onClick={() => onMove?.(-1)}><ArrowUp /></IconButton>
           <IconButton label={t('settings.moveDown')} disabled={!canDown} onClick={() => onMove?.(1)}><ArrowDown /></IconButton>
-          <IconButton label={t('settings.deleteStage')} onClick={() => remove.mutate(stage.id)}><Trash2 /></IconButton>
+          <IconButton label={t('settings.deleteStage')} onClick={() => setConfirmDelete(true)}><Trash2 /></IconButton>
         </div>
       )}
       </div>
       {!closed && (
         <div className="flex flex-wrap items-center gap-2 pl-[116px] max-sm:pl-0">
-          <Input value={rule} onChange={(e) => setRule(e.target.value)} onBlur={saveRule} onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
+          <Input value={rule} onChange={(e) => setRule(e.target.value)} onKeyDown={keys}
             placeholder={t('pipelines.rulePlaceholder')} aria-label={t('pipelines.rule')} className="h-8 min-w-[200px] flex-1 text-xs" />
-          <Input type="number" min={1} max={365} value={maxDays} onChange={(e) => setMaxDays(e.target.value)} onBlur={saveRule}
+          <Input type="number" min={1} max={365} value={maxDays} onChange={(e) => setMaxDays(e.target.value)} onKeyDown={keys}
             placeholder={t('pipelines.maxDays')} aria-label={t('pipelines.maxDays')} className="h-8 w-28 text-xs" />
         </div>
       )}
+      {dirty && <SaveBar dirty onSave={save} onCancel={cancel} className="pl-[116px] max-sm:pl-0" />}
+      <ConfirmDialog open={confirmDelete} onOpenChange={setConfirmDelete} title={t('settings.deleteStage')} description={shown}
+        onConfirm={() => remove.mutate(stage.id, { onSuccess: () => toast.success(t('common.deleted')) })} />
     </motion.li>
   )
 }

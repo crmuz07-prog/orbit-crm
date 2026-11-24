@@ -2,7 +2,8 @@ import { createContext, useCallback, useContext, useState, type ReactNode } from
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { GuardedDialog } from '@/components/common/guarded-dialog'
+import { DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { ActivityForm } from '@/features/activities/ActivityForm'
 import { CallForm } from '@/features/calls/CallForm'
 import { CallWrapUpForm } from '@/features/telephony/CallWrapUpForm'
@@ -68,14 +69,14 @@ export function EntityModalProvider({ children }: { children: ReactNode }) {
   return (
     <EntityModalContext.Provider value={show}>
       {children}
-      <Dialog open={open} onOpenChange={(next) => !next && close()}>
+      <GuardedDialog open={open} onOpenChange={(next) => !next && close()}>
         <DialogContent className="max-w-2xl" aria-describedby={undefined}>
           <DialogHeader>
             <DialogTitle>{request && t(`dialog.${editing ? 'edit' : 'new'}.${request.kind}`)}</DialogTitle>
           </DialogHeader>
           {request && <EntityFormFor key={JSON.stringify(request)} request={request} onDone={done} />}
         </DialogContent>
-      </Dialog>
+      </GuardedDialog>
     </EntityModalContext.Provider>
   )
 }

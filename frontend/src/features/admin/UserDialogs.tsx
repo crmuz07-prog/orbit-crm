@@ -48,7 +48,7 @@ export function CreateUserDialog({ open, onOpenChange, companies, create }: { op
   }
 
   return (
-    <IssueDialog open={open} onOpenChange={reset} title={t('admin.newUser')} issued={issued}>
+    <IssueDialog open={open} onOpenChange={reset} title={t('admin.newUser')} issued={issued} dirty={!!(login.full_name.trim() || login.email.trim())}>
       <form id="new-user-form" onSubmit={submit} noValidate className="grid gap-4 sm:grid-cols-2">
         <LoginFields value={login} onChange={setLogin} onEdit={errors.clear}
           errors={{ full_name: errors.message('full_name'), email: errors.message('email'), password: errors.message('password') }} />

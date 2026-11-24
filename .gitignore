@@ -8,4 +8,4 @@ backend/*.db
 __pycache__
 .pytest_cache
 *.tsbuildinfo
-/docs
+docs/

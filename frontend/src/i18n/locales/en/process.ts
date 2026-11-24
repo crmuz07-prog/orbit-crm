@@ -15,7 +15,7 @@ export const process = {
     types: { text: 'Text', number: 'Number', select: 'List', multiselect: 'Multi-list', date: 'Date' },
   },
   lostReasons: {
-    title: 'Loss reasons', description: 'A fixed list keeps the win/loss report countable.', add: 'Add reason', placeholder: 'e.g. Price too high',
+    deleteTitle: 'Remove this reason?', title: 'Loss reasons', description: 'A fixed list keeps the win/loss report countable.', add: 'Add reason', placeholder: 'e.g. Price too high',
     empty: 'Built-in reasons are used until you add your own', saved: 'Reason added', deleted: 'Reason removed',
   },
   importer: {

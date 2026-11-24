@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/025-som-icons-dry.md](docs/prompts/025-som-icons-dry.md)
+Latest: [docs/prompts/026-explicit-save-password-reveal.md](docs/prompts/026-explicit-save-password-reveal.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -30,3 +30,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [023 — CRM parity on the Paket Makon process, compact UI, Excel import](docs/prompts/023-paket-makon-crm-parity.md)
 - [024 — Form validation and auth: inline, translated, consistent with the API](docs/prompts/024-auth-validation.md)
 - [025 — So'm by default, icons with tooltips, no decorative clutter, DRY UI](docs/prompts/025-som-icons-dry.md)
+- [026 — Explicit save, no silent loss, confirmed deletes, password reveal](docs/prompts/026-explicit-save-password-reveal.md)

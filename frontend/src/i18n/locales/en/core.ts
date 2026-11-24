@@ -35,6 +35,7 @@ export const core = {
       stalled: 'No decision / stalled', features: 'Missing features', timing: 'Bad timing',
     },
   },
+  unsaved: { title: 'Discard unsaved changes?', description: 'What you changed here has not been saved.', discard: 'Discard changes', keep: 'Keep editing', badge: 'Not saved', save: 'Save', cancel: 'Cancel' },
   validation: {
     rules: { required: 'Fill in this field', email: 'Enter a valid email, e.g. name@company.uz', too_short: 'At least {{min}} characters', too_long: 'At most {{max}} characters', mismatch: 'Passwords do not match', invalid: 'Check this value', wrong_password: 'The current password is incorrect', range: 'Enter a whole number from {{min}} to {{max}}', min_value: 'Enter a whole number, at least {{min}}' },
     dealName: 'Deal name is required', stage: 'Pick a pipeline stage', companyName: 'Company name is required',
@@ -63,7 +64,7 @@ export const core = {
     resetConfirm: 'Reset demo workspace?', resetConfirmDesc: 'All changes in the demo workspace will be lost.', resetDone: 'Demo workspace reset',
   },
   auth: {
-    waking: 'Waking up the server… free hosting can take up to a minute.',
+    showPassword: 'Show password', hidePassword: 'Hide password', waking: 'Waking up the server… free hosting can take up to a minute.',
     welcome: 'Welcome back', create: 'Create your workspace', signInSub: 'Sign in to your sales workspace.',
     signUpSub: 'Start managing your B2B pipeline in minutes.', demo: 'Explore the demo workspace', or: 'or',
     fullName: 'Full name', email: 'Work email', password: 'Password', signIn: 'Sign in', signUp: 'Create account',

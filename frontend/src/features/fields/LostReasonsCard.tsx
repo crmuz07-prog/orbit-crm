@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Plus, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { ConfirmDialog } from '@/components/common/confirm-dialog'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -15,6 +16,7 @@ export function LostReasonsCard() {
   const create = useCreateRow('lost_reasons')
   const remove = useRemoveRow('lost_reasons')
   const [name, setName] = useState('')
+  const [deleting, setDeleting] = useState<{ id: string; name: string } | null>(null)
   const add = () => {
     const value = name.trim()
     if (!value || reasons.some((r) => r.name.toLowerCase() === value.toLowerCase())) return
@@ -31,7 +33,7 @@ export function LostReasonsCard() {
               <span key={r.id} className="inline-flex items-center gap-1 rounded-md bg-rose-500/10 py-0.5 pl-2 pr-1 text-xs text-rose-700 dark:text-rose-300">
                 {r.name}
                 <button type="button" aria-label={t('common.delete')} className="rounded p-0.5 hover:bg-rose-500/15"
-                  onClick={() => remove.mutate(r.id, { onSuccess: () => toast.success(t('lostReasons.deleted')) })}><X className="size-3" /></button>
+                  onClick={() => setDeleting(r)}><X className="size-3" /></button>
               </span>
             ))}
           </div>
@@ -41,6 +43,8 @@ export function LostReasonsCard() {
           <Button size="sm" type="submit" variant="outline" disabled={!name.trim()}><Plus /> {t('lostReasons.add')}</Button>
         </form>
       </CardContent>
+      <ConfirmDialog open={!!deleting} onOpenChange={(o) => !o && setDeleting(null)} title={t('lostReasons.deleteTitle')} description={deleting?.name ?? ''}
+        onConfirm={() => deleting && remove.mutate(deleting.id, { onSuccess: () => { toast.success(t('lostReasons.deleted')); setDeleting(null) } })} />
     </Card>
   )
 }

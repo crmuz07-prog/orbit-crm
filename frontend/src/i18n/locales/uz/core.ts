@@ -38,6 +38,7 @@ export const core: Locale<typeof en> = {
       stalled: 'Qaror qabul qilinmadi', features: 'Funksiyalar yetishmaydi', timing: 'Vaqt notoʻgʻri',
     },
   },
+  unsaved: { title: 'Saqlanmagan oʻzgarishlar oʻchirilsinmi?', description: 'Bu yerda oʻzgartirganlaringiz hali saqlanmagan.', discard: 'Oʻzgarishlarni bekor qilish', keep: 'Tahrirni davom ettirish', badge: 'Saqlanmagan', save: 'Saqlash', cancel: 'Bekor qilish' },
   validation: {
     rules: { required: 'Bu maydonni toʻldiring', email: 'Toʻgʻri email kiriting, masalan name@kompaniya.uz', too_short: 'Kamida {{min}} ta belgi', too_long: 'Koʻpi bilan {{max}} ta belgi', mismatch: 'Parollar mos kelmadi', invalid: 'Qiymatni tekshiring', wrong_password: 'Joriy parol notoʻgʻri', range: '{{min}} dan {{max}} gacha butun son kiriting', min_value: 'Kamida {{min}} boʻlgan butun son kiriting' },
     dealName: 'Bitim nomi majburiy', stage: 'Pipeline bosqichini tanlang', companyName: 'Kompaniya nomi majburiy',
@@ -66,7 +67,7 @@ export const core: Locale<typeof en> = {
     resetConfirm: 'Demo ish maydoni tiklansinmi?', resetConfirmDesc: 'Demo ish maydonidagi barcha oʻzgarishlar yoʻqoladi.', resetDone: 'Demo ish maydoni tiklandi',
   },
   auth: {
-    waking: 'Server ishga tushmoqda… bepul hostingda bu bir daqiqagacha choʻzilishi mumkin.',
+    showPassword: 'Parolni koʻrsatish', hidePassword: 'Parolni yashirish', waking: 'Server ishga tushmoqda… bepul hostingda bu bir daqiqagacha choʻzilishi mumkin.',
     welcome: 'Xush kelibsiz', create: 'Ish maydoningizni yarating', signInSub: 'Savdo ish maydoningizga kiring.',
     signUpSub: 'B2B pipelineʼingizni bir necha daqiqada boshqarishni boshlang.', demo: 'Demo ish maydonini koʻrish', or: 'yoki',
     fullName: 'Toʻliq ism', email: 'Ish emaili', password: 'Parol', signIn: 'Kirish', signUp: 'Akkaunt yaratish',

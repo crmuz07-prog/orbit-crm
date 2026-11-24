@@ -4,7 +4,9 @@ import { TextField } from '@/components/common/form-fields'
 import { useFormErrors } from '@/hooks/useFormErrors'
 import { rules } from '@/lib/validation'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { GuardedDialog } from '@/components/common/guarded-dialog'
+import { useReportUnsaved } from '@/hooks/useUnsaved'
 import { useLabels } from '@/hooks/useLabels'
 import { ACTIONS, MODULES, type AccessRole, type Permissions } from '@/lib/types'
 import { PermissionMatrix } from './PermissionMatrix'
@@ -22,6 +24,7 @@ function RoleForm({ role, actions, onDone }: { role: AccessRole | null; actions:
   const [name, setName] = useState(shown)
   const [permissions, setPermissions] = useState<Permissions>(role?.permissions ?? START)
   const busy = actions.createRole.isPending || actions.updateRole.isPending
+  useReportUnsaved(name !== shown || JSON.stringify(permissions) !== JSON.stringify(role?.permissions ?? START))
 
   const errors = useFormErrors<'name'>('role-form')
   const submit = (e: FormEvent) => {
@@ -49,11 +52,11 @@ function RoleForm({ role, actions, onDone }: { role: AccessRole | null; actions:
 export function RoleDialog({ open, role, actions, onClose }: { open: boolean; role: AccessRole | null; actions: AccessActions; onClose: () => void }) {
   const { t } = useTranslation()
   return (
-    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+    <GuardedDialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-3xl">
         <DialogHeader><DialogTitle>{role ? t('access.editRole') : t('access.newRole')}</DialogTitle></DialogHeader>
         {open && <RoleForm key={role?.id ?? 'new'} role={role} actions={actions} onDone={onClose} />}
       </DialogContent>
-    </Dialog>
+    </GuardedDialog>
   )
 }

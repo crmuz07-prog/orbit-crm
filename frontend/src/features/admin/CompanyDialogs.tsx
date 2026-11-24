@@ -33,7 +33,7 @@ export function CreateCompanyDialog({ open, onOpenChange, create }: { open: bool
   }
 
   return (
-    <IssueDialog open={open} onOpenChange={reset} title={t('admin.newCompany')} issued={issued}>
+    <IssueDialog open={open} onOpenChange={reset} title={t('admin.newCompany')} issued={issued} dirty={!!(name.trim() || owner.full_name.trim() || owner.email.trim())}>
       <form id="new-company-form" onSubmit={submit} noValidate className="grid gap-4 sm:grid-cols-2">
         <TextField wide name="name" label={t('admin.companyName')} autoFocus value={name} onChange={errors.bind('name', setName)} error={errors.message('name')} />
         <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground sm:col-span-2">{t('admin.owner')}</p>

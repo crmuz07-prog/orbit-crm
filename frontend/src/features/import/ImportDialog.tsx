@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { SelectField } from '@/components/common/form-fields'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { GuardedDialog } from '@/components/common/guarded-dialog'
 import { useCustomFields } from '@/features/fields/useFields'
 import { useCurrentPipeline } from '@/hooks/usePipelines'
 import { importApi } from '@/lib/api'
@@ -57,7 +58,7 @@ export function ImportDialog({ open, onOpenChange }: { open: boolean; onOpenChan
   const close = (o: boolean) => { if (!o) reset(); onOpenChange(o) }
 
   return (
-    <Dialog open={open} onOpenChange={close}>
+    <GuardedDialog open={open} onOpenChange={close} dirty={!!preview && !result}>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle>{t('importer.title')}</DialogTitle>
@@ -94,6 +95,6 @@ export function ImportDialog({ open, onOpenChange }: { open: boolean; onOpenChan
           )}
         </DialogFooter>
       </DialogContent>
-    </Dialog>
+    </GuardedDialog>
   )
 }

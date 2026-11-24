@@ -1,6 +1,8 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BellRing, Pencil, Pin, PinOff, Trash2 } from 'lucide-react'
+import { ConfirmDialog } from '@/components/common/confirm-dialog'
+import { IconButton } from '@/components/common/icon-button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { CallDetails } from '@/features/calls/CallDetails'
 import type { Activity } from '@/lib/types'
@@ -8,7 +10,6 @@ import { cn, relativeDay } from '@/lib/utils'
 import { ActivityIcon } from './ActivityIcon'
 import { useSubject } from './useSubject'
 import { useActivityActions } from './useActivityActions'
-import { IconButton } from '@/components/common/icon-button'
 
 interface Props {
   activity: Activity
@@ -19,13 +20,16 @@ interface Props {
 function RowActions({ activity: a }: { activity: Activity }) {
   const { t } = useTranslation()
   const actions = useActivityActions()
+  const subject = useSubject()
+  const [confirm, setConfirm] = useState(false)
   return (
     <div className="flex gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
       {a.type === 'note' && (
         <IconButton label={t('activities.pin')} onClick={() => actions.togglePin(a)}>{a.pinned ? <PinOff /> : <Pin />}</IconButton>
       )}
       <IconButton label={t('common.edit')} onClick={() => actions.edit(a)}><Pencil /></IconButton>
-      <IconButton label={t('common.delete')} onClick={() => actions.remove(a)}><Trash2 /></IconButton>
+      <IconButton label={t('common.delete')} onClick={() => setConfirm(true)}><Trash2 /></IconButton>
+      <ConfirmDialog open={confirm} onOpenChange={setConfirm} title={t('activities.deleteTitle')} description={subject(a)} onConfirm={() => actions.remove(a)} />
     </div>
   )
 }
