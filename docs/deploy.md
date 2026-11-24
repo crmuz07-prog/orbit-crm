@@ -53,10 +53,9 @@ docker compose -f infra/asterisk/docker-compose.yml up -d
 ```
 
 ## Serverni uyg'oq saqlash
-`.github/workflows/keep-warm.yml` dushanba–shanba 08:00–20:00 (Toshkent) har 12 daqiqada `/api/health`ni chaqiradi —
-ish vaqtida birinchi ochilish sekinlashmaydi. Repo yopiq bo'lgani uchun (oyiga 2000 bepul Actions daqiqasi) 24/7 emas;
-kechasi ham tez bo'lishi uchun bepul UptimeRobot (5 daqiqalik monitor) qo'shish mumkin. Brauzer oxirgi sessiya va
-ma'lumotlarni saqlaydi (24 soat, chiqishda o'chadi), shuning uchun qayta ochilganda sahifa darhol ko'rinadi.
+`.github/workflows/keep-warm.yml` har 10 daqiqada (24/7) `/api/health`ni chaqiradi, shuning uchun Render bepul serveri
+uxlamaydi. Repo public — Actions daqiqalari bepul. Brauzer oxirgi sessiya va ma'lumotlarni saqlaydi (24 soat, chiqishda
+o'chadi), shuning uchun qayta ochilganda sahifa darhol ko'rinadi.
 
 ## Bepul tarif cheklovlari
 - Render free backend ~15 daqiqa ishlatilmasa uxlaydi; birinchi so'rov ~50 soniya kutadi
