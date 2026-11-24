@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SelectBox, type Option } from '@/components/common/form-fields'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Input, Textarea } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 
@@ -34,7 +35,9 @@ export function InlineField({ label, raw, display, editor, onSave, readOnly }: P
 
   const control = editor.kind === 'select'
     ? <SelectBox value={draft} onChange={(v) => commit(v)} options={editor.options} emptyLabel={editor.emptyLabel} className="h-8" />
-    : editor.kind === 'textarea'
+    : editor.kind === 'date'
+      ? <DatePicker autoFocus value={draft} onChange={(v) => commit(v)} onDismiss={() => setEditing(false)} aria-label={label} />
+      : editor.kind === 'textarea'
       ? <Textarea autoFocus value={draft} onChange={(e) => setDraft(e.target.value)} onBlur={() => commit()} onKeyDown={keys} className="min-h-[72px] text-sm" />
       : <Input autoFocus type={editor.kind} value={draft} onChange={(e) => setDraft(e.target.value)} onBlur={() => commit()} onKeyDown={keys} className="h-8" />
 

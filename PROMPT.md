@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/021-instagram-leads.md](docs/prompts/021-instagram-leads.md)
+Latest: [docs/prompts/022-erp1-date-pickers.md](docs/prompts/022-erp1-date-pickers.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -26,3 +26,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [019 — Blank page after quick navigation (route transition)](docs/prompts/019-blank-page-after-navigation.md)
 - [020 — No full-screen skeleton on first open](docs/prompts/020-no-skeleton-on-first-open.md)
 - [021 — Instagram leads (Direct + lead ads) with analytics](docs/prompts/021-instagram-leads.md)
+- [022 — Calendar date fields from the erp1 template](docs/prompts/022-erp1-date-pickers.md)

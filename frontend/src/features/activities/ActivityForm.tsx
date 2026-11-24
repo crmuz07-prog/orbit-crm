@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { FormLayout, SelectField, TextareaField, TextField } from '@/components/common/form-fields'
+import { DateTimeField, FormLayout, SelectField, TextField, TextareaField } from '@/components/common/form-fields'
 import { useCrm } from '@/hooks/useData'
 import { useEntityForm } from '@/hooks/useEntityForm'
 import { ACTIVITY_TYPES } from '@/lib/constants'
@@ -53,7 +53,7 @@ export function ActivityForm({ initial, onDone }: Props) {
   return (
     <FormLayout onSubmit={submit} onCancel={() => onDone()} submitLabel={isEdit ? t('common.saveChanges') : t('dialog.new.activity')} busy={busy}>
       <SelectField label={t('activities.type')} value={form.type} onChange={(v) => set('type', v as ActivityType)} options={ACTIVITY_TYPES.map((v) => ({ value: v, label: t(`enums.activity.${v}`) }))} />
-      <TextField label={t('activities.due')} type="datetime-local" disabled={form.type === 'note'} value={form.due_at} onChange={(v) => set('due_at', v)} />
+      <DateTimeField label={t('activities.due')} disabled={form.type === 'note'} value={form.due_at} onChange={(v) => set('due_at', v)} />
       <TextField wide autoFocus label={t('activities.subjectRequired')} value={form.subject} onChange={(v) => set('subject', v)} placeholder={t('activities.subjectPlaceholder')} />
       <TextareaField label={t('activities.details')} value={form.body} onChange={(v) => set('body', v)} />
       {form.type !== 'note' && <ReminderSelect label={t('activities.remind')} value={form.reminder} onChange={(v) => set('reminder', v)} />}

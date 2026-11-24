@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react'
 import { addDays, format, setHours, startOfHour } from 'date-fns'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { TextField } from '@/components/common/form-fields'
+import { DateTimeField, TextField } from '@/components/common/form-fields'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Textarea } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -56,7 +56,7 @@ export function CallNotesFields({ notes, patch }: Pick<ReturnType<typeof useCall
         <AnimatePresence initial={false}>
           {notes.followUp && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="grid gap-3 overflow-hidden sm:grid-cols-2">
-              <TextField label={t('calls.followUpDue')} type="datetime-local" value={notes.followUpDue} onChange={(v) => patch({ followUpDue: v })} />
+              <DateTimeField label={t('calls.followUpDue')} value={notes.followUpDue} onChange={(v) => patch({ followUpDue: v })} />
               <ReminderSelect label={t('activities.remind')} value={notes.reminder} onChange={(reminder) => patch({ reminder })} />
             </motion.div>
           )}

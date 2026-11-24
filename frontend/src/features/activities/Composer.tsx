@@ -5,6 +5,7 @@ import { Phone } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { DateTimePicker } from '@/components/ui/date-picker'
 import { Input, Textarea } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
@@ -85,7 +86,7 @@ export function Composer({ links }: { links: Links }) {
           {isNote ? <span /> : (
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               {type === 'task' ? t('activities.due') : t('activities.when')}
-              <Input type="datetime-local" value={due} onChange={(e) => setDue(e.target.value)} className="h-8 w-auto text-xs" />
+              <DateTimePicker value={due} onChange={setDue} className="w-72" />
               {type !== 'email' && <ReminderSelect value={reminder} onChange={setReminder} className="h-8 w-44 text-xs" />}
             </div>
           )}

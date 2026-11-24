@@ -19,5 +19,6 @@ export const labels: Locale<typeof en> = {
     companyName: 'Ipak Yoʻli MChJ', domain: 'ipakyoli.uz', country: 'Oʻzbekiston', city: 'Toshkent', jobTitle: 'Xaridlar boʻlimi boshligʻi',
     dealName: 'Ipak Yoʻli — yillik litsenziya', personName: 'Aziz Karimov', email: 'siz@kompaniya.uz',
   },
+  datePicker: { placeholder: 'Sanani tanlang', clear: 'Sanani tozalash', time: 'Vaqt', hour: 'Soat', minute: 'Daq' },
   misc: { autoCall: '{{direction}} qoʻngʻiroq · {{name}}', callBack: '{{phone}} ga qayta qoʻngʻiroq qilish', demo: 'Demo', close: 'Yopish' },
 }

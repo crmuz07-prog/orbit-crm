@@ -19,5 +19,6 @@ export const labels: Locale<typeof en> = {
     companyName: 'ООО «Шёлковый путь»', domain: 'silkway.uz', country: 'Узбекистан', city: 'Ташкент', jobTitle: 'Руководитель отдела закупок',
     dealName: 'Шёлковый путь — годовая лицензия', personName: 'Азиз Каримов', email: 'vy@kompaniya.uz',
   },
+  datePicker: { placeholder: 'Выберите дату', clear: 'Очистить дату', time: 'Время', hour: 'Час', minute: 'Мин' },
   misc: { autoCall: '{{direction}} звонок · {{name}}', callBack: 'Перезвонить {{phone}}', demo: 'Демо', close: 'Закрыть' },
 }

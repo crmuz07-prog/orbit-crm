@@ -1,6 +1,7 @@
 import type { InputHTMLAttributes, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { DatePicker, DateTimePicker } from '@/components/ui/date-picker'
 import { Input, Textarea } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -33,6 +34,24 @@ export function TextField({ label, value, onChange, wide, ...props }: TextFieldP
   return (
     <Field label={label} wide={wide}>
       <Input value={value} onChange={(e) => onChange(e.target.value)} {...props} />
+    </Field>
+  )
+}
+
+/** Calendar date field (erp1 template); "" = no date. */
+export function DateField({ label, value, onChange, wide, clearable = true, disabled }: { label: string; value: string; onChange: (v: string) => void; wide?: boolean; clearable?: boolean; disabled?: boolean }) {
+  return (
+    <Field label={label} wide={wide}>
+      <DatePicker value={value} onChange={onChange} clearable={clearable} disabled={disabled} aria-label={label} />
+    </Field>
+  )
+}
+
+/** Date + time field ("YYYY-MM-DDTHH:mm"). */
+export function DateTimeField({ label, value, onChange, wide, disabled }: { label: string; value: string; onChange: (v: string) => void; wide?: boolean; disabled?: boolean }) {
+  return (
+    <Field label={label} wide={wide}>
+      <DateTimePicker value={value} onChange={onChange} disabled={disabled} />
     </Field>
   )
 }

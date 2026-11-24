@@ -16,5 +16,6 @@ export const labels = {
     companyName: 'Acme Inc.', domain: 'acme.com', country: 'Germany', city: 'Berlin', jobTitle: 'Head of Procurement',
     dealName: 'Acme — Enterprise licence', personName: 'Alex Morgan', email: 'you@company.com',
   },
+  datePicker: { placeholder: 'Pick a date', clear: 'Clear date', time: 'Time', hour: 'Hour', minute: 'Min' },
   misc: { autoCall: '{{direction}} call · {{name}}', callBack: 'Call back {{phone}}', demo: 'Demo', close: 'Close' },
 }

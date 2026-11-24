@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { FormLayout, SelectField, TextField, toOptions } from '@/components/common/form-fields'
+import { DateField, FormLayout, SelectField, TextField, toOptions } from '@/components/common/form-fields'
 import { isNew, OwnerField, useMyId } from '@/features/team/OwnerField'
 import { useCrm } from '@/hooks/useData'
 import { useEntityForm } from '@/hooks/useEntityForm'
@@ -82,7 +82,7 @@ export function DealForm({ initial, onDone }: Props) {
         options={companies.map((c) => ({ value: c.id, label: c.name }))}
       />
       <SelectField label={t('fields.primaryContact')} emptyLabel={t('fields.noContact')} value={form.contact_id} onChange={(v) => set('contact_id', v)} options={people.map((c) => ({ value: c.id, label: fullName(c) }))} />
-      <TextField label={t('fields.closeDate')} type="date" value={form.expected_close_date} onChange={(v) => set('expected_close_date', v)} />
+      <DateField label={t('fields.closeDate')} value={form.expected_close_date} onChange={(v) => set('expected_close_date', v)} />
       <SelectField label={t('fields.source')} emptyLabel="—" value={form.source} onChange={(v) => set('source', v)} options={labels.sourceOptions} />
       <OwnerField module="deals" value={form.owner_id} onChange={(v) => set('owner_id', v)} />
     </FormLayout>
