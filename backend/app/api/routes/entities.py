@@ -11,20 +11,20 @@ SPECS = [
         order_by=Stage.position, before_delete=guard_stage_delete, write_role="admin",
     ),
     EntitySpec(
-        path="companies", model=Company, create=s.CompanyIn, patch=s.CompanyPatch, read=s.CompanyOut,
+        path="companies", module="companies", model=Company, create=s.CompanyIn, patch=s.CompanyPatch, read=s.CompanyOut,
         order_by=Company.name,
     ),
     EntitySpec(
-        path="contacts", model=Contact, create=s.ContactIn, patch=s.ContactPatch, read=s.ContactOut,
+        path="contacts", module="contacts", model=Contact, create=s.ContactIn, patch=s.ContactPatch, read=s.ContactOut,
         order_by=Contact.first_name, references={"company_id": Company},
     ),
     EntitySpec(
-        path="deals", model=Deal, create=s.DealIn, patch=s.DealPatch, read=s.DealOut,
+        path="deals", module="deals", model=Deal, create=s.DealIn, patch=s.DealPatch, read=s.DealOut,
         order_by=Deal.created_at.desc(), before_save=apply_deal_stage_rules,
         references={"company_id": Company, "contact_id": Contact, "stage_id": Stage},
     ),
     EntitySpec(
-        path="activities", model=Activity, create=s.ActivityIn, patch=s.ActivityPatch, read=s.ActivityOut,
+        path="activities", module="activities", model=Activity, create=s.ActivityIn, patch=s.ActivityPatch, read=s.ActivityOut,
         order_by=Activity.created_at.desc(),
         references={"deal_id": Deal, "company_id": Company, "contact_id": Contact},
     ),

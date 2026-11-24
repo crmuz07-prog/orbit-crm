@@ -5,12 +5,13 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { AddMemberForm } from './AddMemberForm'
 import { MemberRow } from './MemberRow'
 import { useTeam } from './useTeam'
+import type { AccessOverview } from '@/lib/types'
 
 /** Settings → Team: members with roles; admins issue logins (HubSpot / ERP-style user management). */
-export function TeamCard() {
+export function TeamCard({ access }: { access?: AccessOverview }) {
   const { t } = useTranslation()
   const { session } = useAuth()
-  const { team, add, changeRole, remove, setPassword } = useTeam()
+  const { team, add, update, remove, setPassword } = useTeam()
   if (!session?.workspace || !session.role) return null
   if (!team) return <Skeleton className="h-64 rounded-2xl" />
 
@@ -25,7 +26,7 @@ export function TeamCard() {
       )}
       <ul className="divide-y divide-foreground/[0.06]">
         {team.members.map((m) => (
-          <MemberRow key={m.user_id} member={m} isSelf={m.user_id === session.user.id} canManage={team.can_manage} actorRole={session.role!} actions={{ changeRole, remove, setPassword }} />
+          <MemberRow key={m.user_id} member={m} isSelf={m.user_id === session.user.id} canManage={team.can_manage} actorRole={session.role!} actions={{ update, remove, setPassword }} access={access} />
         ))}
       </ul>
       {hint && <p className="px-5 py-3 text-xs text-muted-foreground">{hint}</p>}

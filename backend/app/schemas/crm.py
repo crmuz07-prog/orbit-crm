@@ -25,6 +25,7 @@ class StageIn(Schema):
 
 
 class CompanyIn(Schema):
+    owner_id: str | None = None
     name: str = Name
     domain: str | None = None
     industry: str | None = None
@@ -37,6 +38,7 @@ class CompanyIn(Schema):
 
 
 class ContactIn(Schema):
+    owner_id: str | None = None
     company_id: str | None = None
     first_name: str = Field(min_length=1, max_length=80)
     last_name: str = ""
@@ -47,6 +49,7 @@ class ContactIn(Schema):
 
 
 class DealIn(Schema):
+    owner_id: str | None = None
     title: str = Name
     company_id: str | None = None
     contact_id: str | None = None
@@ -60,6 +63,7 @@ class DealIn(Schema):
 
 
 class ActivityIn(Schema):
+    owner_id: str | None = None
     type: ActivityType
     subject: str = Name
     body: str | None = None

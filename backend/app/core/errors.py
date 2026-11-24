@@ -23,3 +23,7 @@ class Unauthorized(DomainError):
 
 class Forbidden(DomainError):
     status_code = 403
+
+
+class TooManyRequests(DomainError):
+    status_code = 429

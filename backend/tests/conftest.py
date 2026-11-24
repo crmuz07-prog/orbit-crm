@@ -1,8 +1,13 @@
 import os
+import tempfile
 from collections.abc import Callable, Iterator
 
-# Tests must not depend on a developer's local .env (environment variables win over it).
-os.environ.update(REGISTRATION_ENABLED="true", DEMO_ENABLED="true", SUPERADMIN_EMAIL="", SUPERADMIN_PASSWORD="")
+# Tests must not depend on a developer's local .env (environment variables win over it), and the app's start-up
+# migration must never touch the developer's database.
+os.environ.update(
+    REGISTRATION_ENABLED="true", DEMO_ENABLED="true", SUPERADMIN_EMAIL="", SUPERADMIN_PASSWORD="",
+    DATABASE_URL=f"sqlite:///{tempfile.mkdtemp()}/startup.db",
+)
 
 import pytest
 from fastapi.testclient import TestClient

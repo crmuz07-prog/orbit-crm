@@ -6,21 +6,24 @@ import { PageSkeleton } from '@/components/common/states'
 import { AdminShell } from '@/components/layout/AdminShell'
 import { AppShell } from '@/components/layout/AppShell'
 import { PasswordGate } from '@/features/auth/PasswordGate'
+import { RequireView } from '@/features/auth/RequireView'
+import type { Module } from '@/lib/types'
 import { EntityModalProvider } from '@/features/entity-modal/EntityModalProvider'
 import LoginPage from '@/pages/Login'
 
 const page = (load: () => Promise<{ default: React.ComponentType }>) => lazy(load)
 
-const APP_ROUTES: [path: string, Component: React.ComponentType][] = [
-  ['deals', page(() => import('@/pages/Deals'))],
-  ['deals/:id', page(() => import('@/pages/DealDetail'))],
-  ['companies', page(() => import('@/pages/Companies'))],
-  ['companies/:id', page(() => import('@/pages/CompanyDetail'))],
-  ['contacts', page(() => import('@/pages/Contacts'))],
-  ['contacts/:id', page(() => import('@/pages/ContactDetail'))],
-  ['calls', page(() => import('@/pages/Calls'))],
-  ['activities', page(() => import('@/pages/Activities'))],
-  ['settings', page(() => import('@/pages/Settings'))],
+// The module decides who may open the page (null: every member).
+const APP_ROUTES: [path: string, Component: React.ComponentType, module: Module | null][] = [
+  ['deals', page(() => import('@/pages/Deals')), 'deals'],
+  ['deals/:id', page(() => import('@/pages/DealDetail')), 'deals'],
+  ['companies', page(() => import('@/pages/Companies')), 'companies'],
+  ['companies/:id', page(() => import('@/pages/CompanyDetail')), 'companies'],
+  ['contacts', page(() => import('@/pages/Contacts')), 'contacts'],
+  ['contacts/:id', page(() => import('@/pages/ContactDetail')), 'contacts'],
+  ['calls', page(() => import('@/pages/Calls')), 'activities'],
+  ['activities', page(() => import('@/pages/Activities')), 'activities'],
+  ['settings', page(() => import('@/pages/Settings')), null],
 ]
 const Admin = page(() => import('@/pages/Admin'))
 const Dashboard = page(() => import('@/pages/Dashboard'))
@@ -80,8 +83,10 @@ export default function App() {
           {linkRoutes}
           <Route path="/login" element={<Navigate to="/" replace />} />
           <Route element={<AppShell />}>
-            <Route index element={<Dashboard />} />
-            {APP_ROUTES.map(([path, Component]) => <Route key={path} path={path} element={<Component />} />)}
+            <Route index element={<RequireView module="reports"><Dashboard /></RequireView>} />
+            {APP_ROUTES.map(([path, Component, module]) => (
+              <Route key={path} path={path} element={<RequireView module={module}><Component /></RequireView>} />
+            ))}
             {session.user.is_superadmin && <Route path="admin" element={<Admin />} />}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>

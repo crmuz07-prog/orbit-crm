@@ -5,13 +5,17 @@ import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { api } from '@/lib/api'
 import { duration, percent } from '@/lib/utils'
+import { useAccess } from '@/hooks/useAccess'
 import { CALL_QUERIES } from './useLogCall'
 
 const count = (n: number) => String(Math.round(n))
 
 export function CallStatsStrip() {
   const { t } = useTranslation()
-  const { data } = useQuery({ queryKey: CALL_QUERIES.stats, queryFn: api.callStats })
+  const { can } = useAccess()
+  const allowed = can('reports', 'view')
+  const { data } = useQuery({ queryKey: CALL_QUERIES.stats, queryFn: api.callStats, enabled: allowed })
+  if (!allowed) return null
   if (!data) return <Skeleton className="mb-5 h-[76px] rounded-2xl" />
 
   const stats: [string, number, (n: number) => string][] = [

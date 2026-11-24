@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { FormLayout, SelectField, TextareaField, TextField, toOptions } from '@/components/common/form-fields'
+import { isNew, OwnerField, useMyId } from '@/features/team/OwnerField'
 import { useEntityForm } from '@/hooks/useEntityForm'
 import { EMPLOYEE_RANGES, INDUSTRIES, LIFECYCLES } from '@/lib/constants'
 import type { Company, Lifecycle } from '@/lib/types'
@@ -9,12 +10,14 @@ type Props = { initial?: Partial<Company>; onDone: (row?: Company) => void }
 
 export function CompanyForm({ initial, onDone }: Props) {
   const { t } = useTranslation()
+  const myId = useMyId()
   const { form, set, submit, isEdit, busy } = useEntityForm({
     table: 'companies',
     label: t('entity.company'),
     initial,
     onDone,
     defaults: (c) => ({
+      owner_id: c?.owner_id ?? (isNew(c) ? myId : ''),
       name: c?.name ?? '',
       domain: c?.domain ?? '',
       industry: c?.industry ?? '',
@@ -28,6 +31,7 @@ export function CompanyForm({ initial, onDone }: Props) {
     toPayload: (f) => {
       if (!f.name.trim()) return t('validation.companyName')
       return {
+        owner_id: f.owner_id || null,
         name: f.name.trim(),
         domain: blankToNull(f.domain.replace(/^https?:\/\//, '')),
         industry: blankToNull(f.industry),
@@ -52,6 +56,7 @@ export function CompanyForm({ initial, onDone }: Props) {
       <TextField label={t('fields.city')} value={form.city} onChange={(v) => set('city', v)} placeholder="Berlin" />
       <TextField wide label={t('fields.revenue')} type="number" min={0} value={form.annual_revenue} onChange={(v) => set('annual_revenue', v)} />
       <TextareaField label={t('fields.description')} value={form.description} onChange={(v) => set('description', v)} />
+      <OwnerField module="companies" value={form.owner_id} onChange={(v) => set('owner_id', v)} />
     </FormLayout>
   )
 }

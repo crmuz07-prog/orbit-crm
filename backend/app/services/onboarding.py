@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 
 from app.models import Membership, Stage, User, Workspace
+from app.models.base import TenantMixin
+from app.services.permissions import seed_roles
 
 # (name, probability, color, is_won, is_lost) — a classic B2B pipeline.
 DEFAULT_STAGES: list[tuple[str, int, str, bool, bool]] = [
@@ -21,11 +23,16 @@ def default_stages(workspace_id: str) -> list[Stage]:
     ]
 
 
+def workspace_defaults(workspace_id: str) -> list[TenantMixin]:
+    """What every new company starts with: the pipeline and the built-in access roles."""
+    return [*default_stages(workspace_id), *seed_roles(workspace_id)]
+
+
 def create_workspace(db: Session, owner: User, name: str, is_demo: bool = False) -> Workspace:
     workspace = Workspace(name=name, is_demo=is_demo)
     db.add(workspace)
     db.flush()
     db.add(Membership(workspace_id=workspace.id, user_id=owner.id, role="owner"))
-    db.add_all(default_stages(workspace.id))
+    db.add_all(workspace_defaults(workspace.id))
     db.commit()
     return workspace

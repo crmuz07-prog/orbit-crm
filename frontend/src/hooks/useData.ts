@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 import { api, type Draft } from '@/lib/api'
 import type { TableMap, TableName } from '@/lib/types'
 import { byId, errorMessage } from '@/lib/utils'
+import { TABLE_MODULE, useAccess } from './useAccess'
 
 const DASHBOARD = ['dashboard'] as const
 
@@ -15,9 +16,16 @@ const refresh = (qc: QueryClient, table: TableName) =>
 
 const notifyError = (e: unknown) => toast.error(errorMessage(e))
 
-export const useRows = <K extends TableName>(table: K) => useQuery({ queryKey: [table], queryFn: () => api.list(table) })
+/** Tables the caller may not view are not requested at all (they read as empty). */
+export function useRows<K extends TableName>(table: K) {
+  const { can } = useAccess()
+  return useQuery({ queryKey: [table], queryFn: () => api.list(table), enabled: can(TABLE_MODULE[table], 'view') })
+}
 
-export const useDashboard = () => useQuery({ queryKey: DASHBOARD, queryFn: api.dashboard })
+export function useDashboard() {
+  const { can } = useAccess()
+  return useQuery({ queryKey: DASHBOARD, queryFn: api.dashboard, enabled: can('reports', 'view') })
+}
 
 export function useCreateRow<K extends TableName>(table: K) {
   const qc = useQueryClient()

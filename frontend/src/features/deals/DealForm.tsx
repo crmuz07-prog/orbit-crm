@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { FormLayout, SelectField, TextField, toOptions } from '@/components/common/form-fields'
 import { useCrm } from '@/hooks/useData'
+import { isNew, OwnerField, useMyId } from '@/features/team/OwnerField'
 import { useEntityForm } from '@/hooks/useEntityForm'
 import { CURRENCIES, DEAL_SOURCES, PRIORITIES } from '@/lib/constants'
 import type { Deal, Priority } from '@/lib/types'
@@ -11,6 +12,7 @@ type Props = { initial?: Partial<Deal>; onDone: (row?: Deal) => void }
 export function DealForm({ initial, onDone }: Props) {
   const { companies, contacts, stages } = useCrm()
   const { t } = useTranslation()
+  const myId = useMyId()
   const firstOpen = stages.find((s) => !s.is_won && !s.is_lost)
   const { form, set, setForm, submit, isEdit, busy } = useEntityForm({
     table: 'deals',
@@ -18,6 +20,7 @@ export function DealForm({ initial, onDone }: Props) {
     initial,
     onDone,
     defaults: (d) => ({
+      owner_id: d?.owner_id ?? (isNew(d) ? myId : ''),
       title: d?.title ?? '',
       amount: d?.amount?.toString() ?? '',
       currency: d?.currency ?? 'USD',
@@ -33,6 +36,7 @@ export function DealForm({ initial, onDone }: Props) {
       if (!f.stage_id) return t('validation.stage')
       return {
         ...f,
+        owner_id: f.owner_id || null,
         title: f.title.trim(),
         amount: Number(f.amount) || 0,
         company_id: f.company_id || null,
@@ -67,6 +71,7 @@ export function DealForm({ initial, onDone }: Props) {
       <SelectField label={t('fields.primaryContact')} emptyLabel={t('fields.noContact')} value={form.contact_id} onChange={(v) => set('contact_id', v)} options={people.map((c) => ({ value: c.id, label: fullName(c) }))} />
       <TextField label={t('fields.closeDate')} type="date" value={form.expected_close_date} onChange={(v) => set('expected_close_date', v)} />
       <SelectField label={t('fields.source')} emptyLabel="—" value={form.source} onChange={(v) => set('source', v)} options={toOptions(DEAL_SOURCES)} />
+      <OwnerField module="deals" value={form.owner_id} onChange={(v) => set('owner_id', v)} />
     </FormLayout>
   )
 }

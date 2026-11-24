@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { FormLayout, SelectField, TextField } from '@/components/common/form-fields'
 import { useCrm } from '@/hooks/useData'
+import { isNew, OwnerField, useMyId } from '@/features/team/OwnerField'
 import { useEntityForm } from '@/hooks/useEntityForm'
 import type { Contact } from '@/lib/types'
 import { blankToNull } from '@/lib/utils'
@@ -12,12 +13,14 @@ const EMAIL = /^\S+@\S+\.\S+$/
 export function ContactForm({ initial, onDone }: Props) {
   const { companies } = useCrm()
   const { t } = useTranslation()
+  const myId = useMyId()
   const { form, set, submit, isEdit, busy } = useEntityForm({
     table: 'contacts',
     label: t('entity.contact'),
     initial,
     onDone,
     defaults: (c) => ({
+      owner_id: c?.owner_id ?? (isNew(c) ? myId : ''),
       first_name: c?.first_name ?? '',
       last_name: c?.last_name ?? '',
       email: c?.email ?? '',
@@ -30,6 +33,7 @@ export function ContactForm({ initial, onDone }: Props) {
       if (!f.first_name.trim()) return t('validation.firstName')
       if (f.email && !EMAIL.test(f.email)) return t('validation.email')
       return {
+        owner_id: f.owner_id || null,
         first_name: f.first_name.trim(),
         last_name: f.last_name.trim(),
         email: blankToNull(f.email),
@@ -50,6 +54,7 @@ export function ContactForm({ initial, onDone }: Props) {
       <TextField label={t('fields.jobTitle')} value={form.title} onChange={(v) => set('title', v)} placeholder="Head of Procurement" />
       <SelectField label={t('fields.company')} emptyLabel={t('fields.noCompany')} value={form.company_id} onChange={(v) => set('company_id', v)} options={companies.map((c) => ({ value: c.id, label: c.name }))} />
       <TextField wide label={t('fields.linkedin')} value={form.linkedin_url} onChange={(v) => set('linkedin_url', v)} placeholder="https://linkedin.com/in/…" />
+      <OwnerField module="contacts" value={form.owner_id} onChange={(v) => set('owner_id', v)} />
     </FormLayout>
   )
 }

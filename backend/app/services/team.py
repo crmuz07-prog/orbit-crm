@@ -5,8 +5,9 @@ from sqlalchemy.orm import Session
 
 from app.core.errors import Conflict, Forbidden, NotFound
 from app.core.security import hash_password
-from app.models import Membership, User, Workspace
-from app.services.users import create_user, find_user_by_email
+from app.models import AccessRole, Membership, SalesTeam, User, Workspace
+from app.services.access import get_owned
+from app.services.users import create_user, find_user_by_email, revoke_sessions
 from app.services.workspaces import ROLE_RANK
 
 
@@ -22,8 +23,10 @@ def guard_role_change(actor_role: str, target_role: str) -> None:
 
 
 def set_temporary_password(user: User, password: str) -> None:
+    """Also signs the person out everywhere, so a reset takes over a lost or shared session (erp1 force logout)."""
     user.password_hash = hash_password(password)
     user.must_change_password = True
+    revoke_sessions(user)
 
 
 def join(db: Session, workspace: Workspace, full_name: str, email: str, role: str, password: str | None) -> tuple[Membership, User, bool]:
@@ -68,13 +71,25 @@ def guard_last_owner(db: Session, membership: Membership) -> None:
         raise Conflict("A workspace needs at least one owner", "last_owner")
 
 
-def change_role(db: Session, actor: Membership, user_id: str, role: str) -> Membership:
-    membership = target(db, actor.workspace_id, user_id)
-    guard_role_change(actor.role, membership.role)
+def _change_role(db: Session, actor: Membership, membership: Membership, role: str) -> None:
     guard_role_change(actor.role, role)
     if role != "owner":
         guard_last_owner(db, membership)
     membership.role = role
+
+
+def update_member(db: Session, actor: Membership, user_id: str, changes: dict[str, str | None]) -> Membership:
+    """Role, access role and sales team; only the fields present in `changes` are touched."""
+    membership = target(db, actor.workspace_id, user_id)
+    guard_role_change(actor.role, membership.role)
+    if changes.get("role"):
+        _change_role(db, actor, membership, str(changes["role"]))
+    if "access_role_id" in changes:
+        role_id = changes["access_role_id"]
+        membership.access_role_id = get_owned(db, AccessRole, actor.workspace_id, role_id).id if role_id else None
+    if "team_id" in changes:
+        team_id = changes["team_id"]
+        membership.team_id = get_owned(db, SalesTeam, actor.workspace_id, team_id).id if team_id else None
     db.commit()
     return membership
 

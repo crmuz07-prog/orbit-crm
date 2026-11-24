@@ -5,6 +5,7 @@ import { CompanyLogo } from '@/components/common/avatars'
 import { DataTable, type Column } from '@/components/common/data-table'
 import { EmptyState } from '@/components/common/states'
 import { Card } from '@/components/ui/card'
+import { useOwnerColumn } from '@/features/team/OwnerField'
 import { useCrm } from '@/hooks/useData'
 import { PRIORITIES } from '@/lib/constants'
 import { isCloseOverdue, weightedValue } from '@/lib/metrics'
@@ -13,6 +14,7 @@ import { cn, money, shortDate, timeAgo } from '@/lib/utils'
 import { PriorityFlag, StageBadge } from './bits'
 
 function useDealColumns(): Column<Deal>[] {
+  const owner = useOwnerColumn<Deal>()
   const { stageById, companyById } = useCrm()
   const { t } = useTranslation()
   const companyName = (d: Deal) => (d.company_id ? companyById.get(d.company_id)?.name : undefined)
@@ -42,6 +44,7 @@ function useDealColumns(): Column<Deal>[] {
     },
     { key: 'priority', header: t('deals.colPriority'), sortValue: (d) => PRIORITIES.findIndex((p) => p.value === d.priority), cell: (d) => <PriorityFlag priority={d.priority} withLabel /> },
     { key: 'source', header: t('deals.colSource'), sortValue: (d) => d.source ?? '', cell: (d) => d.source ?? '—' },
+    owner,
     { key: 'updated', header: t('deals.colUpdated'), sortValue: (d) => d.updated_at, cell: (d) => <span className="text-muted-foreground">{timeAgo(d.updated_at)}</span> },
   ]
 }

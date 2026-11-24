@@ -2,7 +2,7 @@ from fastapi import APIRouter, status
 
 from app.api.deps import AdminCtx, Ctx
 from app.models import Membership, User
-from app.schemas.team import MemberOut, NewMemberIn, NewMemberOut, RoleIn, SetPasswordIn, TeamOut
+from app.schemas.team import MemberOut, MemberPatch, NewMemberIn, NewMemberOut, SetPasswordIn, TeamOut
 from app.services import team
 from app.services.workspaces import ROLE_RANK
 
@@ -11,7 +11,8 @@ router = APIRouter(prefix="/team", tags=["team"])
 
 def member_out(membership: Membership, user: User) -> MemberOut:
     return MemberOut(user_id=user.id, full_name=user.full_name, email=user.email, role=membership.role,  # type: ignore[arg-type]
-                     is_active=user.is_active, must_change_password=user.must_change_password, joined_at=membership.created_at)
+                     is_active=user.is_active, must_change_password=user.must_change_password, joined_at=membership.created_at,
+                     access_role_id=membership.access_role_id, team_id=membership.team_id)
 
 
 @router.get("", response_model=TeamOut)
@@ -27,8 +28,8 @@ def add_member(payload: NewMemberIn, ctx: AdminCtx) -> NewMemberOut:
 
 
 @router.patch("/members/{user_id}", response_model=MemberOut)
-def change_role(user_id: str, payload: RoleIn, ctx: AdminCtx) -> MemberOut:
-    membership = team.change_role(ctx.db, ctx.membership, user_id, payload.role)
+def update_member(user_id: str, payload: MemberPatch, ctx: AdminCtx) -> MemberOut:
+    membership = team.update_member(ctx.db, ctx.membership, user_id, payload.model_dump(exclude_unset=True))
     return member_out(membership, ctx.db.get(User, user_id))  # type: ignore[arg-type]
 
 

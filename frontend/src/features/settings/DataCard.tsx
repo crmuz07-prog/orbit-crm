@@ -45,9 +45,12 @@ export function DataCard() {
   return (
     <Card>
       <CardHeader title={t('settings.data')} />
-      <DataAction title={t('settings.sampleTitle')} description={t('settings.sampleDesc')}>
-        <Button variant="outline" disabled={busy} onClick={() => run(api.seed, t('settings.sampleDone'))}><Database /> {t('settings.sampleTitle')}</Button>
-      </DataAction>
+      {/* The demo is read-only and has its own reset; real workspaces can load sample data. */}
+      {!session?.workspace?.is_demo && (
+        <DataAction title={t('settings.sampleTitle')} description={t('settings.sampleDesc')}>
+          <Button variant="outline" disabled={busy} onClick={() => run(api.seed, t('settings.sampleDone'))}><Database /> {t('settings.sampleTitle')}</Button>
+        </DataAction>
+      )}
       {session?.workspace?.is_demo && (
         <DataAction title={t('settings.resetTitle')} description={t('settings.resetDesc')}>
           <Button variant="destructive" disabled={busy} onClick={() => setConfirmReset(true)}><RotateCcw /> {t('common.reset')}</Button>

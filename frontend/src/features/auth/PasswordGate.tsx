@@ -11,8 +11,8 @@ import { useAsyncAction } from './useAsyncAction'
 /** First sign-in with an admin-issued password: the person must choose their own before using the CRM. */
 export function PasswordGate() {
   const { t } = useTranslation()
-  const { session, updateUser, signOut } = useAuth()
-  const { busy, attempt } = useAsyncAction()
+  const { session, signIn, signOut } = useAuth()
+  const { busy, run } = useAsyncAction()
   const [current, setCurrent] = useState('')
   const [next, setNext] = useState('')
   const [confirm, setConfirm] = useState('')
@@ -21,8 +21,9 @@ export function PasswordGate() {
   const submit = async (e: FormEvent) => {
     e.preventDefault()
     if (next !== confirm) return toast.error(t('account.mismatch'))
-    if (!(await attempt(() => authApi.changePassword(current, next)))) return
-    updateUser({ ...session.user, must_change_password: false })
+    const token = await run(() => authApi.changePassword(current, next))
+    if (!token) return
+    signIn(token)
     toast.success(t('gate.done'))
   }
 

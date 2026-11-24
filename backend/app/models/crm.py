@@ -4,7 +4,7 @@ from sqlalchemy import Date, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.db import Base, UTCDateTime
-from app.models.base import TenantMixin
+from app.models.base import OwnedMixin, TenantMixin
 
 
 def optional_fk(table: str) -> Mapped[str | None]:
@@ -26,7 +26,7 @@ class Stage(TenantMixin, Base):
         return self.is_won or self.is_lost
 
 
-class Company(TenantMixin, Base):
+class Company(OwnedMixin, Base):
     __tablename__ = "companies"
 
     name: Mapped[str] = mapped_column(String(200))
@@ -40,7 +40,7 @@ class Company(TenantMixin, Base):
     description: Mapped[str | None] = mapped_column(Text)
 
 
-class Contact(TenantMixin, Base):
+class Contact(OwnedMixin, Base):
     __tablename__ = "contacts"
 
     company_id: Mapped[str | None] = optional_fk("companies")
@@ -52,7 +52,7 @@ class Contact(TenantMixin, Base):
     linkedin_url: Mapped[str | None] = mapped_column(String(300))
 
 
-class Deal(TenantMixin, Base):
+class Deal(OwnedMixin, Base):
     __tablename__ = "deals"
 
     title: Mapped[str] = mapped_column(String(200))
@@ -68,7 +68,7 @@ class Deal(TenantMixin, Base):
     closed_at: Mapped[datetime | None] = mapped_column(UTCDateTime)
 
 
-class Activity(TenantMixin, Base):
+class Activity(OwnedMixin, Base):
     __tablename__ = "activities"
 
     type: Mapped[str] = mapped_column(String(20))

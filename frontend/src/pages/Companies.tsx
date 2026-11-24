@@ -3,9 +3,9 @@ import { Building2, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { SelectBox, toOptions } from '@/components/common/form-fields'
 import { Page } from '@/components/common/page'
+import { CreateButton, ExportButton } from '@/components/common/record-actions'
 import { matches, SearchInput } from '@/components/common/search-input'
 import { EmptyState, PageSkeleton } from '@/components/common/states'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { CompaniesTable } from '@/features/companies/CompaniesTable'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
@@ -24,7 +24,7 @@ export default function CompaniesPage() {
   const filtered = companies.filter(
     (c) => (!lifecycle || c.lifecycle === lifecycle) && (!industry || c.industry === industry) && matches(query, c.name, c.domain, c.country),
   )
-  const newCompany = <Button onClick={() => openModal({ kind: 'company' })}><Plus /> {t('companies.newCompany')}</Button>
+  const newCompany = <CreateButton module="companies" onClick={() => openModal({ kind: 'company' })}><Plus /> {t('companies.newCompany')}</CreateButton>
 
   if (isLoading) return <PageSkeleton />
 
@@ -32,7 +32,7 @@ export default function CompaniesPage() {
     <Page
       title={t('companies.title')}
       description={t('companies.summary', { count: companies.length, customers: companies.filter((c) => c.lifecycle === 'customer').length })}
-      actions={newCompany}
+      actions={<><ExportButton table="companies" />{newCompany}</>}
     >
       <div className="mb-4 flex flex-wrap gap-2">
         <SearchInput value={query} onChange={setQuery} placeholder={t('companies.search')} />

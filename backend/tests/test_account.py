@@ -7,7 +7,7 @@ from app.core.db import utcnow
 from app.models import AuthToken
 from app.services import account, tokens
 from app.services.users import find_user_by_email
-from tests.conftest import db_session
+from tests.conftest import bearer, db_session
 
 Headers = dict[str, str]
 
@@ -48,9 +48,10 @@ def test_email_verification(client: TestClient, auth: Headers) -> None:
 def test_change_password_and_profile(client: TestClient, auth: Headers) -> None:
     wrong = client.post("/api/auth/password", headers=auth, json={"current_password": "nope", "new_password": "newsecret123"})
     assert wrong.json()["code"] == "wrong_password"
-    assert client.post("/api/auth/password", headers=auth, json={"current_password": "s3cret-pass", "new_password": "newsecret123"}).status_code == 204
+    changed = client.post("/api/auth/password", headers=auth, json={"current_password": "s3cret-pass", "new_password": "newsecret123"})
     assert client.post("/api/auth/login", json={"email": "rep@acme.com", "password": "newsecret123"}).status_code == 200
-    assert client.patch("/api/auth/me", headers=auth, json={"full_name": "Samantha"}).json()["full_name"] == "Samantha"
+    fresh = bearer(changed.json())
+    assert client.patch("/api/auth/me", headers=fresh, json={"full_name": "Samantha"}).json()["full_name"] == "Samantha"
 
 
 def test_demo_account_is_read_only(client: TestClient) -> None:

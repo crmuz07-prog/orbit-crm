@@ -10,8 +10,8 @@ from app.core.errors import Forbidden, NotFound
 from app.models import Membership, User, Workspace
 from app.schemas.admin import AdminUserIn, AdminUserOut, CompanyIn, CompanyOut, MembershipOut
 from app.services import team
-from app.services.onboarding import default_stages
-from app.services.users import create_user, find_user_by_email
+from app.services.onboarding import workspace_defaults
+from app.services.users import create_user, find_user_by_email, revoke_sessions
 
 Row = TypeVar("Row", User, Workspace)
 
@@ -45,7 +45,7 @@ def create_company(db: Session, data: CompanyIn) -> CompanyOut:
     workspace = Workspace(name=data.name)
     db.add(workspace)
     db.flush()
-    db.add_all(default_stages(workspace.id))
+    db.add_all(workspace_defaults(workspace.id))
     team.join(db, workspace, data.owner.full_name, data.owner.email, "owner", data.owner.password)
     return next(c for c in list_companies(db) if c.id == workspace.id)
 
@@ -86,6 +86,8 @@ def update_account(db: Session, actor: User, user_id: str, full_name: str | None
     for field, value in {"full_name": full_name, "is_active": is_active, "is_superadmin": is_superadmin}.items():
         if value is not None:
             setattr(user, field, value)
+    if is_active is False:
+        revoke_sessions(user)
     db.commit()
     return user_out(db, user.id)
 

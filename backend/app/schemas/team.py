@@ -14,6 +14,8 @@ class MemberOut(Schema):
     is_active: bool
     must_change_password: bool
     joined_at: datetime
+    access_role_id: str | None = None
+    team_id: str | None = None
 
 
 class NewMemberOut(MemberOut):
@@ -34,8 +36,10 @@ class NewMemberIn(Schema):
     password: str = Password
 
 
-class RoleIn(Schema):
-    role: Role
+class MemberPatch(Schema):
+    role: Role | None = None
+    access_role_id: str | None = None
+    team_id: str | None = None
 
 
 class SetPasswordIn(Schema):

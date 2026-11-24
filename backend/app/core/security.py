@@ -1,6 +1,7 @@
 import hashlib
 import secrets
 from datetime import timedelta
+from typing import NamedTuple
 
 import bcrypt
 import jwt
@@ -17,21 +18,30 @@ def verify_password(password: str, hashed: str) -> bool:
     return bcrypt.checkpw(password.encode(), hashed.encode())
 
 
-def create_access_token(user_id: str, workspace_id: str | None) -> str:
-    """`wid` pins the active workspace; it is re-checked against memberships on every request."""
+def create_access_token(user_id: str, workspace_id: str | None, session_version: int = 0) -> str:
+    """`wid` pins the active workspace and `sv` the session version; both are re-checked on every request."""
     settings = get_settings()
-    payload = {"sub": user_id, "wid": workspace_id, "exp": utcnow() + timedelta(minutes=settings.jwt_ttl_minutes)}
+    now = utcnow()
+    payload = {"sub": user_id, "wid": workspace_id, "sv": session_version, "iat": now, "exp": now + timedelta(minutes=settings.jwt_ttl_minutes)}
     return jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
 
 
-def decode_access_token(token: str) -> tuple[str, str | None] | None:
-    """Returns (user id, workspace id), or None when the token is invalid or expired."""
+class Claims(NamedTuple):
+    user_id: str
+    workspace_id: str | None
+    # 0 for tokens issued before session versions existed (they stay valid until the first revocation).
+    session_version: int
+
+
+def decode_access_token(token: str) -> Claims | None:
+    """Returns the claims, or None when the token is invalid or expired."""
     settings = get_settings()
     try:
         claims = jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
     except jwt.PyJWTError:
         return None
-    return claims["sub"], claims.get("wid")
+    return Claims(claims["sub"], claims.get("wid"), int(claims.get("sv", 0)))
+
 
 
 def hash_token(raw: str) -> str:

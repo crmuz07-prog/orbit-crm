@@ -10,6 +10,7 @@ from app.core.db import utcnow
 from app.models import Deal, Stage
 from app.schemas.dashboard import DashboardOut, MonthTotal, StageTotal
 from app.schemas.crm import DealOut
+from app.services.visibility import Visibility
 
 STALE_AFTER_DAYS = 14
 
@@ -59,10 +60,11 @@ def average_cycle_days(won: list[Deal]) -> int:
     return round(sum(cycles) / len(cycles)) if cycles else 0
 
 
-def build_dashboard(db: Session, workspace_id: str) -> DashboardOut:
+def build_dashboard(db: Session, workspace_id: str, reports: Visibility, deals_scope: Visibility) -> DashboardOut:
+    """Figures follow the `reports` scope; deal cards listed on it also need to be visible under `deals`."""
     now = utcnow()
     stages = list(db.scalars(select(Stage).where(Stage.workspace_id == workspace_id).order_by(Stage.position)))
-    deals = list(db.scalars(select(Deal).where(Deal.workspace_id == workspace_id)))
+    deals = list(db.scalars(select(Deal).where(Deal.workspace_id == workspace_id, reports.where(Deal))))
     by_id = {s.id: s for s in stages}
 
     open_deals = [d for d in deals if not by_id[d.stage_id].is_closed]
@@ -83,6 +85,6 @@ def build_dashboard(db: Session, workspace_id: str) -> DashboardOut:
         avg_cycle_days=average_cycle_days(won),
         by_stage=stage_totals(stages, open_deals),
         monthly=monthly_totals(won, lost, now),
-        stale=[DealOut.model_validate(d) for d in open_deals if d.updated_at <= stale_before],
-        top_open=[DealOut.model_validate(d) for d in sorted(open_deals, key=lambda d: -d.amount)[:5]],
+        stale=[DealOut.model_validate(d) for d in open_deals if d.updated_at <= stale_before and deals_scope.allows(d)],
+        top_open=[DealOut.model_validate(d) for d in sorted(filter(deals_scope.allows, open_deals), key=lambda d: -d.amount)[:5]],
     )

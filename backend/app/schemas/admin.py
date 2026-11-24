@@ -66,3 +66,11 @@ class AdminUserPatch(Schema):
 class MembershipIn(Schema):
     workspace_id: str
     role: Role = "member"
+
+
+class LoginAttemptOut(Schema):
+    id: str
+    email: str
+    ip: str | None
+    success: bool
+    created_at: datetime

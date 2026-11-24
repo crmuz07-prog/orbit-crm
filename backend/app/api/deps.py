@@ -9,7 +9,9 @@ from app.core.db import get_db
 from app.core.errors import Forbidden, Unauthorized
 from app.core.security import decode_access_token
 from app.models import Membership, User, Workspace
-from app.services import workspaces
+from app.services import permissions, visibility, workspaces
+from app.services.permissions import Access, Module
+from app.services.visibility import Visibility
 
 bearer = HTTPBearer(auto_error=False)
 
@@ -25,6 +27,7 @@ class RequestContext:
     user: User
     workspace: Workspace
     membership: Membership
+    access: Access
 
     @property
     def workspace_id(self) -> str:
@@ -33,6 +36,9 @@ class RequestContext:
     @property
     def role(self) -> str:
         return self.membership.role
+
+    def visibility(self, module: Module) -> Visibility:
+        return visibility.for_module(self.db, self.access, self.membership, module)
 
 
 @dataclass(frozen=True)
@@ -46,20 +52,23 @@ class UserContext:
 
 def user_for_token(db: Session, token: str | None) -> UserContext:
     claims = decode_access_token(token) if token else None
-    user = db.get(User, claims[0]) if claims else None
+    user = db.get(User, claims.user_id) if claims else None
     if claims is None or user is None:
         raise Unauthorized("Not authenticated", "not_authenticated")
     # Deactivation takes effect immediately, even for tokens issued earlier.
     if not user.is_active:
         raise Unauthorized("This account has been deactivated", "account_disabled")
-    return UserContext(db=db, user=user, workspace_id=claims[1])
+    if claims.session_version != user.session_version:
+        raise Unauthorized("This session was signed out", "session_revoked")
+    return UserContext(db=db, user=user, workspace_id=claims.workspace_id)
 
 
 def context_for_token(db: Session, token: str | None) -> RequestContext:
     base = user_for_token(db, token)
     # The token's workspace is honoured only while the membership still exists.
     membership, workspace = workspaces.resolve(db, base.user.id, base.workspace_id)
-    return RequestContext(db=db, user=base.user, workspace=workspace, membership=membership)
+    access = permissions.resolve(db, membership)
+    return RequestContext(db=db, user=base.user, workspace=workspace, membership=membership, access=access)
 
 
 def get_context(db: DB, credentials: Credentials) -> RequestContext:

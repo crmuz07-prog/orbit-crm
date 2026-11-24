@@ -65,6 +65,12 @@ def _identify(db: Session, integration: TelephonyIntegration, phone: str) -> Con
     return contact
 
 
+def _call_owner(db: Session, contact: Contact | None, deal: Deal | None) -> str | None:
+    """The rep who owns the relationship owns the call, so it shows up in their own-scope lists."""
+    company = db.get(Company, contact.company_id) if contact and contact.company_id else None
+    return next((o for o in (contact and contact.owner_id, deal and deal.owner_id, company and company.owner_id) if o), None)
+
+
 def _new_call(db: Session, integration: TelephonyIntegration, event: TelephonyEventIn) -> Activity:
     contact = _identify(db, integration, event.customer_phone)
     deal = latest_open_deal(db, contact) if contact else None
@@ -74,7 +80,7 @@ def _new_call(db: Session, integration: TelephonyIntegration, event: TelephonyEv
         due_at=event.timestamp or utcnow(), done=False, auto_logged=True, external_id=event.call_id,
         call_direction=event.direction, phone=event.customer_phone,
         contact_id=contact.id if contact else None, company_id=contact.company_id if contact else None,
-        deal_id=deal.id if deal else None,
+        deal_id=deal.id if deal else None, owner_id=_call_owner(db, contact, deal),
     )
     db.add(call)
     db.flush()
@@ -91,7 +97,7 @@ def _callback_task(call: Activity) -> Activity:
     now = utcnow()
     return Activity(
         workspace_id=call.workspace_id, type="task", subject=f"Call back {call.phone}", due_at=now, remind_at=now,
-        contact_id=call.contact_id, company_id=call.company_id, deal_id=call.deal_id,
+        contact_id=call.contact_id, company_id=call.company_id, deal_id=call.deal_id, owner_id=call.owner_id,
     )
 
 

@@ -32,16 +32,18 @@ function ProfileForm() {
 
 function PasswordForm() {
   const { t } = useTranslation()
-  const { session, updateUser } = useAuth()
-  const { busy, attempt } = useAsyncAction()
+  const { session, signIn } = useAuth()
+  const { busy, run } = useAsyncAction()
   const hasPassword = session?.user.has_password ?? true
   const [current, setCurrent] = useState('')
   const [next, setNext] = useState('')
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
-    if (!(await attempt(() => authApi.changePassword(hasPassword ? current : null, next)))) return
-    if (session) updateUser({ ...session.user, has_password: true })
+    // Other devices are signed out; this one continues with the fresh token.
+    const token = await run(() => authApi.changePassword(hasPassword ? current : null, next))
+    if (!token) return
+    signIn(token)
     setCurrent('')
     setNext('')
     toast.success(t('account.passwordChanged'))

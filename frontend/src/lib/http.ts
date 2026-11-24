@@ -38,7 +38,7 @@ function readDetail(body: unknown): string {
 let onUnauthorized: () => void = () => {}
 export const setUnauthorizedHandler = (fn: () => void) => (onUnauthorized = fn)
 
-export async function http<T>(method: string, path: string, body?: unknown): Promise<T> {
+async function send(method: string, path: string, body?: unknown): Promise<Response> {
   const token = tokenStore.get()
   const response = await fetch(`${API_BASE}${path}`, {
     method,
@@ -46,10 +46,29 @@ export async function http<T>(method: string, path: string, body?: unknown): Pro
     body: body === undefined ? undefined : JSON.stringify(body),
   })
   if (response.status === 401) onUnauthorized()
-  if (response.status === 204) return undefined as T
+  return response
+}
+
+async function fail(response: Response): Promise<never> {
   const data: unknown = await response.json().catch(() => null)
-  if (!response.ok) throw new ApiError(response.status, readDetail(data), (data as { code?: string } | null)?.code)
-  return data as T
+  throw new ApiError(response.status, readDetail(data), (data as { code?: string } | null)?.code)
+}
+
+export async function http<T>(method: string, path: string, body?: unknown): Promise<T> {
+  const response = await send(method, path, body)
+  if (!response.ok) return fail(response)
+  if (response.status === 204) return undefined as T
+  return (await response.json().catch(() => null)) as T
+}
+
+/** Authenticated file download (a plain link can't carry the bearer token). */
+export async function download(path: string, filename: string): Promise<void> {
+  const response = await send('GET', path)
+  if (!response.ok) return fail(response)
+  const url = URL.createObjectURL(await response.blob())
+  const link = Object.assign(document.createElement('a'), { href: url, download: filename })
+  link.click()
+  URL.revokeObjectURL(url)
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))

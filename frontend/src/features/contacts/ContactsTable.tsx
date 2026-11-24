@@ -6,6 +6,7 @@ import { CompanyLogo, PersonAvatar } from '@/components/common/avatars'
 import { DataTable, type Column } from '@/components/common/data-table'
 import { EmptyState } from '@/components/common/states'
 import { Card } from '@/components/ui/card'
+import { useOwnerColumn } from '@/features/team/OwnerField'
 import { useCrm } from '@/hooks/useData'
 import { dealStatus } from '@/lib/metrics'
 import type { Contact } from '@/lib/types'
@@ -23,6 +24,7 @@ function useOpenPipelineByContact() {
 }
 
 function useContactColumns(): Column<Contact>[] {
+  const owner = useOwnerColumn<Contact>()
   const { companyById } = useCrm()
   const open = useOpenPipelineByContact()
   const { t } = useTranslation()
@@ -54,6 +56,7 @@ function useContactColumns(): Column<Contact>[] {
     },
     { key: 'phone', header: t('contacts.colPhone'), cell: (c) => c.phone ?? '—' },
     { key: 'open', header: t('contacts.colOpen'), align: 'right', sortValue: (c) => open.get(c.id) ?? 0, cell: (c) => money(open.get(c.id) ?? 0) },
+    owner,
     { key: 'created', header: t('contacts.colCreated'), sortValue: (c) => c.created_at, cell: (c) => <span className="text-muted-foreground">{shortDate(c.created_at)}</span> },
   ]
 }

@@ -40,6 +40,8 @@ class SessionOut(Schema):
     # Empty for a superadmin who does not belong to any company.
     workspace: WorkspaceOut | None
     role: Role | None
+    # Effective module permissions in the active workspace (the UI mirrors them; the API enforces them).
+    permissions: dict[str, dict[str, bool | str]] | None = None
 
 
 class TokenOut(SessionOut):

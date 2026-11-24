@@ -26,3 +26,11 @@ class TenantMixin(IdMixin, TimestampMixin):
     @declared_attr
     def workspace_id(cls) -> Mapped[str]:
         return mapped_column(ForeignKey("workspaces.id", ondelete="CASCADE"), index=True)
+
+
+class OwnedMixin(TenantMixin):
+    """A sales record with an owner (Salesforce / HubSpot "record owner"); drives own/team/all visibility."""
+
+    @declared_attr
+    def owner_id(cls) -> Mapped[str | None]:
+        return mapped_column(ForeignKey("users.id", ondelete="SET NULL"), index=True, nullable=True)

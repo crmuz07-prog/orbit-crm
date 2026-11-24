@@ -3,9 +3,9 @@ import { Plus, Users } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { SelectBox } from '@/components/common/form-fields'
 import { Page } from '@/components/common/page'
+import { CreateButton, ExportButton } from '@/components/common/record-actions'
 import { matches, SearchInput } from '@/components/common/search-input'
 import { EmptyState, PageSkeleton } from '@/components/common/states'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ContactsTable } from '@/features/contacts/ContactsTable'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
@@ -20,12 +20,12 @@ export default function ContactsPage() {
   const [companyId, setCompanyId] = useState('')
 
   const filtered = contacts.filter((c) => (!companyId || c.company_id === companyId) && matches(query, fullName(c), c.email, c.title))
-  const newContact = <Button onClick={() => openModal({ kind: 'contact' })}><Plus /> {t('contacts.newContact')}</Button>
+  const newContact = <CreateButton module="contacts" onClick={() => openModal({ kind: 'contact' })}><Plus /> {t('contacts.newContact')}</CreateButton>
 
   if (isLoading) return <PageSkeleton />
 
   return (
-    <Page title={t('contacts.title')} description={t('contacts.summary', { people: contacts.length, companies: companies.length })} actions={newContact}>
+    <Page title={t('contacts.title')} description={t('contacts.summary', { people: contacts.length, companies: companies.length })} actions={<><ExportButton table="contacts" />{newContact}</>}>
       <div className="mb-4 flex flex-wrap gap-2">
         <SearchInput value={query} onChange={setQuery} placeholder={t('contacts.search')} />
         <SelectBox value={companyId} onChange={setCompanyId} emptyLabel={t('contacts.allCompanies')} options={companies.map((c) => ({ value: c.id, label: c.name }))} className="w-48" />

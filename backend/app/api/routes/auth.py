@@ -1,11 +1,17 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
 from app.api.deps import DB, UserCtx
 from app.core.config import get_settings
-from app.schemas.auth import AuthConfigOut, LoginIn, RegisterIn, SessionOut, SwitchIn, TokenOut, UserOut, WorkspaceChoice, WorkspaceOut
-from app.services import auth, workspaces
+from app.schemas.auth import AuthConfigOut, LoginIn, RegisterIn, SessionOut, SwitchIn, TokenOut, WorkspaceChoice
+from app.services import auth
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+def client_ip(request: Request) -> str | None:
+    # Render and Vercel sit in front of the app; the first forwarded address is the visitor.
+    forwarded = request.headers.get("x-forwarded-for")
+    return forwarded.split(",")[0].strip() if forwarded else request.client.host if request.client else None
 
 
 @router.get("/config", response_model=AuthConfigOut)
@@ -20,8 +26,8 @@ def register(payload: RegisterIn, db: DB) -> TokenOut:
 
 
 @router.post("/login", response_model=TokenOut)
-def login(payload: LoginIn, db: DB) -> TokenOut:
-    return auth.login(db, payload)
+def login(payload: LoginIn, request: Request, db: DB) -> TokenOut:
+    return auth.login(db, payload, client_ip(request))
 
 
 @router.post("/demo", response_model=TokenOut)
@@ -31,12 +37,7 @@ def demo(db: DB) -> TokenOut:
 
 @router.get("/me", response_model=SessionOut)
 def me(ctx: UserCtx) -> SessionOut:
-    found = workspaces.resolve_optional(ctx.db, ctx.user.id, ctx.workspace_id)
-    if found is None and not ctx.user.is_superadmin:
-        workspaces.resolve(ctx.db, ctx.user.id)  # raises no_workspace
-    membership, workspace = found if found else (None, None)
-    return SessionOut(user=UserOut.model_validate(ctx.user), workspace=WorkspaceOut.model_validate(workspace) if workspace else None,
-                      role=membership.role if membership else None)  # type: ignore[arg-type]
+    return auth.session_out(ctx.db, ctx.user, ctx.workspace_id)
 
 
 @router.get("/workspaces", response_model=list[WorkspaceChoice])

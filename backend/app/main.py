@@ -7,7 +7,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.routes import account, admin, auth, calls, entities, team, telephony, workspace
+from app.api.routes import access, account, admin, auth, calls, entities, team, telephony, workspace
 from app.core.config import get_settings
 from app.core.db import SessionLocal, engine
 from app.core.errors import DomainError
@@ -53,7 +53,7 @@ def create_app() -> FastAPI:
     def health() -> dict[str, str]:
         return {"status": "ok"}
 
-    for module in (auth, account, team, admin, calls, entities, telephony, workspace):
+    for module in (auth, account, team, access, admin, calls, entities, telephony, workspace):
         app.include_router(module.router, prefix="/api")
     return app
 

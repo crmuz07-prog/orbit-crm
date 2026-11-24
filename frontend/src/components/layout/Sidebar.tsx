@@ -7,13 +7,15 @@ import { PersonAvatar } from '@/components/common/avatars'
 import { Button } from '@/components/ui/button'
 import { WorkspaceSwitcher } from '@/features/auth/WorkspaceSwitcher'
 import { Tooltip } from '@/components/ui/tooltip'
+import { useAccess } from '@/hooks/useAccess'
 import { useCrm } from '@/hooks/useData'
 import { dueBucket } from '@/lib/metrics'
 import { spring } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 import { Logo } from './Logo'
+import type { Module } from '@/lib/types'
 
-type NavItem = { to: string; label: string; icon: LucideIcon; end?: boolean; badge?: number }
+type NavItem = { to: string; label: string; icon: LucideIcon; end?: boolean; badge?: number; module?: Module }
 
 function NavItemLink({ to, label, icon: Icon, end, badge, onNavigate }: NavItem & { onNavigate?: () => void }) {
   return (
@@ -53,14 +55,15 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { activities } = useCrm()
   const { t } = useTranslation()
   const { session } = useAuth()
+  const { can } = useAccess()
   const overdue = activities.filter((a) => dueBucket(a) === 'overdue').length
   const items: NavItem[] = [
-    { to: '/', label: t('nav.dashboard'), icon: LayoutDashboard, end: true },
-    { to: '/deals', label: t('nav.deals'), icon: Handshake },
-    { to: '/companies', label: t('nav.companies'), icon: Building2 },
-    { to: '/contacts', label: t('nav.contacts'), icon: Users },
-    { to: '/calls', label: t('nav.calls'), icon: Phone },
-    { to: '/activities', label: t('nav.activities'), icon: CalendarCheck, badge: overdue },
+    { to: '/', label: t('nav.dashboard'), icon: LayoutDashboard, end: true, module: 'reports' },
+    { to: '/deals', label: t('nav.deals'), icon: Handshake, module: 'deals' },
+    { to: '/companies', label: t('nav.companies'), icon: Building2, module: 'companies' },
+    { to: '/contacts', label: t('nav.contacts'), icon: Users, module: 'contacts' },
+    { to: '/calls', label: t('nav.calls'), icon: Phone, module: 'activities' },
+    { to: '/activities', label: t('nav.activities'), icon: CalendarCheck, badge: overdue, module: 'activities' },
   ]
 
   return (
@@ -69,7 +72,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       <WorkspaceSwitcher />
       <nav className="flex flex-col gap-0.5">
         <p className="mb-1 px-2 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{t('nav.workspace')}</p>
-        {items.map((item) => <NavItemLink key={item.to} {...item} onNavigate={onNavigate} />)}
+        {items.filter((item) => can(item.module ?? null, 'view')).map((item) => <NavItemLink key={item.to} {...item} onNavigate={onNavigate} />)}
       </nav>
       <div className="mt-auto flex flex-col gap-0.5">
         {session?.user.is_superadmin && <NavItemLink to="/admin" label={t('admin.nav')} icon={ShieldCheck} onNavigate={onNavigate} />}

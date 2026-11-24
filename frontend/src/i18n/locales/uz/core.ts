@@ -43,6 +43,7 @@ export const core: Locale<typeof en> = {
     firstName: 'Ism majburiy', email: 'Email notoʻgʻri koʻrinadi', subject: 'Mavzu majburiy', writeSomething: 'Avval biror narsa yozing',
   },
   errors: {
+    permission_denied: 'Bu amal uchun huquqingiz yoʻq', owner_out_of_scope: 'Yozuvni bu xodimga biriktira olmaysiz', session_revoked: 'Sessiya yakunlandi — qaytadan kiring', too_many_attempts: 'Juda koʻp xato urinish. 15 daqiqadan soʻng qayta urining', default_role: 'Standart rolni oʻchirib boʻlmaydi', name_taken: 'Bu nom allaqachon band',
     registration_disabled: 'Akkauntlarni administrator yaratadi', account_disabled: 'Bu akkaunt faolsizlantirilgan — administratorga murojaat qiling', self_lockout: 'Oʻzingizni faolsizlantira yoki huquqingizni tushira olmaysiz',
     forbidden: 'Bu amal uchun ruxsatingiz yoʻq', invalid_token: 'Havola notoʻgʻri yoki muddati oʻtgan', invite_email_mismatch: 'Bu taklif boshqa emailga yuborilgan', last_owner: 'Ish maydonida kamida bitta egasi boʻlishi kerak', demo_read_only: 'Demoda buni oʻzgartirib boʻlmaydi', already_member: 'Bu kishi allaqachon ish maydonida', wrong_password: 'Joriy parol notoʻgʻri',
     generic: 'Nimadir xato ketdi', not_found: 'Yozuv topilmadi', stage_has_deals: 'Oʻchirishdan oldin bu bosqichdagi bitimlarni koʻchiring',

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, String, false, true
+from sqlalchemy import ForeignKey, String, false, text, true
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.db import Base, UTCDateTime
@@ -26,6 +26,8 @@ class User(IdMixin, TimestampMixin, Base):
     is_active: Mapped[bool] = mapped_column(default=True, server_default=true())
     # Set for admin-issued temporary passwords; cleared when the user picks their own.
     must_change_password: Mapped[bool] = mapped_column(default=False, server_default=false())
+    # Carried in every token; bumping it signs the user out everywhere (admin reset, deactivation, password change).
+    session_version: Mapped[int] = mapped_column(default=0, server_default=text("0"))
 
     @property
     def email_verified(self) -> bool:
@@ -42,3 +44,6 @@ class Membership(TimestampMixin, Base):
     workspace_id: Mapped[str] = mapped_column(ForeignKey("workspaces.id", ondelete="CASCADE"), primary_key=True)
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), primary_key=True, index=True)
     role: Mapped[str] = mapped_column(String(20), default="member")
+    # Members only: which permission set applies (owners and admins have full access) and their sales team.
+    access_role_id: Mapped[str | None] = mapped_column(ForeignKey("access_roles.id", ondelete="SET NULL"), nullable=True)
+    team_id: Mapped[str | None] = mapped_column(ForeignKey("sales_teams.id", ondelete="SET NULL"), index=True, nullable=True)

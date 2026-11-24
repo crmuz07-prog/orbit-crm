@@ -11,7 +11,7 @@ from app.core.security import hash_password, verify_password
 from app.models import User
 from app.services import tokens
 from app.services.mailer import link, send_mail
-from app.services.users import find_user_by_email
+from app.services.users import find_user_by_email, revoke_sessions
 
 
 def _is_demo(user: User) -> bool:
@@ -71,4 +71,6 @@ def change_password(db: Session, user: User, current: str | None, new: str) -> N
         raise DomainError("The current password is incorrect", "wrong_password")
     user.password_hash = hash_password(new)
     user.must_change_password = False
+    # Other devices are signed out; the caller receives a fresh token (see routes/account.py).
+    revoke_sessions(user)
     db.commit()

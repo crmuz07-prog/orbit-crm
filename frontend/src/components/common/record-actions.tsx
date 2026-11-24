@@ -1,12 +1,15 @@
-import { useState } from 'react'
+import { useState, type ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
-import { Trash2, type LucideIcon } from 'lucide-react'
+import { Download, Trash2, type LucideIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Tooltip } from '@/components/ui/tooltip'
+import { TABLE_MODULE, useAccess } from '@/hooks/useAccess'
 import { useRemoveRow } from '@/hooks/useData'
-import type { TableName } from '@/lib/types'
+import { api } from '@/lib/api'
+import type { Module, TableName } from '@/lib/types'
+import { errorMessage } from '@/lib/utils'
 import { ConfirmDialog } from './confirm-dialog'
 import { EmptyState } from './states'
 
@@ -18,12 +21,14 @@ interface DeleteProps {
   redirectTo: string
 }
 
-/** Trash button + confirmation + redirect, shared by every record page. */
+/** Trash button + confirmation + redirect, shared by every record page; hidden without the delete permission. */
 export function DeleteRecordButton({ table, id, title, description, redirectTo }: DeleteProps) {
   const [open, setOpen] = useState(false)
   const remove = useRemoveRow(table)
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const { can } = useAccess()
+  if (!can(TABLE_MODULE[table], 'delete')) return null
 
   const confirm = () =>
     remove.mutate(id, {
@@ -53,4 +58,25 @@ export function RecordNotFound({ icon, label, backTo }: { icon: LucideIcon; labe
       action={<Button variant="outline" asChild><Link to={backTo}>{t('common.back')}</Link></Button>}
     />
   )
+}
+
+type CreateProps = ComponentProps<typeof Button> & { module: Module }
+
+/** A primary "New …" button that only exists for people allowed to create in `module`. */
+export function CreateButton({ module, ...props }: CreateProps) {
+  const { can } = useAccess()
+  return can(module, 'create') ? <Button {...props} /> : null
+}
+
+/** Downloads the list as CSV (exactly the records the user may see); hidden without the export permission. */
+export function ExportButton({ table }: { table: TableName }) {
+  const { t } = useTranslation()
+  const { can } = useAccess()
+  const [busy, setBusy] = useState(false)
+  if (!can(TABLE_MODULE[table], 'export')) return null
+  const run = () => {
+    setBusy(true)
+    api.exportCsv(table).then(() => toast.success(t('exported')), (e) => toast.error(errorMessage(e))).finally(() => setBusy(false))
+  }
+  return <Button variant="outline" disabled={busy} onClick={run}><Download /> {t('exportCsv')}</Button>
 }

@@ -30,9 +30,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     qc.clear()
   }, [qc])
 
-  const signIn = useCallback(({ access_token, user, workspace, role }: Token) => {
+  const signIn = useCallback(({ access_token, ...next }: Token) => {
     tokenStore.set(access_token)
-    setSession({ user, workspace, role })
+    setSession(next)
   }, [])
 
   const switchTo = useCallback((token: Token) => {
@@ -54,6 +54,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setWaking(false)
       })
   }, [signOut])
+
+  // Admins change roles and deactivate people at any time: pick that up when the tab regains focus.
+  useEffect(() => {
+    if (!session) return
+    const refresh = () => document.visibilityState === 'visible' && authApi.me().then(setSession).catch(() => {})
+    document.addEventListener('visibilitychange', refresh)
+    return () => document.removeEventListener('visibilitychange', refresh)
+  }, [session])
 
   return <AuthContext.Provider value={{ session, loading, waking, signIn, switchTo, updateUser, signOut }}>{children}</AuthContext.Provider>
 }

@@ -128,7 +128,8 @@ def build_activities(deal: Deal, contacts: dict[str, Contact], rng: random.Rando
     return calls + [build_activity(deal, contact, rng, now) for _ in range(rng.randint(1, 4))]
 
 
-def seed_workspace(db: Session, workspace_id: str, seed: int = 42) -> None:
+def seed_workspace(db: Session, workspace_id: str, owner_id: str | None = None, seed: int = 42) -> None:
+    """`owner_id` owns every sample record, so scoped reps see the data the way real data behaves."""
     rng, now = random.Random(seed), utcnow()
     stages = ensure_stages(db, workspace_id)
     companies = build_companies(workspace_id, rng, now)
@@ -141,7 +142,10 @@ def seed_workspace(db: Session, workspace_id: str, seed: int = 42) -> None:
     db.add_all(deals)
     db.flush()
     by_id = {c.id: c for c in contacts}
-    db.add_all([a for d in deals for a in build_activities(d, by_id, rng, now)])
+    activities = [a for d in deals for a in build_activities(d, by_id, rng, now)]
+    db.add_all(activities)
+    for row in [*companies, *contacts, *deals, *activities]:
+        row.owner_id = owner_id
     db.commit()
 
 

@@ -4,8 +4,8 @@ import { CalendarCheck, Plus } from 'lucide-react'
 import { SelectBox } from '@/components/common/form-fields'
 import { MotionList } from '@/components/common/motion-list'
 import { Page } from '@/components/common/page'
+import { CreateButton } from '@/components/common/record-actions'
 import { EmptyState, PageSkeleton } from '@/components/common/states'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ActivityMeta } from '@/features/activities/ActivityLinks'
@@ -50,7 +50,7 @@ export default function ActivitiesPage() {
     <Page
       title={t('activities.title')}
       description={t('activities.description')}
-      actions={<Button onClick={() => openModal({ kind: 'activity' })}><Plus /> {t('activities.newActivity')}</Button>}
+      actions={<CreateButton module="activities" onClick={() => openModal({ kind: 'activity' })}><Plus /> {t('activities.newActivity')}</CreateButton>}
     >
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)} className="max-w-full overflow-x-auto">

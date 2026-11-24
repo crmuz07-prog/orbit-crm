@@ -2,6 +2,8 @@ from collections.abc import Callable
 
 from fastapi.testclient import TestClient
 
+from tests.conftest import bearer
+
 Headers = dict[str, str]
 
 
@@ -9,11 +11,15 @@ def test_admin_issued_login_must_be_changed_on_first_sign_in(client: TestClient,
     member = add_member("nia@acme.com")
     me = client.get("/api/auth/me", headers=member).json()
     assert me["role"] == "member" and me["workspace"]["name"] == "Sam's workspace" and me["user"]["must_change_password"]
-    assert client.post("/api/auth/password", headers=member, json={"current_password": "temp-pass-123", "new_password": "my-own-pass"}).status_code == 204
+    changed = client.post("/api/auth/password", headers=member, json={"current_password": "temp-pass-123", "new_password": "my-own-pass"})
+    assert client.get("/api/auth/me", headers=member).json()["code"] == "session_revoked"  # other sessions are signed out
+    member = bearer(changed.json())
     assert client.get("/api/auth/me", headers=member).json()["user"]["must_change_password"] is False
-    # Both people share the same CRM data.
-    client.post("/api/companies", headers=auth, json={"name": "Shared Co"})
-    assert [c["name"] for c in client.get("/api/companies", headers=member).json()] == ["Shared Co"]
+    # New members start on the default "Sales rep" role: they work with their own records only.
+    client.post("/api/companies", headers=auth, json={"name": "Owner's Co"})
+    client.post("/api/companies", headers=member, json={"name": "Nia's Co"})
+    assert [c["name"] for c in client.get("/api/companies", headers=member).json()] == ["Nia's Co"]
+    assert len(client.get("/api/companies", headers=auth).json()) == 2
 
 
 def test_existing_account_gains_membership_and_can_switch(client: TestClient, auth: Headers, register: Callable[[str], Headers]) -> None:

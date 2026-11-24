@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/009-closed-access-superadmin.md](docs/prompts/009-closed-access-superadmin.md)
+Latest: [docs/prompts/010-rbac-record-ownership.md](docs/prompts/010-rbac-record-ownership.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -14,3 +14,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [007 — Cold-start-safe session, Supabase Postgres](docs/prompts/007-cold-start-session-supabase.md)
 - [008 — Teams, invites, roles, password reset, email verification, migrations](docs/prompts/008-teams-accounts-migrations.md)
 - [009 — Closed access: admin-issued credentials, superadmin panel](docs/prompts/009-closed-access-superadmin.md)
+- [010 — Access roles, record ownership & scope, session revocation, login protection](docs/prompts/010-rbac-record-ownership.md)

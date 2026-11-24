@@ -1,9 +1,9 @@
 from fastapi import APIRouter, status
 
 from app.api.deps import SuperCtx
-from app.schemas.admin import AdminUserIn, AdminUserOut, AdminUserPatch, CompanyIn, CompanyOut, CompanyPatch, MembershipIn
+from app.schemas.admin import AdminUserIn, AdminUserOut, AdminUserPatch, CompanyIn, CompanyOut, CompanyPatch, LoginAttemptOut, MembershipIn
 from app.schemas.team import SetPasswordIn
-from app.services import admin
+from app.services import admin, login_guard
 
 router = APIRouter(prefix="/admin", tags=["superadmin"])
 
@@ -51,3 +51,8 @@ def add_membership(user_id: str, payload: MembershipIn, ctx: SuperCtx) -> AdminU
 @router.delete("/users/{user_id}/memberships/{workspace_id}", response_model=AdminUserOut)
 def remove_membership(user_id: str, workspace_id: str, ctx: SuperCtx) -> AdminUserOut:
     return admin.remove_membership(ctx.db, user_id, workspace_id)
+
+
+@router.get("/login-attempts", response_model=list[LoginAttemptOut])
+def login_attempts(ctx: SuperCtx) -> list[LoginAttemptOut]:
+    return [LoginAttemptOut.model_validate(a) for a in login_guard.recent_attempts(ctx.db)]

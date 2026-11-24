@@ -21,3 +21,8 @@ def create_user(db: Session, full_name: str, email: str, password: str | None, v
     db.add(user)
     db.flush()
     return user
+
+
+def revoke_sessions(user: User) -> None:
+    """Signs the user out everywhere: tokens carrying an older session version stop working."""
+    user.session_version += 1

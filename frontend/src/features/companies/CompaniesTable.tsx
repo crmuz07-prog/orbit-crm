@@ -6,6 +6,7 @@ import { CompanyLogo } from '@/components/common/avatars'
 import { DataTable, type Column } from '@/components/common/data-table'
 import { EmptyState } from '@/components/common/states'
 import { Card } from '@/components/ui/card'
+import { useOwnerColumn } from '@/features/team/OwnerField'
 import { useCrm } from '@/hooks/useData'
 import { LIFECYCLES } from '@/lib/constants'
 import { dealStatus } from '@/lib/metrics'
@@ -32,6 +33,7 @@ function useCompanyRollups() {
 }
 
 function useCompanyColumns(): Column<Company>[] {
+  const owner = useOwnerColumn<Company>()
   const rollups = useCompanyRollups()
   const { t } = useTranslation()
   const stat = (c: Company, key: keyof Rollup) => rollups.get(c.id)?.[key] ?? 0
@@ -57,6 +59,7 @@ function useCompanyColumns(): Column<Company>[] {
     { key: 'contacts', header: t('companies.colContacts'), align: 'right', sortValue: (c) => stat(c, 'contacts'), cell: (c) => stat(c, 'contacts') },
     { key: 'open', header: t('companies.colOpen'), align: 'right', sortValue: (c) => stat(c, 'open'), cell: (c) => money(stat(c, 'open')) },
     { key: 'won', header: t('companies.colWon'), align: 'right', sortValue: (c) => stat(c, 'won'), cell: (c) => <span className="text-emerald-600 dark:text-emerald-400">{money(stat(c, 'won'))}</span> },
+    owner,
     { key: 'created', header: t('companies.colCreated'), sortValue: (c) => c.created_at, cell: (c) => <span className="text-muted-foreground">{shortDate(c.created_at)}</span> },
   ]
 }

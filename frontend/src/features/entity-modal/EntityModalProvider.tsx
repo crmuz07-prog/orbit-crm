@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { ActivityForm } from '@/features/activities/ActivityForm'
 import { CallForm } from '@/features/calls/CallForm'
@@ -8,7 +9,8 @@ import { CallWrapUpForm } from '@/features/telephony/CallWrapUpForm'
 import { CompanyForm } from '@/features/companies/CompanyForm'
 import { ContactForm } from '@/features/contacts/ContactForm'
 import { DealForm } from '@/features/deals/DealForm'
-import type { Activity, Company, Contact, Deal } from '@/lib/types'
+import { useAccess } from '@/hooks/useAccess'
+import type { Activity, Company, Contact, Deal, Module } from '@/lib/types'
 
 export type EntityRequest =
   | { kind: 'company'; initial?: Partial<Company> }
@@ -19,6 +21,9 @@ export type EntityRequest =
   | { kind: 'wrapUp'; initial: Activity }
 
 const RECORD_PATH = { company: '/companies', contact: '/contacts', deal: '/deals', activity: null, call: null, wrapUp: null }
+const MODULE: Record<EntityRequest['kind'], Module> = { company: 'companies', contact: 'contacts', deal: 'deals', activity: 'activities', call: 'activities', wrapUp: 'activities' }
+
+const isEdit = (req: EntityRequest) => !!req.initial && 'id' in req.initial
 
 const EntityModalContext = createContext<((req: EntityRequest) => void) | null>(null)
 
@@ -41,11 +46,17 @@ export function EntityModalProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const close = useCallback(() => setOpen(false), [])
+  const { can } = useAccess()
+  // One gate for every entry point (pages, ⌘K, quick-create, screen pop); the API enforces the same rule.
   const show = useCallback((req: EntityRequest) => {
+    if (!can(MODULE[req.kind], isEdit(req) ? 'edit' : 'create')) {
+      toast.error(t('errors.permission_denied'))
+      return
+    }
     setRequest(req)
     setOpen(true)
-  }, [])
-  const editing = !!request?.initial && 'id' in request.initial
+  }, [can, t])
+  const editing = !!request && isEdit(request)
 
   // A record created from scratch opens its page; one created in context keeps the user in place.
   const done = (row?: { id: string }) => {

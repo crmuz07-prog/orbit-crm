@@ -7,13 +7,17 @@ import { Page } from '@/components/common/page'
 import { PageSkeleton } from '@/components/common/states'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardHeader } from '@/components/ui/card'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { AccessRolesCard } from '@/features/access/AccessRolesCard'
+import { SalesTeamsCard } from '@/features/access/SalesTeamsCard'
+import { useAccessConfig } from '@/features/access/useAccessConfig'
 import { AccountCard } from '@/features/settings/AccountCard'
 import { DataCard } from '@/features/settings/DataCard'
 import { StageEditor } from '@/features/settings/StageEditor'
 import { TeamCard } from '@/features/team/TeamCard'
 import { TelephonyCard } from '@/features/telephony/TelephonyCard'
 import { useCrm } from '@/hooks/useData'
+import { usePersistentState } from '@/hooks/usePersistentState'
 import { useTheme } from '@/hooks/useTheme'
 import { LANGUAGES, setLanguage, type Language } from '@/i18n'
 
@@ -72,23 +76,49 @@ function AppearanceCard() {
   )
 }
 
+const TABS = ['account', 'team', 'workspace'] as const
+type Tab = (typeof TABS)[number]
+
+/** Team & access: everyone sees the team; owners and admins also manage roles and sales teams. */
+function TeamTab({ isAdmin }: { isAdmin: boolean }) {
+  const access = useAccessConfig(isAdmin)
+  return (
+    <>
+      <TeamCard access={isAdmin ? access.config : undefined} />
+      {isAdmin && <AccessRolesCard actions={access} />}
+      {isAdmin && <SalesTeamsCard actions={access} />}
+    </>
+  )
+}
+
 export default function SettingsPage() {
   const { isLoading } = useCrm()
   const { t } = useTranslation()
-  // Pipeline and telephony are workspace configuration: owners and admins only (mirrors the API).
-  const isAdmin = useWorkspaceSession().role !== 'member'
+  const session = useWorkspaceSession()
+  const [tab, setTab] = usePersistentState<Tab>('orbit:settings-tab', 'account', TABS)
+  // Workspace configuration is for owners and admins only (mirrors the API).
+  const isAdmin = session.role !== 'member'
   if (isLoading) return <PageSkeleton />
   return (
     <Page title={t('settings.title')} description={t('settings.description')}>
-      <div className="grid max-w-4xl gap-5">
-        <ProfileCard />
-        <AccountCard />
-        <TeamCard />
-        <AppearanceCard />
-        {isAdmin && <TelephonyCard />}
-        {isAdmin && <StageEditor />}
-        <DataCard />
-      </div>
+      <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)} className="max-w-4xl">
+        <TabsList className="mb-5">
+          {TABS.filter((v) => v !== 'workspace' || isAdmin || session.workspace.is_demo).map((v) => (
+            <TabsTrigger key={v} value={v}>{t(`settingsTabs.${v}`)}</TabsTrigger>
+          ))}
+        </TabsList>
+        <TabsContent value="account" className="grid gap-5">
+          <ProfileCard />
+          <AccountCard />
+          <AppearanceCard />
+        </TabsContent>
+        <TabsContent value="team" className="grid gap-5"><TeamTab isAdmin={isAdmin} /></TabsContent>
+        <TabsContent value="workspace" className="grid gap-5">
+          {isAdmin && <TelephonyCard />}
+          {isAdmin && <StageEditor />}
+          <DataCard />
+        </TabsContent>
+      </Tabs>
     </Page>
   )
 }

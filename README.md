@@ -59,5 +59,6 @@ DEMO_ENABLED=false
 - **Pinned notes** — muhim eslatmalar timeline tepasida
 - **Yopiq kirish (ERP uslubi)** — ro'yxatdan o'tish yo'q: superadmin `/admin` panelida kompaniya va loginlar yaratadi, kompaniya administratori xodimlarga login + vaqtinchalik parol beradi; birinchi kirishda parol almashtiriladi, faolsizlantirish, bir nechta workspace
 - **Jamoa** — rollar (Egasi / Administrator / A'zo), a'zolarni boshqarish, parol o'rnatish
+- **Kirish rollari va ko'lam** — bo'lim × amal (ko'rish, qo'shish, tahrirlash, o'chirish, eksport) va "o'ziniki / jamoasiniki / hammasi"; savdo jamoalari, yozuv egasi, CSV eksport, sessiyani majburiy yakunlash, login urinishlari cheklovi
 - **Akkaunt** — parolni tiklash (email yoki administrator havolasi), email tasdiqlash, profil va parolni o'zgartirish
 - **⌘K palette**, glass dizayn (light/dark), til almashtirish (UZ/RU/EN), mobil drawer, Settings: pipeline editor, sample data, demo reset

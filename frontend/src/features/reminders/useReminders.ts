@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { CALL_QUERIES } from '@/features/calls/useLogCall'
+import { useAccess } from '@/hooks/useAccess'
 import { useUpdateRow } from '@/hooks/useData'
 import { api } from '@/lib/api'
 import { isDue, SNOOZE_OPTIONS } from '@/lib/reminders'
@@ -34,7 +35,8 @@ export function useReminders() {
   const { t } = useTranslation()
   const actions = useReminderActions()
   const announced = useRef(new Set<string>())
-  const query = useQuery({ queryKey: CALL_QUERIES.reminders, queryFn: api.reminders, refetchInterval: POLL_MS })
+  const { can } = useAccess()
+  const query = useQuery({ queryKey: CALL_QUERIES.reminders, queryFn: api.reminders, refetchInterval: POLL_MS, enabled: can('activities', 'view') })
   const reminders = useMemo(() => query.data ?? [], [query.data])
   const due = useMemo(() => reminders.filter((r) => isDue(r.remind_at)), [reminders])
 

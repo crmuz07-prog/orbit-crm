@@ -4,9 +4,9 @@ import { Phone } from 'lucide-react'
 import { SelectBox } from '@/components/common/form-fields'
 import { MotionList } from '@/components/common/motion-list'
 import { Page } from '@/components/common/page'
+import { CreateButton } from '@/components/common/record-actions'
 import { matches, SearchInput } from '@/components/common/search-input'
 import { EmptyState, PageSkeleton } from '@/components/common/states'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ActivityMeta } from '@/features/activities/ActivityLinks'
 import { ActivityRow } from '@/features/activities/ActivityRow'
@@ -40,7 +40,7 @@ export default function CallsPage() {
 
   if (isLoading) return <PageSkeleton />
 
-  const logCall = <Button variant="success" onClick={() => openModal({ kind: 'call' })}><Phone /> {t('calls.logCall')}</Button>
+  const logCall = <CreateButton module="activities" variant="success" onClick={() => openModal({ kind: 'call' })}><Phone /> {t('calls.logCall')}</CreateButton>
 
   return (
     <Page title={t('calls.title')} description={t('calls.description')} actions={logCall}>

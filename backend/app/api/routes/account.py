@@ -33,6 +33,8 @@ def update_profile(payload: ProfileIn, ctx: UserCtx) -> UserOut:
     return UserOut.model_validate(account.update_profile(ctx.db, ctx.user, payload.full_name))
 
 
-@router.post("/password", status_code=status.HTTP_204_NO_CONTENT)
-def change_password(payload: PasswordChangeIn, ctx: UserCtx) -> None:
+@router.post("/password", response_model=TokenOut)
+def change_password(payload: PasswordChangeIn, ctx: UserCtx) -> TokenOut:
+    """Other devices are signed out; this one continues with the returned token."""
     account.change_password(ctx.db, ctx.user, payload.current_password, payload.new_password)
+    return auth.issue_token(ctx.db, ctx.user, ctx.workspace_id)

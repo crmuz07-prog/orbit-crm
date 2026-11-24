@@ -3,9 +3,9 @@ import { Handshake, KanbanSquare, List, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { SelectBox } from '@/components/common/form-fields'
 import { Page } from '@/components/common/page'
+import { CreateButton, ExportButton } from '@/components/common/record-actions'
 import { matches, SearchInput } from '@/components/common/search-input'
 import { EmptyState, PageSkeleton } from '@/components/common/states'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DealBoard } from '@/features/deals/DealBoard'
@@ -40,7 +40,7 @@ export default function DealsPage() {
   )
   const open = filtered.filter((d) => dealStatus(d, stageById) === 'open')
   const weighted = open.reduce((total, d) => total + weightedValue(d, stageById), 0)
-  const newDeal = <Button onClick={() => openModal({ kind: 'deal' })}><Plus /> {t('deals.newDeal')}</Button>
+  const newDeal = <CreateButton module="deals" onClick={() => openModal({ kind: 'deal' })}><Plus /> {t('deals.newDeal')}</CreateButton>
 
   if (isLoading) return <PageSkeleton />
 
@@ -48,7 +48,7 @@ export default function DealsPage() {
     <Page
       title={t('deals.title')}
       description={t('deals.summary', { open: money(sumAmount(open)), weighted: money(weighted), count: open.length })}
-      actions={newDeal}
+      actions={<><ExportButton table="deals" />{newDeal}</>}
     >
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <SearchInput value={query} onChange={setQuery} placeholder={t('deals.search')} />

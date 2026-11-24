@@ -15,8 +15,12 @@ DeleteHook = Callable[[Session, Any], None]
 References = Mapping[str, type[TenantMixin]]
 
 
-def list_rows(db: Session, model: type[Row], workspace_id: str, order_by: ColumnElement[Any]) -> Sequence[Row]:
+def list_rows(
+    db: Session, model: type[Row], workspace_id: str, order_by: ColumnElement[Any], visible: ColumnElement[bool] | None = None,
+) -> Sequence[Row]:
     query = select(model).where(model.workspace_id == workspace_id).order_by(order_by)
+    if visible is not None:
+        query = query.where(visible)
     return db.scalars(query).all()
 
 

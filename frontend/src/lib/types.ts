@@ -12,6 +12,11 @@ interface Row {
   updated_at: string
 }
 
+/** Sales records have an owner (drives own/team/all visibility). */
+interface Owned {
+  owner_id: string | null
+}
+
 export interface Stage extends Row {
   name: string
   position: number
@@ -21,7 +26,7 @@ export interface Stage extends Row {
   color: StageColor
 }
 
-export interface Company extends Row {
+export interface Company extends Row, Owned {
   name: string
   domain: string | null
   industry: string | null
@@ -33,7 +38,7 @@ export interface Company extends Row {
   description: string | null
 }
 
-export interface Contact extends Row {
+export interface Contact extends Row, Owned {
   company_id: string | null
   first_name: string
   last_name: string
@@ -43,7 +48,7 @@ export interface Contact extends Row {
   linkedin_url: string | null
 }
 
-export interface Deal extends Row {
+export interface Deal extends Row, Owned {
   title: string
   company_id: string | null
   contact_id: string | null
@@ -57,7 +62,7 @@ export interface Deal extends Row {
   closed_at: string | null
 }
 
-export interface Activity extends Row {
+export interface Activity extends Row, Owned {
   type: ActivityType
   subject: string
   body: string | null
@@ -110,6 +115,8 @@ export interface Session {
   /** Null for a platform superadmin who does not belong to any company. */
   workspace: Workspace | null
   role: Role | null
+  /** Effective permissions in the active workspace (the API enforces them; the UI mirrors them). */
+  permissions: Permissions | null
 }
 
 export interface WorkspaceChoice extends Workspace {
@@ -130,6 +137,8 @@ export interface TeamMember {
   is_active: boolean
   must_change_password: boolean
   joined_at: string
+  access_role_id: string | null
+  team_id: string | null
 }
 
 
@@ -224,3 +233,9 @@ export interface NewLogin {
   email: string
   password: string
 }
+
+
+export * from './access-types'
+import type { Permissions } from './access-types'
+
+export type MemberPatch = Partial<Pick<TeamMember, 'role' | 'access_role_id' | 'team_id'>>

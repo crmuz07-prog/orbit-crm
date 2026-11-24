@@ -9,7 +9,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Tooltip } from '@/components/ui/tooltip'
-import type { Role, TeamMember } from '@/lib/types'
+import type { AccessOverview, Role, TeamMember } from '@/lib/types'
+import { MemberAccess } from './MemberAccess'
 import { RoleSelect } from './RoleSelect'
 import type { TeamActions } from './useTeam'
 
@@ -18,7 +19,9 @@ interface Props {
   isSelf: boolean
   canManage: boolean
   actorRole: Role
-  actions: Pick<TeamActions, 'changeRole' | 'remove' | 'setPassword'>
+  actions: Pick<TeamActions, 'update' | 'remove' | 'setPassword'>
+  /** Roles and teams of the workspace; loaded for admins only. */
+  access?: AccessOverview
 }
 
 /** Admin issues a temporary password; the member must replace it at the next sign-in. */
@@ -62,7 +65,7 @@ function SetPasswordButton({ member, setPassword }: { member: TeamMember; setPas
 }
 
 /** One person in Settings → Team; owners can't be edited by admins (mirrors the API). */
-export function MemberRow({ member, isSelf, canManage, actorRole, actions }: Props) {
+export function MemberRow({ member, isSelf, canManage, actorRole, actions, access }: Props) {
   const { t } = useTranslation()
   const [confirm, setConfirm] = useState(false)
   const editable = canManage && !isSelf && (member.role !== 'owner' || actorRole === 'owner')
@@ -81,10 +84,11 @@ export function MemberRow({ member, isSelf, canManage, actorRole, actions }: Pro
         </p>
       </div>
       {editable ? (
-        <RoleSelect value={member.role} actorRole={actorRole} className="w-40" onChange={(role) => actions.changeRole.mutate({ userId: member.user_id, role })} />
+        <RoleSelect value={member.role} actorRole={actorRole} className="w-40" onChange={(role) => actions.update.mutate({ userId: member.user_id, patch: { role } })} />
       ) : (
         <Badge tone={member.role === 'owner' ? 'violet' : member.role === 'admin' ? 'blue' : 'gray'}>{t(`roles.${member.role}`)}</Badge>
       )}
+      {canManage && access && member.role === 'member' && <MemberAccess member={member} config={access} update={actions.update} />}
       {editable && (
         <div className="flex gap-0.5">
           <SetPasswordButton member={member} setPassword={actions.setPassword} />
