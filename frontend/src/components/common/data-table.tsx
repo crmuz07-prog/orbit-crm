@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react'
+import { useMemo, useState, type Dispatch, type ReactNode, type SetStateAction } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowDown, ArrowUp, ChevronsUpDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -24,8 +24,11 @@ interface DataTableProps<T> {
   /** Px the table keeps before scrolling sideways; list pages need room, small report cards do not. */
   minWidth?: number
   /** Checkbox column for bulk actions (amoCRM lists): the ids of checked rows. */
-  selection?: { selected: Set<string>; onChange: (next: Set<string>) => void }
+  selection?: Selection
 }
+
+/** Checked row ids; `onChange` is a state setter so quick successive clicks never lose one. */
+export type Selection = { selected: Set<string>; onChange: Dispatch<SetStateAction<Set<string>>> }
 
 const boxClass = 'rounded-[4px] border-foreground/30 hover:border-primary data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=indeterminate]:border-primary'
 
@@ -57,12 +60,11 @@ export function DataTable<T extends { id: string }>({ rows, columns, onRowClick,
   const { t } = useTranslation()
   const checked = selection ? sorted.filter((r) => selection.selected.has(r.id)).length : 0
   const toggleAll = () => selection?.onChange(new Set(checked === sorted.length ? [] : sorted.map((r) => r.id)))
-  const toggle = (id: string) => {
-    if (!selection) return
-    const next = new Set(selection.selected)
+  const toggle = (id: string) => selection?.onChange((prev) => {
+    const next = new Set(prev)
     if (!next.delete(id)) next.add(id)
-    selection.onChange(next)
-  }
+    return next
+  })
 
   return (
     <div className="overflow-x-auto">

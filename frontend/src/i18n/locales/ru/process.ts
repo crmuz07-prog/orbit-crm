@@ -1,6 +1,6 @@
 export const process = {
   people: {
-    section: 'Контакты и компании', shown: '{{shown}} из {{total}}', allDeals: 'Все сделки', deals: { open: 'С открытыми сделками', none: 'Без открытых сделок' },
+    moveAction: 'Перенести', moveDesc: 'Время в этапе начнётся заново; сделки в этапах выигрыша или проигрыша попадут в итоги.', moveTo: 'Перенести в этап…', moveTitle_one: 'Перенести {{count}} сделку в «{{name}}»?', moveTitle_few: 'Перенести {{count}} сделки в «{{name}}»?', moveTitle_many: 'Перенести {{count}} сделок в «{{name}}»?', moveTitle_other: 'Перенести {{count}} сделки в «{{name}}»?', moved_one: 'Перенесена {{count}} сделка', moved_few: 'Перенесено {{count}} сделки', moved_many: 'Перенесено {{count}} сделок', moved_other: 'Перенесено {{count}} сделки', section: 'Контакты и компании', shown: '{{shown}} из {{total}}', allDeals: 'Все сделки', deals: { open: 'С открытыми сделками', none: 'Без открытых сделок' },
     reset: 'Сбросить фильтры', colLast: 'Последняя активность',
     selected_one: 'Выбрана {{count}}', selected_few: 'Выбрано {{count}}', selected_many: 'Выбрано {{count}}', selected_other: 'Выбрано {{count}}', clear: 'Снять выделение',
     assignTo: 'Назначить…', assign: 'Назначить',
@@ -9,7 +9,7 @@ export const process = {
     assigned_one: 'Передана {{count}} запись', assigned_few: 'Передано {{count}} записи', assigned_many: 'Передано {{count}} записей', assigned_other: 'Передано {{count}} записи',
     deleteTitle_one: 'Удалить {{count}} запись?', deleteTitle_few: 'Удалить {{count}} записи?', deleteTitle_many: 'Удалить {{count}} записей?', deleteTitle_other: 'Удалить {{count}} записи?',
     deleted_one: 'Удалена {{count}} запись', deleted_few: 'Удалено {{count}} записи', deleted_many: 'Удалено {{count}} записей', deleted_other: 'Удалено {{count}} записи',
-    deleteDesc: { contacts: 'Их сделки и действия сохранятся, но будут отвязаны.', companies: 'Их контакты, сделки и действия сохранятся, но будут отвязаны.' },
+    deleteDesc: { deals: 'Их контакты, компании и действия сохранятся; действия будут отвязаны.', contacts: 'Их сделки и действия сохранятся, но будут отвязаны.', companies: 'Их контакты, сделки и действия сохранятся, но будут отвязаны.' },
   },
   tasks: {
     none: 'Нет задачи', overdueSince: 'Просрочено · {{when}}', filter: 'Все задачи', overdue: 'Просроченные', today: 'Сегодня', planned: 'Запланированные',

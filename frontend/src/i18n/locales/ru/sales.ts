@@ -27,7 +27,7 @@ export const sales: Locale<typeof en> = {
     healthyDesc: 'Все открытые сделки недавно обновлялись.', idleCloses: 'Без движения {{days}} дн. · закрытие {{date}}',
   },
   deals: {
-    title: 'Сделки', summary: '{{open}} в воронке · {{weighted}} взвешенно · открыто: {{count}}', newDeal: 'Новая сделка',
+    zones: { won: 'Выиграна', lost: 'Проиграна', delete: 'Удалить' }, presetsLabel: 'Быстрые фильтры', presets: { all: 'Все', mine: 'Мои сделки', noTask: 'Без задач', overdue: 'Просроченные задачи', today: 'Задачи на сегодня', won: 'Выигранные', lost: 'Проигранные' }, title: 'Сделки', summary: '{{open}} в воронке · {{weighted}} взвешенно · открыто: {{count}}', newDeal: 'Новая сделка',
     search: 'Поиск сделок или компаний', allPriorities: 'Все приоритеты', allStatuses: 'Все статусы', allValues: 'Все значения полей', colTask: 'Следующая задача', board: 'Доска', list: 'Список',
     empty: 'Сделок пока нет', emptyDesc: 'Создайте первую сделку или загрузите демо-данные в Настройках.',
     noMatch: 'Сделки не найдены', noMatchDesc: 'Попробуйте другой поиск или фильтр.', addDeal: 'Добавить сделку', idle: '{{days}} дн. без движения',

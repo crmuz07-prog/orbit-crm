@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { CompanyLogo, PersonAvatar } from '@/components/common/avatars'
-import { DataTable, type Column } from '@/components/common/data-table'
+import { DataTable, type Column, type Selection } from '@/components/common/data-table'
 import { EmptyState } from '@/components/common/states'
 import { Card } from '@/components/ui/card'
 import { DealsCell, EmailCell, LastActivityCell, PhoneCell, TaskCell } from '@/features/people/cells'
@@ -17,7 +17,7 @@ interface Props {
   contacts: Contact[]
   rollup: (id: string) => Rollup
   nextTask: (id: string) => NextTask
-  selection: { selected: Set<string>; onChange: (next: Set<string>) => void }
+  selection: Selection
 }
 
 function useContactColumns({ rollup, nextTask }: Pick<Props, 'rollup' | 'nextTask'>): Column<Contact>[] {

@@ -25,7 +25,7 @@ export const sales: Locale<typeof en> = {
     healthyDesc: 'Barcha ochiq bitimlar yaqinda yangilangan.', idleCloses: '{{days}} kun harakatsiz · yopilishi {{date}}',
   },
   deals: {
-    title: 'Bitimlar', summary: '{{open}} ochiq pipeline · {{weighted}} vaznli · {{count}} ta ochiq', newDeal: 'Yangi bitim',
+    zones: { won: 'Yutildi', lost: 'Yutqazildi', delete: 'Oʻchirish' }, presetsLabel: 'Tezkor filtrlar', presets: { all: 'Barchasi', mine: 'Mening bitimlarim', noTask: 'Vazifasiz', overdue: 'Kechikkan vazifalar', today: 'Bugungi vazifalar', won: 'Yutilgan', lost: 'Yutqazilgan' }, title: 'Bitimlar', summary: '{{open}} ochiq pipeline · {{weighted}} vaznli · {{count}} ta ochiq', newDeal: 'Yangi bitim',
     search: 'Bitim yoki kompaniya qidirish', allPriorities: 'Barcha muhimliklar', allStatuses: 'Barcha holatlar', allValues: 'Barcha maydon qiymatlari', colTask: 'Keyingi vazifa', board: 'Doska', list: 'Roʻyxat',
     empty: 'Hozircha bitim yoʻq', emptyDesc: 'Birinchi imkoniyatni yarating yoki Sozlamalardan namuna maʼlumot yuklang.',
     noMatch: 'Mos bitim topilmadi', noMatchDesc: 'Boshqa qidiruv yoki filtrni sinab koʻring.', addDeal: 'Bitim qoʻshish', idle: '{{days}} kun harakatsiz',

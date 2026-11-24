@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/030-amocrm-contacts-companies.md](docs/prompts/030-amocrm-contacts-companies.md)
+Latest: [docs/prompts/031-amocrm-deals.md](docs/prompts/031-amocrm-deals.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -35,3 +35,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [028 — Every consequential action asks first](docs/prompts/028-confirm-consequential-actions.md)
 - [029 — One confirmation for all changes on a record card](docs/prompts/029-one-confirmation-per-card.md)
 - [030 — Contacts and companies like amoCRM](docs/prompts/030-amocrm-contacts-companies.md)
+- [031 — Deals like amoCRM](docs/prompts/031-amocrm-deals.md)

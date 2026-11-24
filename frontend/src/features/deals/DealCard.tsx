@@ -76,7 +76,13 @@ export function DealCardBody({ deal, overlay }: { deal: Deal; overlay?: boolean 
       <div className="mt-2 flex items-center justify-between gap-2">
         {deal.amount > 0 ? <span className="text-[13px] font-semibold tabular-nums">{money(deal.amount, deal.currency)}</span>
           : !closed ? <NextTaskBadge next={nextTask} className="min-w-0" /> : <span />}
-        {contact && <PersonAvatar name={fullName(contact)} size="xs" />}
+        {contact && (
+          <span className="flex min-w-0 items-center gap-1 text-[11px] text-muted-foreground">
+            {/* Leads are often named after the person; repeating the name adds nothing. */}
+            {fullName(contact) !== deal.title && <span className="truncate">{fullName(contact)}</span>}
+            <PersonAvatar name={fullName(contact)} size="xs" />
+          </span>
+        )}
       </div>
       {deal.amount > 0 && !closed && <NextTaskBadge next={nextTask} className="mt-1.5" />}
       <CardMeta deal={deal} />
