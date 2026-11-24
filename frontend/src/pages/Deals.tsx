@@ -5,7 +5,7 @@ import { SelectBox } from '@/components/common/form-fields'
 import { Page } from '@/components/common/page'
 import { CreateButton, ExportButton } from '@/components/common/record-actions'
 import { matches, SearchInput } from '@/components/common/search-input'
-import { EmptyState, PageSkeleton } from '@/components/common/states'
+import { EmptyState, PageLoading } from '@/components/common/states'
 import { Card } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DealBoard } from '@/features/deals/DealBoard'
@@ -48,7 +48,7 @@ export default function DealsPage() {
   const weighted = open.reduce((total, d) => total + weightedValue(d, stageById), 0)
   const newDeal = <CreateButton module="deals" onClick={() => openModal({ kind: 'deal', initial: stages[0] ? { stage_id: stages[0].id } : undefined })}><Plus /> {t('deals.newDeal')}</CreateButton>
 
-  if (isLoading) return <PageSkeleton />
+  if (isLoading) return <PageLoading title={t('deals.title')} />
 
   return (
     <Page

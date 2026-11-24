@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/019-blank-page-after-navigation.md](docs/prompts/019-blank-page-after-navigation.md)
+Latest: [docs/prompts/020-no-skeleton-on-first-open.md](docs/prompts/020-no-skeleton-on-first-open.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -24,3 +24,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [017 — Translate every status and option](docs/prompts/017-translate-statuses-options.md)
 - [018 — Fast first paint: keep-warm ping, cached session and data](docs/prompts/018-fast-first-paint.md)
 - [019 — Blank page after quick navigation (route transition)](docs/prompts/019-blank-page-after-navigation.md)
+- [020 — No full-screen skeleton on first open](docs/prompts/020-no-skeleton-on-first-open.md)

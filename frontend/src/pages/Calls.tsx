@@ -6,7 +6,7 @@ import { MotionList } from '@/components/common/motion-list'
 import { Page } from '@/components/common/page'
 import { CreateButton } from '@/components/common/record-actions'
 import { matches, SearchInput } from '@/components/common/search-input'
-import { EmptyState, PageSkeleton } from '@/components/common/states'
+import { EmptyState, PageLoading } from '@/components/common/states'
 import { Card } from '@/components/ui/card'
 import { ActivityMeta } from '@/features/activities/ActivityLinks'
 import { ActivityRow } from '@/features/activities/ActivityRow'
@@ -38,7 +38,7 @@ export default function CallsPage() {
     [activities, outcome, direction, query, contactById],
   )
 
-  if (isLoading) return <PageSkeleton />
+  if (isLoading) return <PageLoading title={t('calls.title')} description={t('calls.description')} />
 
   const logCall = <CreateButton module="activities" variant="success" onClick={() => openModal({ kind: 'call' })}><Phone /> {t('calls.logCall')}</CreateButton>
 

@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAuth } from '@/auth/AuthProvider'
@@ -11,7 +11,25 @@ import type { Module } from '@/lib/types'
 import { EntityModalProvider } from '@/features/entity-modal/EntityModalProvider'
 import LoginPage from '@/pages/Login'
 
-const page = (load: () => Promise<{ default: React.ComponentType }>) => lazy(load)
+// Every page is its own chunk; all of them are fetched in the background once the app is idle, so opening a page
+// for the first time doesn't wait for its code.
+const loaders: (() => Promise<unknown>)[] = []
+const page = (load: () => Promise<{ default: React.ComponentType }>) => {
+  loaders.push(load)
+  return lazy(load)
+}
+
+function usePreloadPages() {
+  useEffect(() => {
+    const run = () => loaders.forEach((load) => load().catch(() => {}))
+    const idle = window.requestIdleCallback?.(run, { timeout: 3000 })
+    const timer = idle === undefined ? window.setTimeout(run, 1500) : undefined
+    return () => {
+      if (idle !== undefined) window.cancelIdleCallback(idle)
+      clearTimeout(timer)
+    }
+  }, [])
+}
 
 // The module decides who may open the page (null: every member).
 const APP_ROUTES: [path: string, Component: React.ComponentType, module: Module | null][] = [
@@ -46,6 +64,7 @@ export default function App() {
   const { session, loading, waking } = useAuth()
   // Remount routes on language change so every formatted date / number re-renders.
   const { i18n } = useTranslation()
+  usePreloadPages()
   if (loading) return <div className="p-8">{waking && <ServerWaking />}<PageSkeleton /></div>
 
   if (!session) {

@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { Handshake, Pencil, RotateCcw, ThumbsDown, Trophy } from 'lucide-react'
 import { BackLink } from '@/components/common/record'
 import { DeleteRecordButton, RecordNotFound } from '@/components/common/record-actions'
-import { PageSkeleton } from '@/components/common/states'
+import { RecordSkeleton } from '@/components/common/states'
 import { Button } from '@/components/ui/button'
 import { Tooltip } from '@/components/ui/tooltip'
 import { AssociationCards } from '@/features/deals/AssociationCards'
@@ -57,7 +57,7 @@ export default function DealDetailPage() {
   const [lostTarget, setLostTarget] = useState<Stage | null>(null)
   const stages = useDealStages(dealById.get(id)?.stage_id)
 
-  if (isLoading) return <PageSkeleton />
+  if (isLoading) return <RecordSkeleton />
   const deal = dealById.get(id)
   if (!deal) return <RecordNotFound icon={Handshake} label={t('entity.deal')} backTo="/deals" />
 

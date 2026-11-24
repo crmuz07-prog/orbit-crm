@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { Mail, Pencil, Phone, Users } from 'lucide-react'
 import { BackLink } from '@/components/common/record'
 import { DeleteRecordButton, RecordNotFound } from '@/components/common/record-actions'
-import { PageSkeleton } from '@/components/common/states'
+import { RecordSkeleton } from '@/components/common/states'
 import { Button } from '@/components/ui/button'
 import { Tooltip } from '@/components/ui/tooltip'
 import { DealsListCard } from '@/features/deals/DealsListCard'
@@ -20,7 +20,7 @@ export default function ContactDetailPage() {
   const openModal = useEntityModal()
   const { t } = useTranslation()
 
-  if (isLoading) return <PageSkeleton />
+  if (isLoading) return <RecordSkeleton />
   const contact = contactById.get(id)
   if (!contact) return <RecordNotFound icon={Users} label={t('entity.contact')} backTo="/contacts" />
 

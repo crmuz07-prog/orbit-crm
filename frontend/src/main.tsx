@@ -21,7 +21,8 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      {/* startTransition: while a page's code loads, the current page stays on screen instead of a fallback. */}
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <MotionConfig reducedMotion="user">
           <TooltipProvider delayDuration={300}>
             <AuthProvider>

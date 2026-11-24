@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import { Suspense, useCallback, useEffect, useState, type ReactNode } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/auth/AuthProvider'
+import { ContentSkeleton } from '@/components/common/states'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { VerifyBanner } from '@/features/auth/VerifyBanner'
 import { SubscriptionBanner } from '@/features/billing/SubscriptionBanner'
@@ -77,9 +78,14 @@ export function AppShell() {
         <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
           {/* Enter-only page transition. An exit animation (AnimatePresence mode="wait") could be interrupted by fast
               back-and-forth navigation and leave the new page stuck at opacity 0 — a blank screen. */}
-          <motion.div key={location.pathname} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
-            <Outlet />
-          </motion.div>
+          {/* Inside the shell, so a page whose code is still loading never hides the sidebar and top bar; outside the
+              keyed wrapper, so a navigation (a router transition) keeps the current page on screen until the next one is
+              ready instead of flashing the fallback. */}
+          <Suspense fallback={<ContentSkeleton />}>
+            <motion.div key={location.pathname} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
+              <Outlet />
+            </motion.div>
+          </Suspense>
         </main>
       </div>
     </div>

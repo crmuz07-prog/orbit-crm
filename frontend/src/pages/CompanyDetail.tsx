@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import { PersonAvatar } from '@/components/common/avatars'
 import { BackLink, ListCard, RowLink } from '@/components/common/record'
 import { DeleteRecordButton, RecordNotFound } from '@/components/common/record-actions'
-import { PageSkeleton } from '@/components/common/states'
+import { RecordSkeleton } from '@/components/common/states'
 import { Button } from '@/components/ui/button'
 import { Tooltip } from '@/components/ui/tooltip'
 import { DealsListCard } from '@/features/deals/DealsListCard'
@@ -35,7 +35,7 @@ export default function CompanyDetailPage() {
   const { people, companyDeals, related, openValue, wonValue } = useCompanyRecord(id)
   const { t } = useTranslation()
 
-  if (isLoading) return <PageSkeleton />
+  if (isLoading) return <RecordSkeleton />
   const company = companyById.get(id)
   if (!company) return <RecordNotFound icon={Building2} label={t('entity.company')} backTo="/companies" />
 

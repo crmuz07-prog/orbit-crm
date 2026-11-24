@@ -4,7 +4,7 @@ import { useWorkspaceSession } from '@/auth/AuthProvider'
 import { PersonAvatar } from '@/components/common/avatars'
 import { Flag } from '@/components/common/flags'
 import { Page } from '@/components/common/page'
-import { PageSkeleton } from '@/components/common/states'
+import { PageLoading } from '@/components/common/states'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardHeader } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -98,7 +98,7 @@ export default function SettingsPage() {
   const [tab, setTab] = usePersistentState<Tab>('orbit:settings-tab', 'account', TABS)
   // Workspace configuration is for owners and admins only (mirrors the API).
   const isAdmin = session.role !== 'member'
-  if (isLoading) return <PageSkeleton />
+  if (isLoading) return <PageLoading title={t('settings.title')} description={t('settings.description')} />
   return (
     <Page title={t('settings.title')} description={t('settings.description')}>
       <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)} className="max-w-4xl">

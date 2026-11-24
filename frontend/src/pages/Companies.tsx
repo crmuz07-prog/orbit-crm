@@ -5,7 +5,7 @@ import { SelectBox } from '@/components/common/form-fields'
 import { Page } from '@/components/common/page'
 import { CreateButton, ExportButton } from '@/components/common/record-actions'
 import { matches, SearchInput } from '@/components/common/search-input'
-import { EmptyState, PageSkeleton } from '@/components/common/states'
+import { EmptyState, PageLoading } from '@/components/common/states'
 import { Card } from '@/components/ui/card'
 import { CompaniesTable } from '@/features/companies/CompaniesTable'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
@@ -28,7 +28,7 @@ export default function CompaniesPage() {
   )
   const newCompany = <CreateButton module="companies" onClick={() => openModal({ kind: 'company' })}><Plus /> {t('companies.newCompany')}</CreateButton>
 
-  if (isLoading) return <PageSkeleton />
+  if (isLoading) return <PageLoading title={t('companies.title')} />
 
   return (
     <Page

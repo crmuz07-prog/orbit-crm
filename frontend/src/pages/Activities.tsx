@@ -5,7 +5,7 @@ import { SelectBox } from '@/components/common/form-fields'
 import { MotionList } from '@/components/common/motion-list'
 import { Page } from '@/components/common/page'
 import { CreateButton } from '@/components/common/record-actions'
-import { EmptyState, PageSkeleton } from '@/components/common/states'
+import { EmptyState, PageLoading } from '@/components/common/states'
 import { Card } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ActivityMeta } from '@/features/activities/ActivityLinks'
@@ -44,7 +44,7 @@ export default function ActivitiesPage() {
     return isChronological(tab) ? [...list].sort((a, b) => dueTime(a) - dueTime(b)) : list
   }, [activities, tab, type])
 
-  if (isLoading) return <PageSkeleton />
+  if (isLoading) return <PageLoading title={t('activities.title')} />
 
   return (
     <Page
