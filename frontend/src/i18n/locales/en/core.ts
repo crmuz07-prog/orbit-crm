@@ -48,7 +48,7 @@ export const core = {
     defaultPipeline: { title: 'Make “{{name}}” the default pipeline?', desc: 'New deals and the board open in it first.', action: 'Make default' },
     defaultRole: { title: 'Make “{{name}}” the default role?', desc: 'New members get these permissions.', action: 'Make default' },
   },
-  unsaved: { title: 'Discard unsaved changes?', description: 'What you changed here has not been saved.', discard: 'Discard changes', keep: 'Keep editing', badge: 'Not saved', save: 'Save', cancel: 'Cancel' },
+  unsaved: { changes_one: '{{count}} unsaved change', changes_other: '{{count}} unsaved changes', title: 'Discard unsaved changes?', description: 'What you changed here has not been saved.', discard: 'Discard changes', keep: 'Keep editing', badge: 'Not saved', save: 'Save', cancel: 'Cancel' },
   validation: {
     rules: { required: 'Fill in this field', email: 'Enter a valid email, e.g. name@company.uz', too_short: 'At least {{min}} characters', too_long: 'At most {{max}} characters', mismatch: 'Passwords do not match', invalid: 'Check this value', wrong_password: 'The current password is incorrect', range: 'Enter a whole number from {{min}} to {{max}}', min_value: 'Enter a whole number, at least {{min}}' },
     dealName: 'Deal name is required', stage: 'Pick a pipeline stage', companyName: 'Company name is required',

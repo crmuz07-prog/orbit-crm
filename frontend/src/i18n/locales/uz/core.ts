@@ -51,7 +51,7 @@ export const core: Locale<typeof en> = {
     defaultPipeline: { title: '«{{name}}» standart voronka boʻlsinmi?', desc: 'Yangi bitimlar va doska birinchi navbatda shu voronkada ochiladi.', action: 'Standart qilish' },
     defaultRole: { title: '«{{name}}» standart rol boʻlsinmi?', desc: 'Yangi aʼzolar shu huquqlarni oladi.', action: 'Standart qilish' },
   },
-  unsaved: { title: 'Saqlanmagan oʻzgarishlar oʻchirilsinmi?', description: 'Bu yerda oʻzgartirganlaringiz hali saqlanmagan.', discard: 'Oʻzgarishlarni bekor qilish', keep: 'Tahrirni davom ettirish', badge: 'Saqlanmagan', save: 'Saqlash', cancel: 'Bekor qilish' },
+  unsaved: { changes_one: '{{count}} ta oʻzgarish saqlanmagan', changes_other: '{{count}} ta oʻzgarish saqlanmagan', title: 'Saqlanmagan oʻzgarishlar oʻchirilsinmi?', description: 'Bu yerda oʻzgartirganlaringiz hali saqlanmagan.', discard: 'Oʻzgarishlarni bekor qilish', keep: 'Tahrirni davom ettirish', badge: 'Saqlanmagan', save: 'Saqlash', cancel: 'Bekor qilish' },
   validation: {
     rules: { required: 'Bu maydonni toʻldiring', email: 'Toʻgʻri email kiriting, masalan name@kompaniya.uz', too_short: 'Kamida {{min}} ta belgi', too_long: 'Koʻpi bilan {{max}} ta belgi', mismatch: 'Parollar mos kelmadi', invalid: 'Qiymatni tekshiring', wrong_password: 'Joriy parol notoʻgʻri', range: '{{min}} dan {{max}} gacha butun son kiriting', min_value: 'Kamida {{min}} boʻlgan butun son kiriting' },
     dealName: 'Bitim nomi majburiy', stage: 'Pipeline bosqichini tanlang', companyName: 'Kompaniya nomi majburiy',

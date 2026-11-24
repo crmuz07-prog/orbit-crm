@@ -1,8 +1,5 @@
-import { useTranslation } from 'react-i18next'
-import { toast } from 'sonner'
 import { MULTI_SEPARATOR, InlineField, type Editor } from '@/features/record/InlineField'
 import { TABLE_MODULE, useAccess } from '@/hooks/useAccess'
-import { useUpdateRow } from '@/hooks/useData'
 import type { CustomField, CustomValue, Deal } from '@/lib/types'
 import { ValueChip } from './FieldChips'
 import { displayValue, isWarning, useCustomFields, valueList } from './useFields'
@@ -22,16 +19,14 @@ function parse(field: CustomField, raw: string): CustomValue {
 
 /** The workspace's custom fields of a deal, editable in place like the built-in ones. */
 export function CustomFieldRows({ deal }: { deal: Deal }) {
-  const { t } = useTranslation()
   const fields = useCustomFields()
-  const update = useUpdateRow('deals')
   const { can } = useAccess()
   const readOnly = !can(TABLE_MODULE.deals, 'edit')
-  const save = (field: CustomField) => (raw: string) => {
+  // Only this field's value: the card's draft merges it over the deal's other custom values when saving.
+  const toPatch = (field: CustomField) => (raw: string) => {
     const value = parse(field, raw)
-    if (field.type === 'number' && typeof value === 'number' && Number.isNaN(value)) return
-    const custom = { ...(deal.custom ?? {}), [field.key]: value }
-    update.mutate({ id: deal.id, patch: { custom } }, { onSuccess: () => toast.success(t('card.saved')) })
+    if (field.type === 'number' && typeof value === 'number' && Number.isNaN(value)) return null
+    return { custom: { [field.key]: value } }
   }
 
   return fields.map((f) => {
@@ -39,9 +34,9 @@ export function CustomFieldRows({ deal }: { deal: Deal }) {
     const list = valueList(value)
     const chips = (f.type === 'select' || f.type === 'multiselect') && list.length > 0
     return (
-      <InlineField key={f.id} label={f.label} raw={f.type === 'multiselect' ? list.join(MULTI_SEPARATOR) : list[0] ?? ''} readOnly={readOnly}
+      <InlineField key={f.id} name={`custom.${f.key}`} label={f.label} raw={f.type === 'multiselect' ? list.join(MULTI_SEPARATOR) : list[0] ?? ''} readOnly={readOnly}
         display={chips ? <span className="flex flex-wrap gap-1">{list.map((v) => <ValueChip key={v} value={v} warn={isWarning(f, v)} />)}</span> : displayValue(f, value)}
-        editor={editorFor(f)} onSave={save(f)} />
+        editor={editorFor(f)} toPatch={toPatch(f)} />
     )
   })
 }
