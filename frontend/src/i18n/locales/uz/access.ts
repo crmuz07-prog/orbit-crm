@@ -21,6 +21,7 @@ export const access: Locale<typeof en> = {
   owner: { label: 'Masʼul', unassigned: 'Biriktirilmagan', me: 'Men' },
   settingsTabs: { account: 'Hisob', team: 'Jamoa va huquqlar', workspace: 'Ish maydoni' },
   noAccess: { title: 'Bu boʻlimga kirish huquqi yoʻq', desc: 'Kirish rolingizni oʻzgartirish uchun administratorga murojaat qiling.' },
+  crash: { title: 'Nimadir xato ketdi', desc: 'Sahifani koʻrsatib boʻlmadi. Odatda qayta yuklash yordam beradi.', reload: 'Qayta yuklash' },
   exportCsv: 'CSV eksport', exported: 'Eksport yuklab olindi',
   security: { tab: 'Xavfsizlik', title: 'Kirish urinishlari', email: 'Login', ip: 'IP manzil', result: 'Natija', time: 'Vaqt', success: 'Muvaffaqiyatli', failed: 'Xato', empty: 'Hozircha kirish urinishlari yoʻq' },
 }

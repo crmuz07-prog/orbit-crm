@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/011-subscriptions-seats-rls.md](docs/prompts/011-subscriptions-seats-rls.md)
+Latest: [docs/prompts/012-stale-build-blank-page.md](docs/prompts/012-stale-build-blank-page.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -16,3 +16,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [009 — Closed access: admin-issued credentials, superadmin panel](docs/prompts/009-closed-access-superadmin.md)
 - [010 — Access roles, record ownership & scope, session revocation, login protection](docs/prompts/010-rbac-record-ownership.md)
 - [011 — Subscriptions, seats, payments (erp1 model), Supabase RLS](docs/prompts/011-subscriptions-seats-rls.md)
+- [012 — Blank page after deploy: error boundary, stale-build reload](docs/prompts/012-stale-build-blank-page.md)

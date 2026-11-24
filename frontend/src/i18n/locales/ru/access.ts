@@ -22,6 +22,7 @@ export const access: Locale<typeof en> = {
   owner: { label: 'Ответственный', unassigned: 'Не назначен', me: 'Я' },
   settingsTabs: { account: 'Аккаунт', team: 'Команда и доступ', workspace: 'Пространство' },
   noAccess: { title: 'Нет доступа к разделу', desc: 'Попросите администратора изменить вашу роль доступа.' },
+  crash: { title: 'Что-то пошло не так', desc: 'Страницу не удалось показать. Обычно помогает перезагрузка.', reload: 'Перезагрузить' },
   exportCsv: 'Экспорт CSV', exported: 'Файл экспорта загружен',
   security: { tab: 'Безопасность', title: 'Попытки входа', email: 'Логин', ip: 'IP-адрес', result: 'Результат', time: 'Время', success: 'Успешно', failed: 'Ошибка', empty: 'Попыток входа пока нет' },
 }

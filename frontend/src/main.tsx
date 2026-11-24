@@ -6,9 +6,13 @@ import { MotionConfig } from 'framer-motion'
 import { Toaster } from 'sonner'
 import { AuthProvider } from '@/auth/AuthProvider'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { ErrorBoundary } from '@/components/common/error-boundary'
+import { reloadOnStaleBuild } from '@/lib/stale-build'
 import App from './App'
 import '@/i18n'
 import './index.css'
+
+reloadOnStaleBuild()
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000, refetchOnWindowFocus: false, retry: 1 } },
@@ -21,7 +25,9 @@ createRoot(document.getElementById('root')!).render(
         <MotionConfig reducedMotion="user">
           <TooltipProvider delayDuration={300}>
             <AuthProvider>
-              <App />
+              <ErrorBoundary>
+                <App />
+              </ErrorBoundary>
               <Toaster position="bottom-right" richColors closeButton />
             </AuthProvider>
           </TooltipProvider>

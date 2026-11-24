@@ -18,6 +18,7 @@ export const access = {
   owner: { label: 'Owner', unassigned: 'Unassigned', me: 'Me' },
   settingsTabs: { account: 'Account', team: 'Team & access', workspace: 'Workspace' },
   noAccess: { title: 'No access to this section', desc: 'Ask an administrator to change your access role.' },
+  crash: { title: 'Something went wrong', desc: 'The page could not be displayed. Reloading usually fixes it.', reload: 'Reload' },
   exportCsv: 'Export CSV', exported: 'Export downloaded',
   security: { tab: 'Security', title: 'Sign-in attempts', email: 'Login', ip: 'IP address', result: 'Result', time: 'Time', success: 'Success', failed: 'Failed', empty: 'No sign-in attempts yet' },
 }
