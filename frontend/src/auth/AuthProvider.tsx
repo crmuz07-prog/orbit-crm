@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 import { useQueryClient } from '@tanstack/react-query'
 import { authApi } from '@/lib/api'
 import { ApiError, setUnauthorizedHandler, tokenStore, withRetry } from '@/lib/http'
+import { clearOfflineCache, persistQueries, restoreQueries, sessionCache } from '@/lib/offline-cache'
 import type { Session, Token, User } from '@/lib/types'
 
 interface AuthState {
@@ -20,12 +21,18 @@ const AuthContext = createContext<AuthState | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const qc = useQueryClient()
-  const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(!!tokenStore.get())
+  // A returning user starts from the last known session and data (checked against the API right after).
+  const [session, setSession] = useState<Session | null>(() => {
+    const cached = tokenStore.get() ? sessionCache.read() : null
+    if (cached) restoreQueries(qc, cached)
+    return cached
+  })
+  const [loading, setLoading] = useState(() => !!tokenStore.get() && !session)
   const [waking, setWaking] = useState(false)
 
   const signOut = useCallback(() => {
     tokenStore.clear()
+    clearOfflineCache()
     setSession(null)
     qc.clear()
   }, [qc])
@@ -36,6 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const switchTo = useCallback((token: Token) => {
+    clearOfflineCache()
     qc.clear()
     signIn(token)
   }, [qc, signIn])
@@ -54,6 +62,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setWaking(false)
       })
   }, [signOut])
+
+  // Keep the session and this user's data for the next visit.
+  useEffect(() => {
+    if (!session) return
+    sessionCache.write(session)
+    return persistQueries(qc, session)
+  }, [qc, session])
 
   // Admins change roles and deactivate people at any time: pick that up when the tab regains focus.
   useEffect(() => {
