@@ -1,5 +1,4 @@
 import { useState, type FormEvent } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { ArrowRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
@@ -9,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { AuthLayout } from '@/features/auth/AuthLayout'
 import { useAsyncAction } from '@/features/auth/useAsyncAction'
+import { useAuthConfig } from '@/features/auth/useAuthConfig'
 import { authApi } from '@/lib/api'
 import { withRetry } from '@/lib/http'
 import type { Token } from '@/lib/types'
@@ -21,7 +21,7 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const { busy, run } = useAsyncAction()
-  const { data: config } = useQuery({ queryKey: ['auth-config'], queryFn: () => withRetry(authApi.config) })
+  const config = useAuthConfig()
   const [mode, setMode] = useState<Mode>('signin')
   // Closed (ERP-style) deployments: no sign-up, and password help comes from the administrator.
   const canSignUp = config?.registration_enabled ?? false
@@ -43,7 +43,7 @@ export default function LoginPage() {
 
   return (
     <AuthLayout title={mode === 'signin' ? t('auth.welcome') : t('auth.create')} subtitle={mode === 'signin' ? t('auth.signInSub') : t('auth.signUpSub')}>
-      {config?.demo_enabled !== false && (
+      {config?.demo_enabled && (
         <>
           <Button variant="outline" className="w-full" disabled={busy} onClick={() => enter(authApi.demo)}>
             {t('auth.demo')} <ArrowRight className="ml-auto" />
@@ -56,7 +56,8 @@ export default function LoginPage() {
       <form onSubmit={submit} className="grid gap-4">
         {mode === 'signup' && <TextField label={t('auth.fullName')} required value={form.fullName} onChange={set('fullName')} placeholder="Alex Morgan" />}
         <TextField label={t('auth.email')} type="email" required autoComplete="email" value={form.email} onChange={set('email')} placeholder="you@company.com" />
-        <TextField label={t('auth.password')} type="password" required minLength={8} autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} value={form.password} onChange={set('password')} />
+        {/* The length rule is for new passwords only; existing (e.g. admin-issued) ones must always be accepted. */}
+        <TextField label={t('auth.password')} type="password" required minLength={mode === 'signup' ? 8 : undefined} autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} value={form.password} onChange={set('password')} />
         {mode === 'signin' && config?.email_enabled && <Link to="/forgot" className="-mt-2 justify-self-end text-xs font-medium text-primary hover:underline">{t('account.forgot')}</Link>}
         <Button type="submit" disabled={busy}>{busy ? t('common.pleaseWait') : mode === 'signin' ? t('auth.signIn') : t('auth.signUp')}</Button>
       </form>

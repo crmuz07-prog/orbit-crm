@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/012-stale-build-blank-page.md](docs/prompts/012-stale-build-blank-page.md)
+Latest: [docs/prompts/013-login-page-flicker.md](docs/prompts/013-login-page-flicker.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -17,3 +17,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [010 — Access roles, record ownership & scope, session revocation, login protection](docs/prompts/010-rbac-record-ownership.md)
 - [011 — Subscriptions, seats, payments (erp1 model), Supabase RLS](docs/prompts/011-subscriptions-seats-rls.md)
 - [012 — Blank page after deploy: error boundary, stale-build reload](docs/prompts/012-stale-build-blank-page.md)
+- [013 — Stable login page on refresh, any password length on sign-in](docs/prompts/013-login-page-flicker.md)
