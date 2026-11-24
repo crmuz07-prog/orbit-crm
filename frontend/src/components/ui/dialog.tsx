@@ -1,4 +1,5 @@
 import * as React from 'react'
+import i18n from 'i18next'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -28,7 +29,7 @@ export const DialogContent = React.forwardRef<
       {!hideClose && (
         <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-60 transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40">
           <X className="size-4" />
-          <span className="sr-only">Close</span>
+          <span className="sr-only">{i18n.t('misc.close')}</span>
         </DialogPrimitive.Close>
       )}
     </DialogPrimitive.Content>

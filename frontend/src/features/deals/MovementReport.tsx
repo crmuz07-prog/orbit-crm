@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { formatDuration } from '@/features/record/duration'
 import { useAccess } from '@/hooks/useAccess'
+import { useLabels } from '@/hooks/useLabels'
 import { historyApi } from '@/lib/api'
 import { STAGE_COLORS } from '@/lib/constants'
 import type { Pipeline, Stage } from '@/lib/types'
@@ -16,6 +17,7 @@ const PERIODS = ['7', '30', '90'] as const
 
 function ReportTable({ pipeline, stages, days }: { pipeline: Pipeline; stages: Stage[]; days: number }) {
   const { t } = useTranslation()
+  const labels = useLabels()
   const { data = [] } = useQuery({ queryKey: ['movement', pipeline.id, days], queryFn: () => historyApi.movement(pipeline.id, days) })
   const rows = new Map(data.map((r) => [r.stage_id, r]))
   return (
@@ -34,7 +36,7 @@ function ReportTable({ pipeline, stages, days }: { pipeline: Pipeline; stages: S
             const row = rows.get(s.id)
             return (
               <tr key={s.id}>
-                <td className="px-3 py-2"><span className={cn('mr-2 inline-block size-2 rounded-full', STAGE_COLORS[s.color].dot)} />{s.name}</td>
+                <td className="px-3 py-2"><span className={cn('mr-2 inline-block size-2 rounded-full', STAGE_COLORS[s.color].dot)} />{labels.stage(s.name)}</td>
                 <td className="px-3 py-2 text-right tabular-nums">{row?.deals_now ?? 0}</td>
                 <td className="px-3 py-2 text-right tabular-nums">{row?.entered ?? 0}</td>
                 <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">{row?.avg_seconds != null ? formatDuration(row.avg_seconds, t) : '—'}</td>
@@ -50,6 +52,7 @@ function ReportTable({ pipeline, stages, days }: { pipeline: Pipeline; stages: S
 /** amoCRM "Отчёт по движению сделок": how deals flow through the stages of a pipeline over a period. */
 export function MovementReport({ pipeline, stages }: { pipeline?: Pipeline; stages: Stage[] }) {
   const { t } = useTranslation()
+  const labels = useLabels()
   const { can } = useAccess()
   const [open, setOpen] = useState(false)
   const [days, setDays] = useState<string>('30')
@@ -59,7 +62,7 @@ export function MovementReport({ pipeline, stages }: { pipeline?: Pipeline; stag
       <Button variant="outline" onClick={() => setOpen(true)}><BarChart3 /> {t('board.report')}</Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-2xl">
-          <DialogHeader><DialogTitle>{t('report.title')} · {pipeline.name}</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{t('report.title')} · {labels.pipeline(pipeline.name)}</DialogTitle></DialogHeader>
           <SelectBox value={days} onChange={setDays} options={PERIODS.map((d) => ({ value: d, label: t('report.days', { count: Number(d) }) }))} className="w-48" />
           {open && <ReportTable pipeline={pipeline} stages={stages} days={Number(days)} />}
         </DialogContent>

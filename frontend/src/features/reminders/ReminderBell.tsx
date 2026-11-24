@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { ActivityIcon } from '@/features/activities/ActivityIcon'
+import { useSubject } from '@/features/activities/useSubject'
 import { SNOOZE_OPTIONS } from '@/lib/reminders'
 import type { Activity } from '@/lib/types'
 import { relativeDay } from '@/lib/utils'
@@ -13,12 +14,13 @@ import { useReminderActions, useReminders } from './useReminders'
 
 function ReminderItem({ reminder: r, due }: { reminder: Activity; due: boolean }) {
   const { t } = useTranslation()
+  const subject = useSubject()
   const actions = useReminderActions()
   return (
     <motion.li layout initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, height: 0 }} className="flex items-start gap-3 px-4 py-3">
       <ActivityIcon type={r.type} className="size-6" />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium">{r.subject}</p>
+        <p className="truncate text-sm font-medium">{subject(r)}</p>
         <p className={due ? 'text-xs font-medium text-rose-600 dark:text-rose-400' : 'text-xs text-muted-foreground'}>{relativeDay(r.remind_at!)}</p>
       </div>
       <DropdownMenu>

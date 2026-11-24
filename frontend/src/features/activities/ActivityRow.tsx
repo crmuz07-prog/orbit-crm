@@ -8,6 +8,7 @@ import { CallDetails } from '@/features/calls/CallDetails'
 import type { Activity } from '@/lib/types'
 import { cn, relativeDay } from '@/lib/utils'
 import { ActivityIcon } from './ActivityIcon'
+import { useSubject } from './useSubject'
 import { useActivityActions } from './useActivityActions'
 
 interface Props {
@@ -35,6 +36,7 @@ function RowActions({ activity: a }: { activity: Activity }) {
 /** One activity line: complete checkbox, type icon, subject, details, call info, hover actions. */
 export function ActivityRow({ activity: a, meta, compact }: Props) {
   const { t } = useTranslation()
+  const subject = useSubject()
   const actions = useActivityActions()
   const schedulable = a.type !== 'note' && a.type !== 'call'
 
@@ -46,7 +48,7 @@ export function ActivityRow({ activity: a, meta, compact }: Props) {
       </div>
       <ActivityIcon type={a.type} className={compact ? 'size-6' : undefined} />
       <div className="min-w-0 flex-1">
-        <p className={cn('text-sm font-medium transition-colors', a.done && schedulable && 'text-muted-foreground line-through')}>{a.subject}</p>
+        <p className={cn('text-sm font-medium transition-colors', a.done && schedulable && 'text-muted-foreground line-through')}>{subject(a)}</p>
         {a.type === 'call' && <CallDetails activity={a} />}
         {!compact && a.body && <p className="mt-0.5 line-clamp-3 whitespace-pre-wrap text-sm text-muted-foreground">{a.body}</p>}
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">

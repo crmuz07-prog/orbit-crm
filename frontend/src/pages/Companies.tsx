@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Building2, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { SelectBox, toOptions } from '@/components/common/form-fields'
+import { SelectBox } from '@/components/common/form-fields'
 import { Page } from '@/components/common/page'
 import { CreateButton, ExportButton } from '@/components/common/record-actions'
 import { matches, SearchInput } from '@/components/common/search-input'
@@ -10,12 +10,14 @@ import { Card } from '@/components/ui/card'
 import { CompaniesTable } from '@/features/companies/CompaniesTable'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { useCrm } from '@/hooks/useData'
+import { useLabels } from '@/hooks/useLabels'
 import { LIFECYCLES } from '@/lib/constants'
 
 export default function CompaniesPage() {
   const { isLoading, companies } = useCrm()
   const openModal = useEntityModal()
   const { t } = useTranslation()
+  const labels = useLabels()
   const [query, setQuery] = useState('')
   const [lifecycle, setLifecycle] = useState('')
   const [industry, setIndustry] = useState('')
@@ -37,7 +39,7 @@ export default function CompaniesPage() {
       <div className="mb-4 flex flex-wrap gap-2">
         <SearchInput value={query} onChange={setQuery} placeholder={t('companies.search')} />
         <SelectBox value={lifecycle} onChange={setLifecycle} emptyLabel={t('companies.allLifecycle')} options={LIFECYCLES.map((l) => ({ value: l.value, label: t(`enums.lifecycle.${l.value}`) }))} className="w-48" />
-        <SelectBox value={industry} onChange={setIndustry} emptyLabel={t('companies.allIndustries')} options={toOptions(industries)} className="w-44" />
+        <SelectBox value={industry} onChange={setIndustry} emptyLabel={t('companies.allIndustries')} options={industries.map((i) => ({ value: i, label: labels.industry(i) }))} className="w-44" />
       </div>
       {companies.length === 0 ? (
         <Card><EmptyState icon={Building2} title={t('companies.empty')} description={t('companies.emptyDesc')} action={newCompany} /></Card>

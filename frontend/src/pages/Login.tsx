@@ -54,8 +54,8 @@ export default function LoginPage() {
         </>
       )}
       <form onSubmit={submit} className="grid gap-4">
-        {mode === 'signup' && <TextField label={t('auth.fullName')} required value={form.fullName} onChange={set('fullName')} placeholder="Alex Morgan" />}
-        <TextField label={t('auth.email')} type="email" required autoComplete="email" value={form.email} onChange={set('email')} placeholder="you@company.com" />
+        {mode === 'signup' && <TextField label={t('auth.fullName')} required value={form.fullName} onChange={set('fullName')} placeholder={t('examples.personName')} />}
+        <TextField label={t('auth.email')} type="email" required autoComplete="email" value={form.email} onChange={set('email')} placeholder={t('examples.email')} />
         {/* The length rule is for new passwords only; existing (e.g. admin-issued) ones must always be accepted. */}
         <TextField label={t('auth.password')} type="password" required minLength={mode === 'signup' ? 8 : undefined} autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} value={form.password} onChange={set('password')} />
         {mode === 'signin' && config?.email_enabled && <Link to="/forgot" className="-mt-2 justify-self-end text-xs font-medium text-primary hover:underline">{t('account.forgot')}</Link>}

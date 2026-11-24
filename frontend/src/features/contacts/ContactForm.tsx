@@ -49,9 +49,9 @@ export function ContactForm({ initial, onDone }: Props) {
     <FormLayout onSubmit={submit} onCancel={() => onDone()} submitLabel={isEdit ? t('common.saveChanges') : t('dialog.new.contact')} busy={busy}>
       <TextField autoFocus label={t('fields.firstName')} value={form.first_name} onChange={(v) => set('first_name', v)} />
       <TextField label={t('fields.lastName')} value={form.last_name} onChange={(v) => set('last_name', v)} />
-      <TextField label={t('fields.email')} type="email" value={form.email} onChange={(v) => set('email', v)} placeholder="name@company.com" />
+      <TextField label={t('fields.email')} type="email" value={form.email} onChange={(v) => set('email', v)} placeholder={t('examples.email')} />
       <TextField label={t('fields.phone')} value={form.phone} onChange={(v) => set('phone', v)} />
-      <TextField label={t('fields.jobTitle')} value={form.title} onChange={(v) => set('title', v)} placeholder="Head of Procurement" />
+      <TextField label={t('fields.jobTitle')} value={form.title} onChange={(v) => set('title', v)} placeholder={t('examples.jobTitle')} />
       <SelectField label={t('fields.company')} emptyLabel={t('fields.noCompany')} value={form.company_id} onChange={(v) => set('company_id', v)} options={companies.map((c) => ({ value: c.id, label: c.name }))} />
       <TextField wide label={t('fields.linkedin')} value={form.linkedin_url} onChange={(v) => set('linkedin_url', v)} placeholder="https://linkedin.com/in/…" />
       <OwnerField module="contacts" value={form.owner_id} onChange={(v) => set('owner_id', v)} />

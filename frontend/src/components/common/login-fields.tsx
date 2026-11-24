@@ -12,7 +12,7 @@ export function LoginFields({ value, onChange }: { value: NewLogin; onChange: (v
   return (
     <>
       <TextField label={t('team.fullName')} required value={value.full_name} onChange={set('full_name')} />
-      <TextField label={t('team.email')} type="email" required value={value.email} onChange={set('email')} placeholder="name@company.com" />
+      <TextField label={t('team.email')} type="email" required value={value.email} onChange={set('email')} placeholder={t('examples.email')} />
       <PasswordField label={t('team.tempPassword')} value={value.password} onChange={set('password')} />
     </>
   )

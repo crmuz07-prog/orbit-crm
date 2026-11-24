@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { CallNotesFields, Section, useCallNotes } from '@/features/calls/CallNotesFields'
+import { useSubject } from '@/features/activities/useSubject'
 import { CallDetails } from '@/features/calls/CallDetails'
 import { OutcomePicker } from '@/features/calls/CallPickers'
 import { useCreateRow, useCrm, useUpdateRow } from '@/hooks/useData'
@@ -14,6 +15,7 @@ type Props = { initial: Activity; onDone: () => void }
 /** After an automatically captured call: record what was discussed on the same call activity. */
 export function CallWrapUpForm({ initial: call, onDone }: Props) {
   const { t } = useTranslation()
+  const subject = useSubject()
   const { contactById } = useCrm()
   const update = useUpdateRow('activities')
   const create = useCreateRow('activities')
@@ -36,7 +38,7 @@ export function CallWrapUpForm({ initial: call, onDone }: Props) {
   return (
     <form onSubmit={submit} className="space-y-5">
       <div className="glass-subtle rounded-2xl p-4">
-        <p className="font-medium">{call.subject}</p>
+        <p className="font-medium">{subject(call)}</p>
         <CallDetails activity={call} showWrapUp={false} />
       </div>
       <Section label={t('calls.outcome')}><OutcomePicker value={outcome} onChange={setOutcome} /></Section>

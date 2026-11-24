@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { Card, CardHeader } from '@/components/ui/card'
 import { useCrm } from '@/hooks/useData'
+import { useLabels } from '@/hooks/useLabels'
 import type { Deal } from '@/lib/types'
 import { fullName } from '@/lib/utils'
 
@@ -34,6 +35,7 @@ const iconLink = 'text-muted-foreground transition-colors hover:text-primary'
 export function AssociationCards({ deal }: { deal: Deal }) {
   const { contactById, companyById } = useCrm()
   const { t } = useTranslation()
+  const labels = useLabels()
   const openModal = useEntityModal()
   const contact = deal.contact_id ? contactById.get(deal.contact_id) : undefined
   const company = deal.company_id ? companyById.get(deal.company_id) : undefined
@@ -61,7 +63,7 @@ export function AssociationCards({ deal }: { deal: Deal }) {
           to={`/companies/${company.id}`}
           media={<CompanyLogo name={company.name} size="md" />}
           name={company.name}
-          detail={[company.industry, company.country].filter(Boolean).join(' · ')}
+          detail={[labels.industry(company.industry), company.country].filter(Boolean).join(' · ')}
         />
       )}
     </>

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { TextField } from '@/components/common/form-fields'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { useLabels } from '@/hooks/useLabels'
 import { ACTIONS, MODULES, type AccessRole, type Permissions } from '@/lib/types'
 import { PermissionMatrix } from './PermissionMatrix'
 import type { AccessActions } from './useAccessConfig'
@@ -14,13 +15,16 @@ const START: Permissions = Object.fromEntries(
 
 function RoleForm({ role, actions, onDone }: { role: AccessRole | null; actions: AccessActions; onDone: () => void }) {
   const { t } = useTranslation()
-  const [name, setName] = useState(role?.name ?? '')
+  const labels = useLabels()
+  const shown = role ? labels.role(role.name) : ''
+  const [name, setName] = useState(shown)
   const [permissions, setPermissions] = useState<Permissions>(role?.permissions ?? START)
   const busy = actions.createRole.isPending || actions.updateRole.isPending
 
   const submit = (e: FormEvent) => {
     e.preventDefault()
-    const values = { name: name.trim(), permissions }
+    // An untouched built-in name keeps its stored (English) value, so it stays translatable.
+    const values = { name: role && name.trim() === shown ? role.name : name.trim(), permissions }
     if (role) actions.updateRole.mutate({ id: role.id, ...values }, { onSuccess: onDone })
     else actions.createRole.mutate(values, { onSuccess: onDone })
   }

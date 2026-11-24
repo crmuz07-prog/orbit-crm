@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/016-amo-record-card-pipelines.md](docs/prompts/016-amo-record-card-pipelines.md)
+Latest: [docs/prompts/017-translate-statuses-options.md](docs/prompts/017-translate-statuses-options.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -21,3 +21,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [014 — Superadmin login from Render env always works](docs/prompts/014-superadmin-env-login.md)
 - [015 — One shell for everyone (superadmin in the CRM layout)](docs/prompts/015-one-shell-for-everyone.md)
 - [016 — amoCRM-style record card and multiple pipelines](docs/prompts/016-amo-record-card-pipelines.md)
+- [017 — Translate every status and option](docs/prompts/017-translate-statuses-options.md)

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useMembers } from '@/features/team/useMembers'
 import { useCrm } from '@/hooks/useData'
+import { useLabels } from '@/hooks/useLabels'
 import type { FieldChange, RecordEvent, RecordLink } from '@/lib/types'
 import { fullName, timeOf, toDate } from '@/lib/utils'
 
@@ -10,8 +11,13 @@ const MONEY_FIELDS = new Set(['amount', 'annual_revenue'])
 function useReadable() {
   const { companyById, contactById } = useCrm()
   const { memberById } = useMembers()
+  const { t } = useTranslation()
+  const labels = useLabels()
   return (field: string, value: FieldChange['new']): string => {
     if (value === null || value === '') return ''
+    if (field === 'source') return labels.source(String(value))
+    if (field === 'industry') return labels.industry(String(value))
+    if (field === 'priority' || field === 'lifecycle') return t(`enums.${field}.${value as 'low'}`, { defaultValue: String(value) })
     if (field === 'company_id') return companyById.get(String(value))?.name ?? '—'
     if (field === 'contact_id') { const c = contactById.get(String(value)); return c ? fullName(c) : '—' }
     if (field === 'owner_id') return memberById.get(String(value))?.full_name ?? '—'
@@ -29,7 +35,8 @@ export function EventLine({ event, link }: { event: RecordEvent; link: RecordLin
   const actor = (event.actor_id && memberById.get(event.actor_id)?.full_name) || t('feed.system')
   // "title" is the deal name but a contact's job title.
   const label = (field: string) => t(`feedFields.${field === 'title' && link === 'contact_id' ? 'title_job' : field}`, { defaultValue: field })
-  const stage = (id?: string) => (id && stageById.get(id)?.name) || '—'
+  const labels = useLabels()
+  const stage = (id?: string) => { const s = id ? stageById.get(id) : undefined; return s ? labels.stage(s.name) : '—' }
 
   const lines: string[] = event.kind === 'created'
     ? [event.changes.stage_id ? t('feed.createdIn', { stage: stage(event.changes.stage_id) }) : t('feed.created')]

@@ -24,7 +24,7 @@ function useColumns(onRename: (c: PlatformCompany) => void, onBilling: (c: Platf
         <div className="flex items-center gap-3">
           <CompanyLogo name={c.name} />
           <span className="font-medium">{c.name}</span>
-          {c.is_demo && <Badge tone="amber">Demo</Badge>}
+          {c.is_demo && <Badge tone="amber">{t('misc.demo')}</Badge>}
         </div>
       ),
     },

@@ -2,7 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { PriorityFlag } from '@/features/deals/bits'
 import { useAssignableOwners, useMembers } from '@/features/team/useMembers'
 import { useCrm } from '@/hooks/useData'
-import { DEAL_SOURCES, PRIORITIES } from '@/lib/constants'
+import { useLabels } from '@/hooks/useLabels'
+import { PRIORITIES } from '@/lib/constants'
 import type { Deal } from '@/lib/types'
 import { fullName, money, shortDate, timeAgo } from '@/lib/utils'
 import { InfoSection } from './RecordCard'
@@ -16,6 +17,7 @@ export function DealInfo({ deal, lost }: { deal: Deal; lost: boolean }) {
   const { owners, allowUnassigned } = useAssignableOwners('deals')
   const { memberById } = useMembers()
   const { save, readOnly } = useSaveField('deals', deal.id)
+  const labels = useLabels()
   const company = deal.company_id ? companyById.get(deal.company_id) : undefined
   const contact = deal.contact_id ? contactById.get(deal.contact_id) : undefined
   const people = deal.company_id ? contacts.filter((c) => c.company_id === deal.company_id) : contacts
@@ -32,8 +34,8 @@ export function DealInfo({ deal, lost }: { deal: Deal; lost: boolean }) {
         editor={{ kind: 'select', options: people.map((c) => ({ value: c.id, label: fullName(c) })), emptyLabel: '—' }} onSave={save('contact_id')} />
       <InlineField label={t('feedFields.priority')} raw={deal.priority} display={<PriorityFlag priority={deal.priority} withLabel />} readOnly={readOnly}
         editor={{ kind: 'select', options: PRIORITIES.map((p) => ({ value: p.value, label: t(`enums.priority.${p.value}`) })) }} onSave={save('priority')} />
-      <InlineField label={t('feedFields.source')} raw={deal.source ?? ''} readOnly={readOnly}
-        editor={{ kind: 'select', options: DEAL_SOURCES.map((s) => ({ value: s, label: s })), emptyLabel: '—' }} onSave={save('source')} />
+      <InlineField label={t('feedFields.source')} raw={deal.source ?? ''} display={labels.source(deal.source)} readOnly={readOnly}
+        editor={{ kind: 'select', options: labels.sourceOptions, emptyLabel: '—' }} onSave={save('source')} />
       <InlineField label={t('feedFields.expected_close_date')} raw={deal.expected_close_date ?? ''} display={deal.expected_close_date && shortDate(deal.expected_close_date)}
         editor={{ kind: 'date' }} readOnly={readOnly} onSave={save('expected_close_date')} />
       {lost && <InlineField label={t('feedFields.lost_reason')} raw={deal.lost_reason ?? ''} editor={{ kind: 'textarea' }} readOnly={readOnly} onSave={save('lost_reason')} />}

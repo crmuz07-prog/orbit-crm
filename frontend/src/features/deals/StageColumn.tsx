@@ -3,6 +3,7 @@ import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { useAccess } from '@/hooks/useAccess'
+import { useLabels } from '@/hooks/useLabels'
 import { STAGE_COLORS } from '@/lib/constants'
 import { sumAmount } from '@/lib/metrics'
 import type { Deal, Stage } from '@/lib/types'
@@ -13,9 +14,10 @@ import { QuickAdd } from './QuickAdd'
 /** amoCRM column head: NAME, "N deals: sum", a coloured rule, then the stage's own rule text. */
 function ColumnHeader({ stage, deals }: { stage: Stage; deals: Deal[] }) {
   const { t } = useTranslation()
+  const labels = useLabels()
   return (
     <div className="mb-2 px-1 text-center">
-      <h3 className="truncate text-[12px] font-bold uppercase tracking-wider">{stage.name}</h3>
+      <h3 className="truncate text-[12px] font-bold uppercase tracking-wider">{labels.stage(stage.name)}</h3>
       <p className="mt-0.5 text-xs tabular-nums text-muted-foreground">
         {t('board.header', { count: deals.length, sum: money(sumAmount(deals), 'USD', true) })}
         {!stage.is_won && !stage.is_lost && <span className="opacity-70"> · {stage.probability}%</span>}

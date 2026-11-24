@@ -1,6 +1,7 @@
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis, type TooltipProps } from 'recharts'
 import type { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useLabels } from '@/hooks/useLabels'
 import { Card, CardHeader } from '@/components/ui/card'
 import { STAGE_COLORS } from '@/lib/constants'
 import type { Dashboard } from '@/lib/types'
@@ -42,15 +43,17 @@ const yAxis = <YAxis tick={axis} tickLine={false} axisLine={false} tickFormatter
 
 export function PipelineChart({ data, className }: { data: Dashboard['by_stage']; className?: string }) {
   const { t } = useTranslation()
+  const labels = useLabels()
+  const rows = data.map((s) => ({ ...s, name: labels.stage(s.name) }))
   return (
     <ChartCard title={t('dashboard.pipelineTitle')} description={t('dashboard.pipelineDesc')} className={className}>
-      <BarChart data={data} margin={{ left: 0, right: 8, top: 8 }}>
+      <BarChart data={rows} margin={{ left: 0, right: 8, top: 8 }}>
         {grid}
         <XAxis dataKey="name" tick={axis} tickLine={false} axisLine={false} interval={0} />
         {yAxis}
         <Tooltip content={<ChartTooltip />} cursor={{ fill: 'hsl(var(--foreground) / 0.04)' }} />
         <Bar dataKey="value" name={t('dashboard.value')} radius={[6, 6, 0, 0]} maxBarSize={56} animationDuration={700}>
-          {data.map((s) => <Cell key={s.id} fill={STAGE_COLORS[s.color].hex} />)}
+          {rows.map((s) => <Cell key={s.id} fill={STAGE_COLORS[s.color].hex} />)}
         </Bar>
       </BarChart>
     </ChartCard>

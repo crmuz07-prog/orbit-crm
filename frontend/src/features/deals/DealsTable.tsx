@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/common/states'
 import { Card } from '@/components/ui/card'
 import { useOwnerColumn } from '@/features/team/OwnerField'
 import { useCrm } from '@/hooks/useData'
+import { useLabels } from '@/hooks/useLabels'
 import { PRIORITIES } from '@/lib/constants'
 import { isCloseOverdue, weightedValue } from '@/lib/metrics'
 import type { Deal } from '@/lib/types'
@@ -17,6 +18,7 @@ function useDealColumns(): Column<Deal>[] {
   const owner = useOwnerColumn<Deal>()
   const { stageById, companyById } = useCrm()
   const { t } = useTranslation()
+  const labels = useLabels()
   const companyName = (d: Deal) => (d.company_id ? companyById.get(d.company_id)?.name : undefined)
   return [
     {
@@ -43,7 +45,7 @@ function useDealColumns(): Column<Deal>[] {
       cell: (d) => <span className={cn(isCloseOverdue(d, stageById) && 'font-medium text-rose-600 dark:text-rose-400')}>{shortDate(d.expected_close_date)}</span>,
     },
     { key: 'priority', header: t('deals.colPriority'), sortValue: (d) => PRIORITIES.findIndex((p) => p.value === d.priority), cell: (d) => <PriorityFlag priority={d.priority} withLabel /> },
-    { key: 'source', header: t('deals.colSource'), sortValue: (d) => d.source ?? '', cell: (d) => d.source ?? '—' },
+    { key: 'source', header: t('deals.colSource'), sortValue: (d) => d.source ?? '', cell: (d) => labels.source(d.source) || '—' },
     owner,
     { key: 'updated', header: t('deals.colUpdated'), sortValue: (d) => d.updated_at, cell: (d) => <span className="text-muted-foreground">{timeAgo(d.updated_at)}</span> },
   ]

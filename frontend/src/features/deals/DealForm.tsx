@@ -3,8 +3,9 @@ import { FormLayout, SelectField, TextField, toOptions } from '@/components/comm
 import { isNew, OwnerField, useMyId } from '@/features/team/OwnerField'
 import { useCrm } from '@/hooks/useData'
 import { useEntityForm } from '@/hooks/useEntityForm'
+import { useLabels } from '@/hooks/useLabels'
 import { stagesOf, useCurrentPipeline } from '@/hooks/usePipelines'
-import { CURRENCIES, DEAL_SOURCES, PRIORITIES } from '@/lib/constants'
+import { CURRENCIES, PRIORITIES } from '@/lib/constants'
 import type { Deal, Priority, Stage } from '@/lib/types'
 import { fullName } from '@/lib/utils'
 
@@ -13,6 +14,7 @@ type Props = { initial?: Partial<Deal>; onDone: (row?: Deal) => void }
 export function DealForm({ initial, onDone }: Props) {
   const { companies, contacts, stages, stageById } = useCrm()
   const { t } = useTranslation()
+  const labels = useLabels()
   const myId = useMyId()
   // New deals start in the first open stage of the pipeline the user is looking at.
   const current = useCurrentPipeline()
@@ -56,20 +58,20 @@ export function DealForm({ initial, onDone }: Props) {
 
   return (
     <FormLayout onSubmit={submit} onCancel={() => onDone()} submitLabel={isEdit ? t('common.saveChanges') : t('dialog.new.deal')} busy={busy}>
-      <TextField wide autoFocus label={t('fields.dealName')} value={form.title} onChange={(v) => set('title', v)} placeholder="Acme — Enterprise License" />
+      <TextField wide autoFocus label={t('fields.dealName')} value={form.title} onChange={(v) => set('title', v)} placeholder={t('examples.dealName')} />
       <TextField label={t('fields.amount')} type="number" min={0} step={100} value={form.amount} onChange={(v) => set('amount', v)} placeholder="50000" />
       <SelectField label={t('fields.currency')} value={form.currency} onChange={(v) => set('currency', v)} options={toOptions(CURRENCIES)} />
       <SelectField
         label={t('pipelines.select')}
         value={pipelineId ?? ''}
         onChange={(id) => set('stage_id', firstOpen(stagesOf(stages, id))?.id ?? '')}
-        options={current.pipelines.map((p) => ({ value: p.id, label: p.name }))}
+        options={current.pipelines.map((p) => ({ value: p.id, label: labels.pipeline(p.name) }))}
       />
       <SelectField
         label={t('fields.stage')}
         value={form.stage_id}
         onChange={(v) => set('stage_id', v)}
-        options={pipelineStages.map((s) => ({ value: s.id, label: `${s.name} · ${s.probability}%` }))}
+        options={pipelineStages.map((s) => ({ value: s.id, label: `${labels.stage(s.name)} · ${s.probability}%` }))}
       />
       <SelectField label={t('fields.priority')} value={form.priority} onChange={(v) => set('priority', v as Priority)} options={PRIORITIES.map((p) => ({ value: p.value, label: t(`enums.priority.${p.value}`) }))} />
       <SelectField
@@ -81,7 +83,7 @@ export function DealForm({ initial, onDone }: Props) {
       />
       <SelectField label={t('fields.primaryContact')} emptyLabel={t('fields.noContact')} value={form.contact_id} onChange={(v) => set('contact_id', v)} options={people.map((c) => ({ value: c.id, label: fullName(c) }))} />
       <TextField label={t('fields.closeDate')} type="date" value={form.expected_close_date} onChange={(v) => set('expected_close_date', v)} />
-      <SelectField label={t('fields.source')} emptyLabel="—" value={form.source} onChange={(v) => set('source', v)} options={toOptions(DEAL_SOURCES)} />
+      <SelectField label={t('fields.source')} emptyLabel="—" value={form.source} onChange={(v) => set('source', v)} options={labels.sourceOptions} />
       <OwnerField module="deals" value={form.owner_id} onChange={(v) => set('owner_id', v)} />
     </FormLayout>
   )

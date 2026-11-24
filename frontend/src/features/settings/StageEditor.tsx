@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Tooltip } from '@/components/ui/tooltip'
 import { PipelineSwitcher } from '@/features/deals/PipelineSwitcher'
 import { useCreateRow, useCrm, useUpdateRow } from '@/hooks/useData'
+import { useLabels } from '@/hooks/useLabels'
 import { stagesOf, useCurrentPipeline, usePipelines } from '@/hooks/usePipelines'
 import type { Pipeline, Stage } from '@/lib/types'
 import { StageRow } from './StageRow'
@@ -17,9 +18,10 @@ import { StageRow } from './StageRow'
 function PipelineToolbar({ pipeline, onDeleted }: { pipeline: Pipeline; onDeleted: () => void }) {
   const { t } = useTranslation()
   const actions = usePipelines()
-  const [name, setName] = useState(pipeline.name)
+  const shown = useLabels().pipeline(pipeline.name)
+  const [name, setName] = useState(shown)
   const [confirm, setConfirm] = useState(false)
-  const rename = () => name.trim() && name.trim() !== pipeline.name && actions.update.mutate({ id: pipeline.id, patch: { name: name.trim() } })
+  const rename = () => name.trim() && name.trim() !== shown && actions.update.mutate({ id: pipeline.id, patch: { name: name.trim() } })
   return (
     <div className="flex flex-wrap items-center gap-2 border-b border-foreground/[0.06] px-5 py-3">
       <Input value={name} onChange={(e) => setName(e.target.value)} onBlur={rename} onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}

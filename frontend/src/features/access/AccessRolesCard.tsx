@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip } from '@/components/ui/tooltip'
+import { useLabels } from '@/hooks/useLabels'
 import { MODULES, type AccessRole } from '@/lib/types'
 import { RoleDialog } from './RoleDialog'
 import type { AccessActions } from './useAccessConfig'
@@ -29,12 +30,13 @@ function Summary({ role }: { role: AccessRole }) {
 
 function RoleRow({ role, onEdit, onDelete, actions }: { role: AccessRole; onEdit: () => void; onDelete: () => void; actions: AccessActions }) {
   const { t } = useTranslation()
+  const labels = useLabels()
   return (
     <li className="flex items-center gap-3 px-5 py-3">
       <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary"><ShieldCheck className="size-4" /></span>
       <div className="min-w-0 flex-1">
         <p className="flex items-center gap-2 text-sm font-medium">
-          {role.name} {role.is_default && <Badge tone="violet">{t('access.default')}</Badge>}
+          {labels.role(role.name)} {role.is_default && <Badge tone="violet">{t('access.default')}</Badge>}
           <span className="text-xs font-normal text-muted-foreground">{t('access.members', { count: role.member_count })}</span>
         </p>
         <Summary role={role} />

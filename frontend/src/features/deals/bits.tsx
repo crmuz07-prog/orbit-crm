@@ -1,17 +1,19 @@
 import { Flag } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
+import { useLabels } from '@/hooks/useLabels'
 import { PRIORITIES, STAGE_COLORS } from '@/lib/constants'
 import type { DealStatus, Priority, Stage } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
 export function StageBadge({ stage }: { stage?: Stage }) {
+  const labels = useLabels()
   if (!stage) return <span className="text-muted-foreground">—</span>
   const color = STAGE_COLORS[stage.color]
   return (
     <span className={cn('inline-flex items-center gap-1.5 whitespace-nowrap rounded-md px-1.5 py-0.5 text-xs font-medium', color.soft)}>
       <span className={cn('size-1.5 rounded-full', color.dot)} />
-      {stage.name}
+      {labels.stage(stage.name)}
     </span>
   )
 }

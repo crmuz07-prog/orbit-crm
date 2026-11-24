@@ -8,6 +8,7 @@ import { EmptyState } from '@/components/common/states'
 import { Card } from '@/components/ui/card'
 import { useOwnerColumn } from '@/features/team/OwnerField'
 import { useCrm } from '@/hooks/useData'
+import { useLabels } from '@/hooks/useLabels'
 import { LIFECYCLES } from '@/lib/constants'
 import { dealStatus } from '@/lib/metrics'
 import type { Company } from '@/lib/types'
@@ -36,6 +37,7 @@ function useCompanyColumns(): Column<Company>[] {
   const owner = useOwnerColumn<Company>()
   const rollups = useCompanyRollups()
   const { t } = useTranslation()
+  const labels = useLabels()
   const stat = (c: Company, key: keyof Rollup) => rollups.get(c.id)?.[key] ?? 0
   return [
     {
@@ -53,7 +55,7 @@ function useCompanyColumns(): Column<Company>[] {
       ),
     },
     { key: 'lifecycle', header: t('fields.lifecycle'), sortValue: (c) => LIFECYCLES.findIndex((l) => l.value === c.lifecycle), cell: (c) => <LifecycleBadge value={c.lifecycle} /> },
-    { key: 'industry', header: t('fields.industry'), sortValue: (c) => c.industry ?? '', cell: (c) => c.industry ?? '—' },
+    { key: 'industry', header: t('fields.industry'), sortValue: (c) => c.industry ?? '', cell: (c) => labels.industry(c.industry) || '—' },
     { key: 'location', header: t('companies.colLocation'), sortValue: (c) => c.country ?? '', cell: (c) => [c.city, c.country].filter(Boolean).join(', ') || '—' },
     { key: 'employees', header: t('fields.employees'), cell: (c) => c.employees ?? '—' },
     { key: 'contacts', header: t('companies.colContacts'), align: 'right', sortValue: (c) => stat(c, 'contacts'), cell: (c) => stat(c, 'contacts') },

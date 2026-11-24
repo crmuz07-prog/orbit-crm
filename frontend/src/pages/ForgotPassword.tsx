@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
   return (
     <AuthLayout title={t('account.forgotTitle')} subtitle={t('account.forgotSub')}>
       <form onSubmit={submit} className="grid gap-4">
-        <TextField label={t('auth.email')} type="email" required autoFocus value={email} onChange={setEmail} placeholder="you@company.com" />
+        <TextField label={t('auth.email')} type="email" required autoFocus value={email} onChange={setEmail} placeholder={t('examples.email')} />
         <Button type="submit" disabled={busy}>{busy ? t('common.pleaseWait') : t('account.sendLink')}</Button>
       </form>
       {back}

@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useRemoveRow, useUpdateRow } from '@/hooks/useData'
+import { useLabels } from '@/hooks/useLabels'
 import { STAGE_COLORS } from '@/lib/constants'
 import { spring } from '@/lib/motion'
 import type { Stage, StageColor } from '@/lib/types'
@@ -41,7 +42,9 @@ export function StageRow({ stage, dealCount, onMove, canUp, canDown }: Props) {
   const update = useUpdateRow('pipeline_stages')
   const remove = useRemoveRow('pipeline_stages')
   const { t } = useTranslation()
-  const [name, setName] = useState(stage.name)
+  // Built-in names are edited in the user's language; an untouched name is never written back.
+  const shown = useLabels().stage(stage.name)
+  const [name, setName] = useState(shown)
   const [probability, setProbability] = useState(String(stage.probability))
   const [rule, setRule] = useState(stage.description ?? '')
   const [maxDays, setMaxDays] = useState(stage.max_days?.toString() ?? '')
@@ -49,9 +52,10 @@ export function StageRow({ stage, dealCount, onMove, canUp, canDown }: Props) {
 
   const save = () => {
     const p = Math.max(0, Math.min(100, Number(probability) || 0))
-    if (!name.trim()) return setName(stage.name)
-    if (name.trim() === stage.name && p === stage.probability) return
-    update.mutate({ id: stage.id, patch: { name: name.trim(), probability: p } })
+    if (!name.trim()) return setName(shown)
+    const renamed = name.trim() !== shown
+    if (!renamed && p === stage.probability) return
+    update.mutate({ id: stage.id, patch: { ...(renamed ? { name: name.trim() } : {}), probability: p } })
     setProbability(String(p))
     toast.success(t('settings.stageSaved'))
   }
