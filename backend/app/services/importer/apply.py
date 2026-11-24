@@ -19,7 +19,8 @@ ATTRIBUTION = ("campaign", "adset", "ad_name", "form_name")
 
 class Importer:
     def __init__(self, db: Session, workspace_id: str, user_id: str, pipeline_id: str, columns: list[ColumnMap],
-                 meta: dict[int, ColumnMeta] | None = None) -> None:
+                 meta: dict[int, ColumnMeta] | None = None, company_per_contact: bool = False) -> None:
+        self.company_per_contact = company_per_contact and not any(c.target == "company" for c in columns)
         self.db, self.workspace_id, self.user_id = db, workspace_id, user_id
         self.result = ImportResult()
         self.look = Lookups(db, workspace_id, pipeline_id, self.result)
@@ -91,10 +92,14 @@ class Importer:
         is_new = deal is None
         lead = lead or (self.lead_of(deal.id) if deal else None)
         deal = self.save_deal(deal, row, contact, name or contact.first_name, created)
+        company = None
         if company_name := v.text(self.cell(row, "company")):
             company = self.look.company(company_name, deal.owner_id)
-            contact.company_id = contact.company_id or company.id
-            deal.company_id = deal.company_id or company.id
+        elif self.company_per_contact and not contact.company_id:
+            company = self.look.own_company(f"{contact.first_name} {contact.last_name}", deal.owner_id)
+        if company is not None or contact.company_id:
+            contact.company_id = contact.company_id or company.id  # type: ignore[union-attr]
+            deal.company_id = deal.company_id or contact.company_id
         self.save_lead(lead, deal, contact, row, external, created)
         self.save_note(deal, row)
         self.save_task(deal, row, contact.first_name)
@@ -223,7 +228,7 @@ class Importer:
         if text:
             # Same shape as a note typed in the card: first line is the subject, the body only when there is more.
             self.upsert_activity(f"import-note:{deal.id}", type="note", subject=text.split("\n")[0][:80], body=text if "\n" in text or len(text) > 80 else None, deal_id=deal.id,
-                                 contact_id=deal.contact_id, owner_id=deal.owner_id, done=True, created_at=deal.created_at)
+                                 contact_id=deal.contact_id, company_id=deal.company_id, owner_id=deal.owner_id, done=True, created_at=deal.created_at)
 
     def save_task(self, deal: Deal, row: list[Cell], name: str) -> None:
         """amoCRM rule: an open deal has a next step. The sheet's next contact date becomes an open call task."""
@@ -236,4 +241,4 @@ class Importer:
             self.result.tasks_created += 1
         # "Call back <name>": the subject the PBX integration uses too; the UI shows it in the user's language.
         self.upsert_activity(f"import-task:{deal.id}", type="task", subject=f"Call back {name}"[:200], due_at=due, done=False, deal_id=deal.id,
-                             contact_id=deal.contact_id, owner_id=deal.owner_id)
+                             contact_id=deal.contact_id, company_id=deal.company_id, owner_id=deal.owner_id)

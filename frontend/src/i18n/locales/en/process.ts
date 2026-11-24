@@ -31,7 +31,7 @@ export const process = {
     empty: 'Built-in reasons are used until you add your own', saved: 'Reason added', deleted: 'Reason removed',
   },
   importer: {
-    button: 'Import', title: 'Import deals from Excel / CSV', pick: 'Choose an .xlsx or .csv file', pickHint: 'Meta lead exports and your own sheets. Up to 5 MB.',
+    perContact: 'Create a company for every client', perContactHint: 'There is no company column: each contact gets a company named after them (two people with the same name stay separate). Re-importing reuses it.', button: 'Import', title: 'Import deals from Excel / CSV', pick: 'Choose an .xlsx or .csv file', pickHint: 'Meta lead exports and your own sheets. Up to 5 MB.',
     reading: 'Reading the file…', rows_one: '{{count}} row', rows_other: '{{count}} rows', pipeline: 'Pipeline', column: 'Column', sample: 'Example', target: 'Goes to',
     newField: 'New field', newFieldType: 'Type', existingField: 'Field', run: 'Import {{count}} rows', running: 'Importing…',
     companies: 'Companies created', doneTitle: 'Import finished', created: 'New deals', updated: 'Updated', skipped: 'Skipped (empty or test)', tasks: 'Tasks created',

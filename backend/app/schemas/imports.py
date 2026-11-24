@@ -37,6 +37,8 @@ class ImportPreview(Schema):
 class ImportRequest(ImportFile):
     pipeline_id: str
     columns: list[ColumnMap]
+    # No company column: every contact gets a company of its own, named after the person (same names stay separate).
+    company_per_contact: bool = False
 
 
 class ImportResult(Schema):

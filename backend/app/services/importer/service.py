@@ -37,4 +37,5 @@ def preview(db: Session, workspace_id: str, file: ImportFile) -> ImportPreview:
 
 def run(db: Session, workspace_id: str, user_id: str, request: ImportRequest) -> ImportResult:
     headers, rows = decode(request)
-    return Importer(db, workspace_id, user_id, request.pipeline_id, request.columns, sheet_meta(request, headers)).run(rows)
+    importer = Importer(db, workspace_id, user_id, request.pipeline_id, request.columns, sheet_meta(request, headers), request.company_per_contact)
+    return importer.run(rows)

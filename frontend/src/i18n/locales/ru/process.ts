@@ -35,7 +35,7 @@ export const process = {
     empty: 'Пока вы не добавите свои, используются стандартные причины', saved: 'Причина добавлена', deleted: 'Причина удалена',
   },
   importer: {
-    button: 'Импорт', title: 'Импорт сделок из Excel / CSV', pick: 'Выберите файл .xlsx или .csv', pickHint: 'Выгрузки лидов Meta и ваши таблицы. До 5 МБ.',
+    perContact: 'Создать компанию для каждого клиента', perContactHint: 'Столбца компании нет: у каждого контакта будет своя компания с его именем (тёзки останутся раздельными). Повторный импорт использует её же.', button: 'Импорт', title: 'Импорт сделок из Excel / CSV', pick: 'Выберите файл .xlsx или .csv', pickHint: 'Выгрузки лидов Meta и ваши таблицы. До 5 МБ.',
     reading: 'Читаем файл…', rows_one: '{{count}} строка', rows_few: '{{count}} строки', rows_many: '{{count}} строк', rows_other: '{{count}} строки',
     pipeline: 'Воронка', column: 'Столбец', sample: 'Пример', target: 'Куда', newField: 'Новое поле', newFieldType: 'Тип', existingField: 'Поле',
     run: 'Импортировать ({{count}})', running: 'Импортируем…',

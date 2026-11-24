@@ -68,3 +68,23 @@ def test_sheet_lists_colours_companies_and_ids_are_used(client: TestClient, auth
     assert (source["ad_id"], source["form_id"]) == ("555", "777")
     again = client.post("/api/import/deals", headers=auth, json={"filename": "s.xlsx", "content": content, "pipeline_id": pid, "columns": columns}).json()
     assert (again["created"], again["companies_created"]) == (0, 0)
+
+
+def test_a_company_per_contact_keeps_same_names_apart(client: TestClient, auth: Headers) -> None:
+    rows = [["l:20", "Doniyor", "p:+998901000001", "", "", "Jarayonda", "", "", "", "", ""],
+            ["l:21", "Doniyor", "p:+998901000002", "", "", "Jarayonda", "", "", "", "", ""]]
+    book = Workbook()
+    sheet = book.active
+    for row in [[h for h in HEADER if h != "Kompaniya"], *[[c for i, c in enumerate(r) if i != 4] for r in rows]]:
+        sheet.append(row)
+    out = io.BytesIO()
+    book.save(out)
+    content = base64.b64encode(out.getvalue()).decode()
+    pid = client.post("/api/pipelines", headers=auth, json={"name": "Bir martalik"}).json()["id"]
+    columns = client.post("/api/import/deals/preview", headers=auth, json={"filename": "p.xlsx", "content": content}).json()["columns"]
+    body = {"filename": "p.xlsx", "content": content, "pipeline_id": pid, "columns": columns, "company_per_contact": True}
+    assert client.post("/api/import/deals", headers=auth, json=body).json()["companies_created"] == 2
+    companies = [c for c in client.get("/api/companies", headers=auth).json() if c["name"] == "Doniyor"]
+    assert len(companies) == 2
+    again = client.post("/api/import/deals", headers=auth, json=body).json()
+    assert again["companies_created"] == 0 and len([c for c in client.get("/api/companies", headers=auth).json() if c["name"] == "Doniyor"]) == 2

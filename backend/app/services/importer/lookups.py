@@ -60,6 +60,14 @@ class Lookups:
         for position, stage in enumerate(ordered):
             stage.position = position
 
+    def own_company(self, name: str, owner_id: str | None) -> Company:
+        """A company for one person: never matched by name, so two leads called "Doniyor" are two companies."""
+        company = Company(workspace_id=self.workspace_id, name=name.strip()[:200] or "—", owner_id=owner_id, lifecycle="lead")
+        self.db.add(company)
+        self.db.flush()
+        self.result.companies_created += 1
+        return company
+
     def describe(self, stage: Stage, description: str | None) -> None:
         if description and not stage.description:
             stage.description = description[:500]

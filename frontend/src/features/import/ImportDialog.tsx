@@ -36,6 +36,9 @@ export function ImportDialog({ open, onOpenChange }: { open: boolean; onOpenChan
   const [columns, setColumns] = useState<ColumnMap[]>([])
   const [pipelineId, setPipelineId] = useState('')
   const [result, setResult] = useState<ImportResult | null>(null)
+  // Leads often have no company column: then each person can get a company of their own (on by default there).
+  const [perContact, setPerContact] = useState(true)
+  const hasCompanyColumn = columns.some((c) => c.target === 'company')
   const reset = () => { setFile(null); setPreview(null); setColumns([]); setResult(null) }
 
   const read = useMutation({
@@ -51,7 +54,7 @@ export function ImportDialog({ open, onOpenChange }: { open: boolean; onOpenChan
     onError: (e) => toast.error(errorMessage(e)),
   })
   const run = useMutation({
-    mutationFn: () => importApi.run(file!.name, file!.content, pipelineId || pipeline!.id, columns),
+    mutationFn: () => importApi.run(file!.name, file!.content, pipelineId || pipeline!.id, columns, perContact && !hasCompanyColumn),
     onSuccess: (r) => { setResult(r); toast.success(t('importer.doneTitle')); void qc.invalidateQueries() },
     onError: (e) => toast.error(errorMessage(e)),
   })
@@ -76,7 +79,13 @@ export function ImportDialog({ open, onOpenChange }: { open: boolean; onOpenChan
               <p className="flex items-center gap-1.5 text-sm font-medium"><FileSpreadsheet className="size-4 text-emerald-600" /> {file?.name} · {t('importer.rows', { count: preview.rows })}</p>
               <div className="ml-auto w-56"><SelectField label={t('importer.pipeline')} value={pipelineId || pipeline?.id || ''} onChange={setPipelineId} options={pipelines.map((p) => ({ value: p.id, label: p.name }))} /></div>
             </div>
-            <div className="max-h-[52vh] overflow-auto rounded-lg">
+            {!hasCompanyColumn && (
+              <label className="flex cursor-pointer items-start gap-2 rounded-lg bg-foreground/[0.03] px-3 py-2 text-[13px]">
+                <input type="checkbox" checked={perContact} onChange={(e) => setPerContact(e.target.checked)} className="mt-0.5 size-4 accent-[hsl(var(--primary))]" />
+                <span><b className="font-medium">{t('importer.perContact')}</b><span className="block text-[11px] text-muted-foreground">{t('importer.perContactHint')}</span></span>
+              </label>
+            )}
+            <div className="max-h-[48vh] overflow-auto rounded-lg">
               <table className="w-full text-left">
                 <thead className="sticky top-0 bg-background/90 text-[11px] text-muted-foreground backdrop-blur-sm">
                   <tr><th className="py-1.5 font-medium">{t('importer.column')}</th><th className="py-1.5 font-medium">{t('importer.sample')}</th><th className="py-1.5 font-medium">{t('importer.target')}</th></tr>

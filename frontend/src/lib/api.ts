@@ -94,8 +94,8 @@ export const instagramApi = {
 
 export const importApi = {
   preview: (filename: string, content: string) => http<ImportPreview>('POST', '/import/deals/preview', { filename, content }),
-  run: (filename: string, content: string, pipeline_id: string, columns: ColumnMap[]) =>
-    http<ImportResult>('POST', '/import/deals', { filename, content, pipeline_id, columns }),
+  run: (filename: string, content: string, pipeline_id: string, columns: ColumnMap[], company_per_contact: boolean) =>
+    http<ImportResult>('POST', '/import/deals', { filename, content, pipeline_id, columns, company_per_contact }),
 }
 
 export const reportsApi = {

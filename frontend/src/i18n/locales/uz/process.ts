@@ -31,7 +31,7 @@ export const process = {
     empty: 'Oʻz sabablaringizni qoʻshmaguningizcha standart sabablar ishlatiladi', saved: 'Sabab qoʻshildi', deleted: 'Sabab oʻchirildi',
   },
   importer: {
-    button: 'Import', title: 'Excel / CSV dan bitimlarni import qilish', pick: '.xlsx yoki .csv faylni tanlang', pickHint: 'Meta lid eksporti va oʻz jadvallaringiz. 5 MB gacha.',
+    perContact: 'Har bir mijoz uchun kompaniya ochish', perContactHint: 'Faylda kompaniya ustuni yoʻq: har bir kontaktga uning nomi bilan alohida kompaniya ochiladi (bir xil ismli ikki kishi alohida qoladi). Qayta importda oʻsha kompaniya ishlatiladi.', button: 'Import', title: 'Excel / CSV dan bitimlarni import qilish', pick: '.xlsx yoki .csv faylni tanlang', pickHint: 'Meta lid eksporti va oʻz jadvallaringiz. 5 MB gacha.',
     reading: 'Fayl oʻqilmoqda…', rows_one: '{{count}} qator', rows_other: '{{count}} qator', pipeline: 'Voronka', column: 'Ustun', sample: 'Namuna', target: 'Qayerga',
     newField: 'Yangi maydon', newFieldType: 'Turi', existingField: 'Maydon', run: '{{count}} qatorni import qilish', running: 'Import qilinmoqda…',
     companies: 'Yaratilgan kompaniyalar', doneTitle: 'Import tugadi', created: 'Yangi bitimlar', updated: 'Yangilandi', skipped: 'Oʻtkazib yuborildi (boʻsh yoki test)', tasks: 'Yaratilgan vazifalar',
