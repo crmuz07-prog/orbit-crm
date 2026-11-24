@@ -1,19 +1,22 @@
 import { useTranslation } from 'react-i18next'
 import { FormLayout, SelectField, TextField, toOptions } from '@/components/common/form-fields'
-import { useCrm } from '@/hooks/useData'
 import { isNew, OwnerField, useMyId } from '@/features/team/OwnerField'
+import { useCrm } from '@/hooks/useData'
 import { useEntityForm } from '@/hooks/useEntityForm'
+import { stagesOf, useCurrentPipeline } from '@/hooks/usePipelines'
 import { CURRENCIES, DEAL_SOURCES, PRIORITIES } from '@/lib/constants'
-import type { Deal, Priority } from '@/lib/types'
+import type { Deal, Priority, Stage } from '@/lib/types'
 import { fullName } from '@/lib/utils'
 
 type Props = { initial?: Partial<Deal>; onDone: (row?: Deal) => void }
 
 export function DealForm({ initial, onDone }: Props) {
-  const { companies, contacts, stages } = useCrm()
+  const { companies, contacts, stages, stageById } = useCrm()
   const { t } = useTranslation()
   const myId = useMyId()
-  const firstOpen = stages.find((s) => !s.is_won && !s.is_lost)
+  // New deals start in the first open stage of the pipeline the user is looking at.
+  const current = useCurrentPipeline()
+  const firstOpen = (pipelineStages: Stage[]) => pipelineStages.find((s) => !s.is_won && !s.is_lost)
   const { form, set, setForm, submit, isEdit, busy } = useEntityForm({
     table: 'deals',
     label: t('entity.deal'),
@@ -26,7 +29,7 @@ export function DealForm({ initial, onDone }: Props) {
       currency: d?.currency ?? 'USD',
       company_id: d?.company_id ?? '',
       contact_id: d?.contact_id ?? '',
-      stage_id: d?.stage_id ?? firstOpen?.id ?? '',
+      stage_id: d?.stage_id ?? firstOpen(current.stages)?.id ?? '',
       expected_close_date: d?.expected_close_date ?? '',
       priority: d?.priority ?? ('medium' as Priority),
       source: d?.source ?? '',
@@ -48,6 +51,8 @@ export function DealForm({ initial, onDone }: Props) {
   })
 
   const people = form.company_id ? contacts.filter((c) => c.company_id === form.company_id) : contacts
+  const pipelineId = stageById.get(form.stage_id)?.pipeline_id ?? current.pipeline?.id
+  const pipelineStages = stagesOf(stages, pipelineId)
 
   return (
     <FormLayout onSubmit={submit} onCancel={() => onDone()} submitLabel={isEdit ? t('common.saveChanges') : t('dialog.new.deal')} busy={busy}>
@@ -55,10 +60,16 @@ export function DealForm({ initial, onDone }: Props) {
       <TextField label={t('fields.amount')} type="number" min={0} step={100} value={form.amount} onChange={(v) => set('amount', v)} placeholder="50000" />
       <SelectField label={t('fields.currency')} value={form.currency} onChange={(v) => set('currency', v)} options={toOptions(CURRENCIES)} />
       <SelectField
+        label={t('pipelines.select')}
+        value={pipelineId ?? ''}
+        onChange={(id) => set('stage_id', firstOpen(stagesOf(stages, id))?.id ?? '')}
+        options={current.pipelines.map((p) => ({ value: p.id, label: p.name }))}
+      />
+      <SelectField
         label={t('fields.stage')}
         value={form.stage_id}
         onChange={(v) => set('stage_id', v)}
-        options={stages.map((s) => ({ value: s.id, label: `${s.name} · ${s.probability}%` }))}
+        options={pipelineStages.map((s) => ({ value: s.id, label: `${s.name} · ${s.probability}%` }))}
       />
       <SelectField label={t('fields.priority')} value={form.priority} onChange={(v) => set('priority', v as Priority)} options={PRIORITIES.map((p) => ({ value: p.value, label: t(`enums.priority.${p.value}`) }))} />
       <SelectField

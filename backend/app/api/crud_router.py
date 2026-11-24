@@ -13,7 +13,7 @@ from sqlalchemy import ColumnElement
 
 from app.api.deps import Ctx, RequestContext
 from app.models.base import OwnedMixin, TenantMixin
-from app.services import crud
+from app.services import crud, history
 from app.services.export import member_names, to_csv
 from app.services.permissions import Action, Module
 from app.services.visibility import Visibility, ensure_assignable, ensure_visible
@@ -101,7 +101,9 @@ def build_crud_router(spec: EntitySpec) -> APIRouter:
         if spec.module and "owner_id" not in payload.model_fields_set:
             values["owner_id"] = ctx.user.id
         guard.check_owner(values, visibility)
-        return crud.create_row(ctx.db, spec.model, ctx.workspace_id, values, spec.references, spec.before_save)
+        row = crud.create_row(ctx.db, spec.model, ctx.workspace_id, values, spec.references, spec.before_save)
+        history.created(ctx.db, row, ctx.user.id)
+        return row
 
     @router.patch("/{row_id}", response_model=Read)
     def update_row(row_id: str, payload: Patch, ctx: Ctx) -> Any:  # type: ignore[valid-type]
@@ -109,7 +111,10 @@ def build_crud_router(spec: EntitySpec) -> APIRouter:
         row, visibility = guard.row(row_id, "edit")
         changes = payload.model_dump(exclude_unset=True)
         guard.check_owner(changes, visibility)
-        return crud.update_row(ctx.db, row, changes, spec.references, spec.before_save)
+        before = history.snapshot(row, set(changes))
+        row = crud.update_row(ctx.db, row, changes, spec.references, spec.before_save)
+        history.updated(ctx.db, row, ctx.user.id, before)
+        return row
 
     @router.delete("/{row_id}", status_code=status.HTTP_204_NO_CONTENT)
     def delete_row(row_id: str, ctx: Ctx) -> None:

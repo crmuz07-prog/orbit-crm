@@ -7,7 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.db import utcnow
-from app.models import Deal, Stage
+from app.models import Deal, Pipeline, Stage
 from app.schemas.dashboard import DashboardOut, MonthTotal, StageTotal
 from app.schemas.crm import DealOut
 from app.services.visibility import Visibility
@@ -60,6 +60,11 @@ def average_cycle_days(won: list[Deal]) -> int:
     return round(sum(cycles) / len(cycles)) if cycles else 0
 
 
+def default_pipeline_stages(db: Session, stages: list[Stage]) -> list[Stage]:
+    default = db.scalar(select(Pipeline.id).where(Pipeline.workspace_id == stages[0].workspace_id, Pipeline.is_default.is_(True))) if stages else None
+    return [s for s in stages if s.pipeline_id == default] or stages
+
+
 def build_dashboard(db: Session, workspace_id: str, reports: Visibility, deals_scope: Visibility) -> DashboardOut:
     """Figures follow the `reports` scope; deal cards listed on it also need to be visible under `deals`."""
     now = utcnow()
@@ -83,7 +88,8 @@ def build_dashboard(db: Session, workspace_id: str, reports: Visibility, deals_s
         win_rate=len(won) / closed_count * 100 if closed_count else 0,
         avg_deal_size=total(won) / len(won) if won else 0,
         avg_cycle_days=average_cycle_days(won),
-        by_stage=stage_totals(stages, open_deals),
+        # The stage chart is one pipeline (the default); the totals above cover all of them.
+        by_stage=stage_totals(default_pipeline_stages(db, stages), open_deals),
         monthly=monthly_totals(won, lost, now),
         stale=[DealOut.model_validate(d) for d in open_deals if d.updated_at <= stale_before and deals_scope.allows(d)],
         top_open=[DealOut.model_validate(d) for d in sorted(filter(deals_scope.allows, open_deals), key=lambda d: -d.amount)[:5]],

@@ -50,6 +50,13 @@ clamping. Adding or reactivating a member beyond `seat_limit` fails with `seat_l
 Row Level Security on without policies, so Supabase's public REST/GraphQL keys can't reach CRM data; the API connects as
 the table owner and is not affected.
 
+### Pipelines & record history
+A workspace has several pipelines (`pipelines`); every stage belongs to one, and each pipeline has its own won/lost
+stages, a rule text (`description`) and a day limit (`max_days`, cards are flagged past it). Deals keep
+`stage_entered_at`. The generic CRUD writes `record_events` (created, field changes old → new, stage moves, with the
+actor) for companies, contacts and deals; `/events` serves them for a visible record, `/deals/{id}/stage-times` and
+`/reports/deal-movement` are computed from them. The record card (deal, company, contact) shows info | feed | widgets.
+
 ### Sessions & sign-in protection
 Tokens carry the user's `session_version` (`sv`); bumping it (admin password reset, deactivation, own password change)
 signs the user out everywhere. Sign-in is limited to 5 failures per account in 15 minutes; attempts are logged in
@@ -109,6 +116,6 @@ tailwindcss-animate handles Radix enter/exit states. `MotionConfig reducedMotion
 
 ## Quality gates
 - `scripts/check-lines.sh` enforces a maximum of 250 lines per file.
-- `pytest`: 63 tests covering auth, isolation, CRUD, rules, dashboard, calls, reminders, telephony, teams, superadmin, closed access, access roles and scope, sessions, accounts, migrations and error codes.
+- `pytest`: 70 tests covering auth, isolation, CRUD, rules, dashboard, calls, reminders, telephony, teams, superadmin, closed access, access roles and scope, sessions, accounts, migrations and error codes.
 - Alembic migrations (`backend/migrations`) run on boot; legacy databases are stamped at the baseline first.
 - `tsc` strict, with no `any`.

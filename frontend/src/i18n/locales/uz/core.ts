@@ -43,6 +43,7 @@ export const core: Locale<typeof en> = {
     firstName: 'Ism majburiy', email: 'Email notoʻgʻri koʻrinadi', subject: 'Mavzu majburiy', writeSomething: 'Avval biror narsa yozing',
   },
   errors: {
+    pipeline_has_deals: 'Avval bitimlarni bu voronkadan koʻchiring', default_pipeline: 'Asosiy voronkani oʻchirib boʻlmaydi',
     subscription_expired: 'Kompaniya obunasi muddati tugagan', company_blocked: 'Kompaniya platforma administratori tomonidan bloklangan', seat_limit_reached: 'Barcha toʻlangan oʻrinlar band — qoʻshimcha oʻrin uchun platforma administratoriga murojaat qiling',
     permission_denied: 'Bu amal uchun huquqingiz yoʻq', owner_out_of_scope: 'Yozuvni bu xodimga biriktira olmaysiz', session_revoked: 'Sessiya yakunlandi — qaytadan kiring', too_many_attempts: 'Juda koʻp xato urinish. 15 daqiqadan soʻng qayta urining', default_role: 'Standart rolni oʻchirib boʻlmaydi', name_taken: 'Bu nom allaqachon band',
     registration_disabled: 'Akkauntlarni administrator yaratadi', account_disabled: 'Bu akkaunt faolsizlantirilgan — administratorga murojaat qiling', self_lockout: 'Oʻzingizni faolsizlantira yoki huquqingizni tushira olmaysiz',

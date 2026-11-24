@@ -8,18 +8,20 @@ from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app.core.db import utcnow
-from app.models import Activity, Company, Contact, Deal, Stage
+from app.models import Activity, Company, Contact, Deal, Pipeline, RecordEvent, Stage
 from app.services import sample_data as data
-from app.services.onboarding import default_stages
+from app.services.onboarding import default_pipeline
 
 
 def ensure_stages(db: Session, workspace_id: str) -> list[Stage]:
-    stages = list(db.scalars(select(Stage).where(Stage.workspace_id == workspace_id).order_by(Stage.position)))
-    if not stages:
-        stages = default_stages(workspace_id)
-        db.add_all(stages)
+    """Stages of the default pipeline (created if the workspace has none)."""
+    pipeline = db.scalar(select(Pipeline).where(Pipeline.workspace_id == workspace_id).order_by(Pipeline.is_default.desc(), Pipeline.position))
+    if pipeline is None:
+        rows = default_pipeline(workspace_id)
+        db.add_all(rows)
         db.flush()
-    return stages
+        return [r for r in rows if isinstance(r, Stage)]
+    return list(db.scalars(select(Stage).where(Stage.pipeline_id == pipeline.id).order_by(Stage.position)))
 
 
 def build_companies(workspace_id: str, rng: random.Random, now: datetime) -> list[Company]:
@@ -71,6 +73,7 @@ def build_deal(company: Company, contacts: list[Contact], stages: list[Stage], r
         expected_close_date=(closed_at or now + timedelta(days=rng.randint(-12, 90))).date(),
         lost_reason=rng.choice(data.LOST_REASONS) if stage.is_lost else None,
         closed_at=closed_at, created_at=created_at, updated_at=max(now - timedelta(days=idle_days), created_at),
+        stage_entered_at=max(now - timedelta(days=idle_days), created_at),
     )
 
 
@@ -150,6 +153,6 @@ def seed_workspace(db: Session, workspace_id: str, owner_id: str | None = None, 
 
 
 def wipe_workspace(db: Session, workspace_id: str) -> None:
-    for model in (Activity, Deal, Contact, Company, Stage):
+    for model in (RecordEvent, Activity, Deal, Contact, Company, Stage, Pipeline):
         db.execute(delete(model).where(model.workspace_id == workspace_id))
     db.commit()

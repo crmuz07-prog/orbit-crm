@@ -32,3 +32,12 @@ export function dueBucket(activity: Activity): DueBucket {
   if (diff < 0) return 'overdue'
   return diff === 0 ? 'today' : 'upcoming'
 }
+
+/** Days the deal has spent in its current stage (falls back to the last update for older data). */
+export const daysInStage = (deal: Deal) => daysSince(deal.stage_entered_at ?? deal.updated_at)
+
+/** Past the stage's limit (Stage.max_days), e.g. "a lead may not stay here longer than a day". */
+export const isStageOverdue = (deal: Deal, stageById: Stages) => {
+  const stage = stageById.get(deal.stage_id)
+  return !!stage?.max_days && !stage.is_won && !stage.is_lost && daysInStage(deal) >= stage.max_days
+}

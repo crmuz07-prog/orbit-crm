@@ -2,10 +2,10 @@ import { useDraggable } from '@dnd-kit/core'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { CalendarDays, Hourglass } from 'lucide-react'
+import { CalendarDays, Hourglass, Timer } from 'lucide-react'
 import { CompanyLogo, PersonAvatar } from '@/components/common/avatars'
 import { useCrm } from '@/hooks/useData'
-import { daysSince, isCloseOverdue, isStale } from '@/lib/metrics'
+import { daysInStage, daysSince, isCloseOverdue, isStageOverdue, isStale } from '@/lib/metrics'
 import { spring } from '@/lib/motion'
 import type { Deal } from '@/lib/types'
 import { cn, fullName, money, shortDate } from '@/lib/utils'
@@ -15,11 +15,17 @@ function CardMeta({ deal }: { deal: Deal }) {
   const { stageById } = useCrm()
   const { t } = useTranslation()
   const stale = isStale(deal, stageById)
+  const overdue = isStageOverdue(deal, stageById)
   return (
     <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]">
       {deal.expected_close_date && (
         <span className={cn('inline-flex items-center gap-1', isCloseOverdue(deal, stageById) ? 'font-medium text-rose-600 dark:text-rose-400' : 'text-muted-foreground')}>
           <CalendarDays className="size-3" /> {shortDate(deal.expected_close_date)}
+        </span>
+      )}
+      {overdue && (
+        <span className="inline-flex items-center gap-1 font-medium text-amber-600 dark:text-amber-400">
+          <Timer className="size-3" /> {t('board.inStage', { count: daysInStage(deal) })}
         </span>
       )}
       {stale && (
@@ -41,6 +47,7 @@ export function DealCardBody({ deal, overlay }: { deal: Deal; overlay?: boolean 
       className={cn(
         'rounded-xl bg-card/80 p-3 shadow-sm ring-1 ring-foreground/[0.06] transition-[box-shadow] dark:bg-white/[0.06]',
         isStale(deal, stageById) && 'ring-rose-300/60 dark:ring-rose-500/30',
+        isStageOverdue(deal, stageById) && 'ring-amber-400/60 dark:ring-amber-500/40',
         overlay ? 'rotate-[1.5deg] cursor-grabbing shadow-xl ring-2 ring-primary/30' : 'hover:shadow-md hover:ring-foreground/15',
       )}
     >

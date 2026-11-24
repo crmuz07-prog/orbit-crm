@@ -16,12 +16,15 @@ Name = Field(min_length=1, max_length=200)
 
 
 class StageIn(Schema):
+    pipeline_id: str
     name: str = Name
     position: int = 0
     probability: int = Field(default=0, ge=0, le=100)
     is_won: bool = False
     is_lost: bool = False
     color: StageColor = "slate"
+    description: str | None = Field(default=None, max_length=500)
+    max_days: int | None = Field(default=None, ge=1, le=365)
 
 
 class CompanyIn(Schema):
@@ -103,6 +106,7 @@ class ContactOut(ContactIn, RowRead):
 
 class DealOut(DealIn, RowRead):
     closed_at: datetime | None
+    stage_entered_at: datetime | None = None
 
 
 class ActivityOut(ActivityIn, RowRead):

@@ -1,19 +1,20 @@
-import { Building2, ExternalLink, Pencil, Phone, Plus } from 'lucide-react'
+import type { ReactNode } from 'react'
+import { Building2, Pencil, Phone, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { CompanyLogo, PersonAvatar } from '@/components/common/avatars'
-import { BackLink, ListCard, PropertyList, RecordHeader, RecordLayout, RowLink, StatStrip } from '@/components/common/record'
+import { PersonAvatar } from '@/components/common/avatars'
+import { BackLink, ListCard, RowLink } from '@/components/common/record'
 import { DeleteRecordButton, RecordNotFound } from '@/components/common/record-actions'
 import { PageSkeleton } from '@/components/common/states'
 import { Button } from '@/components/ui/button'
-import { Composer } from '@/features/activities/Composer'
-import { Timeline } from '@/features/activities/Timeline'
-import { LifecycleBadge } from '@/features/companies/LifecycleBadge'
+import { Tooltip } from '@/components/ui/tooltip'
 import { DealsListCard } from '@/features/deals/DealsListCard'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
+import { CompanyInfo } from '@/features/record/ClientInfo'
+import { InfoHeader, RecordCard } from '@/features/record/RecordCard'
 import { useCrm } from '@/hooks/useData'
 import { dealStatus, sumAmount } from '@/lib/metrics'
-import { fullName, money, shortDate, timeAgo } from '@/lib/utils'
+import { fullName, money } from '@/lib/utils'
 
 /** Everything associated with a company: its people, deals and their activity roll-up. */
 function useCompanyRecord(id: string) {
@@ -38,73 +39,56 @@ export default function CompanyDetailPage() {
   const company = companyById.get(id)
   if (!company) return <RecordNotFound icon={Building2} label={t('entity.company')} backTo="/companies" />
 
-  const location = [company.city, company.country].filter(Boolean).join(', ')
   const addDeal = () => openModal({ kind: 'deal', initial: { company_id: id } })
   const addContact = () => openModal({ kind: 'contact', initial: { company_id: id } })
+  const action = (label: string, onClick: () => void, icon: ReactNode) => (
+    <Tooltip content={label}><Button variant="ghost" size="icon" onClick={onClick} aria-label={label}>{icon}</Button></Tooltip>
+  )
 
   return (
-    <>
-      <BackLink to="/companies" label={t('nav.companies')} />
-      <RecordHeader
-        media={<CompanyLogo name={company.name} size="lg" className="rounded-xl" />}
-        title={company.name}
-        badge={<LifecycleBadge value={company.lifecycle} />}
-        subtitle={
-          <>
-            {company.domain && <a href={`https://${company.domain}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:text-primary">{company.domain} <ExternalLink className="size-3" /></a>}
-            {[company.industry, location].filter(Boolean).map((t) => <span key={t}>· {t}</span>)}
-          </>
-        }
-        actions={
-          <>
-            <Button onClick={addDeal}><Plus /> {t('entity.deal')}</Button>
-            <Button variant="outline" onClick={addContact}><Plus /> {t('entity.contact')}</Button>
-            <Button variant="outline" onClick={() => openModal({ kind: 'call', initial: { company_id: id } })}><Phone /> {t('calls.logCall')}</Button>
-            <Button variant="outline" onClick={() => openModal({ kind: 'company', initial: company })}><Pencil /> {t('common.edit')}</Button>
-            <DeleteRecordButton table="companies" id={id} title={t('companies.deleteTitle', { name: company.name })} description={t('companies.deleteDesc')} redirectTo="/companies" />
-          </>
-        }
-      />
-      <StatStrip stats={[[t('companies.openPipeline'), money(openValue)], [t('companies.wonRevenue'), money(wonValue)], [t('companies.contacts'), people.length], [t('companies.lastActivity'), related[0] ? timeAgo(related[0].created_at) : '—']]} />
-      <RecordLayout
-        side={
-          <>
-            <PropertyList
-              title={t('companies.about')}
-              items={[
-                [t('fields.industry'), company.industry],
-                [t('fields.employees'), company.employees],
-                [t('fields.revenue'), company.annual_revenue && money(company.annual_revenue, 'USD', true)],
-                [t('companies.location'), location],
-                [t('companies.created'), shortDate(company.created_at)],
-                [t('fields.description'), company.description],
-              ]}
-            />
-            <ListCard
-              title={t('companies.people', { count: people.length })}
-              action={<Button size="sm" variant="ghost" onClick={addContact}><Plus /> {t('common.add')}</Button>}
-              items={people}
-              empty={<p className="px-5 py-4 text-sm text-muted-foreground">{t('companies.noPeople')}</p>}
-              render={(c) => (
-                <RowLink to={`/contacts/${c.id}`}>
-                  <PersonAvatar name={fullName(c)} />
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium">{fullName(c)}</p>
-                    <p className="truncate text-xs text-muted-foreground">{c.title ?? c.email}</p>
-                  </div>
-                </RowLink>
-              )}
-            />
-          </>
-        }
-        main={
-          <>
-            <DealsListCard deals={companyDeals} onAdd={addDeal} />
-            <Composer links={{ company_id: id }} />
-            <Timeline activities={related} showDeal />
-          </>
-        }
-      />
-    </>
+    <RecordCard
+      link="company_id"
+      recordId={id}
+      activities={related}
+      links={{ company_id: id }}
+      info={
+        <>
+          <InfoHeader back={<BackLink to="/companies" label={t('nav.companies')} />} title={company.name} shortId={id.slice(0, 8).toUpperCase()}
+            actions={
+              <>
+                {action(t('calls.logCall'), () => openModal({ kind: 'call', initial: { company_id: id } }), <Phone className="text-emerald-500" />)}
+                {action(t('common.edit'), () => openModal({ kind: 'company', initial: company }), <Pencil />)}
+                <DeleteRecordButton table="companies" id={id} title={t('companies.deleteTitle', { name: company.name })} description={t('companies.deleteDesc')} redirectTo="/companies" />
+              </>
+            }>
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <div className="glass-subtle rounded-lg px-3 py-2"><p className="text-xs text-muted-foreground">{t('companies.openPipeline')}</p><p className="font-semibold tabular-nums">{money(openValue)}</p></div>
+              <div className="glass-subtle rounded-lg px-3 py-2"><p className="text-xs text-muted-foreground">{t('companies.wonRevenue')}</p><p className="font-semibold tabular-nums text-emerald-600 dark:text-emerald-400">{money(wonValue)}</p></div>
+            </div>
+          </InfoHeader>
+          <CompanyInfo company={company} />
+        </>
+      }
+      widgets={
+        <>
+          <DealsListCard deals={companyDeals} onAdd={addDeal} />
+          <ListCard
+            title={t('companies.people', { count: people.length })}
+            action={<Button size="sm" variant="ghost" onClick={addContact}><Plus /> {t('common.add')}</Button>}
+            items={people}
+            empty={<p className="px-5 py-4 text-sm text-muted-foreground">{t('companies.noPeople')}</p>}
+            render={(c) => (
+              <RowLink to={`/contacts/${c.id}`}>
+                <PersonAvatar name={fullName(c)} />
+                <div className="min-w-0">
+                  <p className="text-sm font-medium">{fullName(c)}</p>
+                  <p className="truncate text-xs text-muted-foreground">{c.title ?? c.email}</p>
+                </div>
+              </RowLink>
+            )}
+          />
+        </>
+      }
+    />
   )
 }

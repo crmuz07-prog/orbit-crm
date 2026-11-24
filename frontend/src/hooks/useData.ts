@@ -11,8 +11,11 @@ const DASHBOARD = ['dashboard'] as const
 // Derived server views that depend on a table and must be refetched with it.
 const DEPENDENTS: Partial<Record<TableName, string[][]>> = { activities: [['reminders'], ['calls', 'stats']] }
 
+// Every write may add a line to a record feed (record history) or move a deal between stages.
+const HISTORY = [['events'], ['stage-times']]
+
 const refresh = (qc: QueryClient, table: TableName) =>
-  Promise.all([[table], [...DASHBOARD], ...(DEPENDENTS[table] ?? [])].map((queryKey) => qc.invalidateQueries({ queryKey })))
+  Promise.all([[table], [...DASHBOARD], ...HISTORY, ...(DEPENDENTS[table] ?? [])].map((queryKey) => qc.invalidateQueries({ queryKey })))
 
 const notifyError = (e: unknown) => toast.error(errorMessage(e))
 

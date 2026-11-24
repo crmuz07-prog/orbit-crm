@@ -11,15 +11,30 @@ def optional_fk(table: str) -> Mapped[str | None]:
     return mapped_column(ForeignKey(f"{table}.id", ondelete="SET NULL"), index=True, nullable=True)
 
 
+class Pipeline(TenantMixin, Base):
+    """A sales process with its own stages (amoCRM "voronka", Pipedrive pipeline)."""
+
+    __tablename__ = "pipelines"
+
+    name: Mapped[str] = mapped_column(String(80))
+    position: Mapped[int] = mapped_column(default=0)
+    is_default: Mapped[bool] = mapped_column(default=False)
+
+
 class Stage(TenantMixin, Base):
     __tablename__ = "pipeline_stages"
 
+    pipeline_id: Mapped[str] = mapped_column(ForeignKey("pipelines.id", ondelete="CASCADE"), index=True)
     name: Mapped[str] = mapped_column(String(80))
     position: Mapped[int] = mapped_column(default=0)
     probability: Mapped[int] = mapped_column(default=0)
     is_won: Mapped[bool] = mapped_column(default=False)
     is_lost: Mapped[bool] = mapped_column(default=False)
     color: Mapped[str] = mapped_column(String(20), default="slate")
+    # The rule shown under the board column, e.g. "a lead may not stay here longer than 24 hours".
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Past this many days in the stage a deal is flagged as overdue (Pipedrive "rotting").
+    max_days: Mapped[int | None] = mapped_column(nullable=True)
 
     @property
     def is_closed(self) -> bool:
@@ -66,6 +81,7 @@ class Deal(OwnedMixin, Base):
     source: Mapped[str | None] = mapped_column(String(40))
     lost_reason: Mapped[str | None] = mapped_column(Text)
     closed_at: Mapped[datetime | None] = mapped_column(UTCDateTime)
+    stage_entered_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
 
 
 class Activity(OwnedMixin, Base):

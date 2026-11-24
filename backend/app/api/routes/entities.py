@@ -1,14 +1,14 @@
 from fastapi import APIRouter
 
 from app.api.crud_router import EntitySpec, build_crud_router
-from app.models import Activity, Company, Contact, Deal, Stage
+from app.models import Activity, Company, Contact, Deal, Pipeline, Stage
 from app.schemas import crm as s
 from app.services.rules import apply_deal_stage_rules, guard_stage_delete
 
 SPECS = [
     EntitySpec(
         path="stages", model=Stage, create=s.StageIn, patch=s.StagePatch, read=s.StageOut,
-        order_by=Stage.position, before_delete=guard_stage_delete, write_role="admin",
+        order_by=Stage.position, before_delete=guard_stage_delete, write_role="admin", references={"pipeline_id": Pipeline},
     ),
     EntitySpec(
         path="companies", module="companies", model=Company, create=s.CompanyIn, patch=s.CompanyPatch, read=s.CompanyOut,

@@ -1,6 +1,6 @@
 import type {
   AccessOverview, Activity, AdminUser, AuthConfig, CallDirection, CallLog, CallStats, CompanyPatch, Dashboard, LoginAttempt, MemberPatch, NewLogin,
-  Payment, PaymentDraft, Permissions, PlatformCompany, ProviderStatus, Role, Session, TableMap, TableName, Team, TeamMember, TelephonySettings, Token, User, WorkspaceChoice,
+  Payment, PaymentDraft, Permissions, Pipeline, PlatformCompany, RecordEvent, RecordLink, StageMovement, StageTime, ProviderStatus, Role, Session, TableMap, TableName, Team, TeamMember, TelephonySettings, Token, User, WorkspaceChoice,
 } from './types'
 import { download, http } from './http'
 
@@ -16,7 +16,7 @@ const PATHS: Record<TableName, string> = {
 
 /** Server-managed fields are never sent back to the API. */
 function writable<T extends object>(draft: T) {
-  const { id: _id, created_at: _c, updated_at: _u, closed_at: _closed, ...rest } = draft as Record<string, unknown>
+  const { id: _id, created_at: _c, updated_at: _u, closed_at: _closed, stage_entered_at: _entered, ...rest } = draft as Record<string, unknown>
   return rest
 }
 
@@ -66,6 +66,19 @@ export const teamApi = {
   update: (userId: string, patch: MemberPatch) => http<TeamMember>('PATCH', `/team/members/${userId}`, patch),
   remove: (userId: string) => http<void>('DELETE', `/team/members/${userId}`),
   setPassword: (userId: string, password: string) => http<void>('POST', `/team/members/${userId}/password`, { password }),
+}
+
+export const pipelinesApi = {
+  list: () => http<Pipeline[]>('GET', '/pipelines'),
+  create: (name: string) => http<Pipeline>('POST', '/pipelines', { name }),
+  update: (id: string, patch: Partial<Pick<Pipeline, 'name' | 'position' | 'is_default'>>) => http<Pipeline>('PATCH', `/pipelines/${id}`, patch),
+  remove: (id: string) => http<void>('DELETE', `/pipelines/${id}`),
+}
+
+export const historyApi = {
+  events: (link: RecordLink, id: string) => http<RecordEvent[]>('GET', `/events?${link}=${encodeURIComponent(id)}`),
+  stageTimes: (dealId: string) => http<StageTime[]>('GET', `/deals/${dealId}/stage-times`),
+  movement: (pipelineId: string, days: number) => http<StageMovement[]>('GET', `/reports/deal-movement?pipeline_id=${encodeURIComponent(pipelineId)}&days=${days}`),
 }
 
 export const accessApi = {

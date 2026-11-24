@@ -9,9 +9,10 @@ from app.services.crud import count_rows
 
 
 def apply_deal_stage_rules(db: Session, deal: Deal, changed: set[str]) -> None:
-    """Keeps closed_at / lost_reason consistent with the kind of stage the deal is in."""
+    """Keeps closed_at / lost_reason consistent with the kind of stage the deal is in, and times the stage."""
     if "stage_id" not in changed:
         return
+    deal.stage_entered_at = utcnow()
     stage = db.get(Stage, deal.stage_id)
     if stage is None:
         return

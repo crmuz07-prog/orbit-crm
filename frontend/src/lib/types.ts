@@ -18,12 +18,17 @@ interface Owned {
 }
 
 export interface Stage extends Row {
+  pipeline_id: string
   name: string
   position: number
   probability: number
   is_won: boolean
   is_lost: boolean
   color: StageColor
+  /** Rule shown under the board column. */
+  description: string | null
+  /** Days a deal may stay before it is flagged. */
+  max_days: number | null
 }
 
 export interface Company extends Row, Owned {
@@ -60,6 +65,7 @@ export interface Deal extends Row, Owned {
   source: string | null
   lost_reason: string | null
   closed_at: string | null
+  stage_entered_at: string | null
 }
 
 export interface Activity extends Row, Owned {
@@ -233,6 +239,7 @@ export interface NewLogin {
 
 export * from './access-types'
 export * from './platform-types'
+export * from './pipeline-types'
 import type { CompanyStatus } from './platform-types'
 import type { Permissions } from './access-types'
 

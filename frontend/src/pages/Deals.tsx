@@ -10,9 +10,12 @@ import { Card } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DealBoard } from '@/features/deals/DealBoard'
 import { DealsTable } from '@/features/deals/DealsTable'
+import { MovementReport } from '@/features/deals/MovementReport'
+import { PipelineSwitcher } from '@/features/deals/PipelineSwitcher'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { useCrm } from '@/hooks/useData'
 import { usePersistentState } from '@/hooks/usePersistentState'
+import { useCurrentPipeline } from '@/hooks/usePipelines'
 import { PRIORITIES } from '@/lib/constants'
 import { dealStatus, sumAmount, weightedValue } from '@/lib/metrics'
 import { money } from '@/lib/utils'
@@ -21,7 +24,10 @@ const VIEWS = ['board', 'list'] as const
 const STATUSES = ['open', 'won', 'lost'] as const
 
 export default function DealsPage() {
-  const { isLoading, deals, stageById, companyById } = useCrm()
+  const { isLoading, deals: allDeals, stageById, companyById } = useCrm()
+  const { pipeline, pipelines, setPipeline, stages } = useCurrentPipeline()
+  // The board and the list show the chosen pipeline only (amoCRM: one voronka at a time).
+  const deals = useMemo(() => allDeals.filter((d) => stageById.get(d.stage_id)?.pipeline_id === pipeline?.id), [allDeals, stageById, pipeline])
   const openModal = useEntityModal()
   const { t } = useTranslation()
   const [view, setView] = usePersistentState('orbit:deals-view', 'board', VIEWS)
@@ -40,7 +46,7 @@ export default function DealsPage() {
   )
   const open = filtered.filter((d) => dealStatus(d, stageById) === 'open')
   const weighted = open.reduce((total, d) => total + weightedValue(d, stageById), 0)
-  const newDeal = <CreateButton module="deals" onClick={() => openModal({ kind: 'deal' })}><Plus /> {t('deals.newDeal')}</CreateButton>
+  const newDeal = <CreateButton module="deals" onClick={() => openModal({ kind: 'deal', initial: stages[0] ? { stage_id: stages[0].id } : undefined })}><Plus /> {t('deals.newDeal')}</CreateButton>
 
   if (isLoading) return <PageSkeleton />
 
@@ -48,9 +54,10 @@ export default function DealsPage() {
     <Page
       title={t('deals.title')}
       description={t('deals.summary', { open: money(sumAmount(open)), weighted: money(weighted), count: open.length })}
-      actions={<><ExportButton table="deals" />{newDeal}</>}
+      actions={<><MovementReport pipeline={pipeline} stages={stages} /><ExportButton table="deals" />{newDeal}</>}
     >
       <div className="mb-4 flex flex-wrap items-center gap-2">
+        <PipelineSwitcher pipelines={pipelines} current={pipeline} onChange={setPipeline} />
         <SearchInput value={query} onChange={setQuery} placeholder={t('deals.search')} />
         <SelectBox value={priority} onChange={setPriority} emptyLabel={t('deals.allPriorities')} options={PRIORITIES.map((p) => ({ value: p.value, label: t('enums.priorityFilter', { label: t(`enums.priority.${p.value}`) }) }))} className="w-40" />
         {view === 'list' && <SelectBox value={status} onChange={setStatus} emptyLabel={t('deals.allStatuses')} options={STATUSES.map((s) => ({ value: s, label: t(`enums.status.${s}`) }))} className="w-36" />}
@@ -63,7 +70,7 @@ export default function DealsPage() {
       </div>
       {deals.length === 0 ? (
         <Card><EmptyState icon={Handshake} title={t('deals.empty')} description={t('deals.emptyDesc')} action={newDeal} /></Card>
-      ) : view === 'board' ? <DealBoard deals={filtered} /> : <DealsTable deals={filtered} />}
+      ) : view === 'board' ? <DealBoard deals={filtered} stages={stages} /> : <DealsTable deals={filtered} />}
     </Page>
   )
 }

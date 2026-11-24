@@ -43,6 +43,8 @@ export function StageRow({ stage, dealCount, onMove, canUp, canDown }: Props) {
   const { t } = useTranslation()
   const [name, setName] = useState(stage.name)
   const [probability, setProbability] = useState(String(stage.probability))
+  const [rule, setRule] = useState(stage.description ?? '')
+  const [maxDays, setMaxDays] = useState(stage.max_days?.toString() ?? '')
   const closed = stage.is_won || stage.is_lost
 
   const save = () => {
@@ -54,8 +56,18 @@ export function StageRow({ stage, dealCount, onMove, canUp, canDown }: Props) {
     toast.success(t('settings.stageSaved'))
   }
 
+  // The rule text and the day limit drive the board column note and the overdue flag on cards.
+  const saveRule = () => {
+    const days = maxDays ? Math.max(1, Math.min(365, Number(maxDays) || 1)) : null
+    if ((rule.trim() || null) === stage.description && days === stage.max_days) return
+    update.mutate({ id: stage.id, patch: { description: rule.trim() || null, max_days: days } })
+    setMaxDays(days?.toString() ?? '')
+    toast.success(t('settings.stageSaved'))
+  }
+
   return (
-    <motion.li layout transition={spring} className="flex flex-wrap items-center gap-3 px-5 py-3">
+    <motion.li layout transition={spring} className="space-y-2 px-5 py-3">
+      <div className="flex flex-wrap items-center gap-3">
       <ColorPicker stage={stage} />
       <Input value={name} onChange={(e) => setName(e.target.value)} onBlur={save} onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()} className="h-8 min-w-[160px] flex-1" />
       <div className="flex items-center gap-1.5">
@@ -70,6 +82,15 @@ export function StageRow({ stage, dealCount, onMove, canUp, canDown }: Props) {
           <Button variant="ghost" size="icon" disabled={!canUp} onClick={() => onMove?.(-1)} aria-label={t('settings.moveUp')}><ArrowUp /></Button>
           <Button variant="ghost" size="icon" disabled={!canDown} onClick={() => onMove?.(1)} aria-label={t('settings.moveDown')}><ArrowDown /></Button>
           <Button variant="ghost" size="icon" onClick={() => remove.mutate(stage.id)} aria-label={t('settings.deleteStage')}><Trash2 /></Button>
+        </div>
+      )}
+      </div>
+      {!closed && (
+        <div className="flex flex-wrap items-center gap-2 pl-[116px] max-sm:pl-0">
+          <Input value={rule} onChange={(e) => setRule(e.target.value)} onBlur={saveRule} onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
+            placeholder={t('pipelines.rulePlaceholder')} aria-label={t('pipelines.rule')} className="h-8 min-w-[200px] flex-1 text-xs" />
+          <Input type="number" min={1} max={365} value={maxDays} onChange={(e) => setMaxDays(e.target.value)} onBlur={saveRule}
+            placeholder={t('pipelines.maxDays')} aria-label={t('pipelines.maxDays')} className="h-8 w-28 text-xs" />
         </div>
       )}
     </motion.li>

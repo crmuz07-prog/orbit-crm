@@ -1,41 +1,47 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Handshake, Pencil, RotateCcw, ThumbsDown, Trophy } from 'lucide-react'
-import { CompanyLogo } from '@/components/common/avatars'
-import { BackLink, PropertyList, RecordHeader, RecordLayout } from '@/components/common/record'
+import { BackLink } from '@/components/common/record'
 import { DeleteRecordButton, RecordNotFound } from '@/components/common/record-actions'
 import { PageSkeleton } from '@/components/common/states'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Composer } from '@/features/activities/Composer'
-import { Timeline } from '@/features/activities/Timeline'
+import { Tooltip } from '@/components/ui/tooltip'
 import { AssociationCards } from '@/features/deals/AssociationCards'
-import { PriorityFlag, StatusBadge } from '@/features/deals/bits'
 import { LostReasonDialog } from '@/features/deals/LostReasonDialog'
-import { StagePath } from '@/features/deals/StagePath'
 import { useMoveDeal } from '@/features/deals/useMoveDeal'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
+import { DealInfo } from '@/features/record/DealInfo'
+import { InfoHeader, RecordCard } from '@/features/record/RecordCard'
+import { StageSelector } from '@/features/record/StageSelector'
+import { StageTimesWidget } from '@/features/record/StageTimesWidget'
+import { useAccess } from '@/hooks/useAccess'
 import { useCrm } from '@/hooks/useData'
-import { daysSince, dealStatus, isStale, weightedValue } from '@/lib/metrics'
-import type { Deal } from '@/lib/types'
-import { money, shortDate, timeAgo } from '@/lib/utils'
+import { useDealStages } from '@/hooks/usePipelines'
+import type { Deal, Stage } from '@/lib/types'
 
+function IconAction({ label, onClick, children }: { label: string; onClick: () => void; children: React.ReactNode }) {
+  return <Tooltip content={label}><Button variant="ghost" size="icon" onClick={onClick} aria-label={label}>{children}</Button></Tooltip>
+}
+
+/** Won / lost / reopen within the deal's own pipeline, plus edit and delete. */
 function DealActions({ deal, onLost }: { deal: Deal; onLost: () => void }) {
-  const { stages, stageById } = useCrm()
+  const { t } = useTranslation()
+  const stages = useDealStages(deal.stage_id)
   const moveDeal = useMoveDeal()
   const openModal = useEntityModal()
-  const { t } = useTranslation()
+  const { can } = useAccess()
+  const current = stages.find((s) => s.id === deal.stage_id)
   const won = stages.find((s) => s.is_won)
   const firstOpen = stages.find((s) => !s.is_won && !s.is_lost)
-  const isOpen = dealStatus(deal, stageById) === 'open'
-
+  const isOpen = !!current && !current.is_won && !current.is_lost
+  if (!can('deals', 'edit')) return null
   return (
     <>
-      {isOpen && won && <Button variant="success" onClick={() => moveDeal(deal, won)}><Trophy /> {t('deals.won')}</Button>}
-      {isOpen && <Button variant="outline" onClick={onLost}><ThumbsDown /> {t('deals.lost')}</Button>}
-      {!isOpen && firstOpen && <Button variant="outline" onClick={() => moveDeal(deal, firstOpen)}><RotateCcw /> {t('deals.reopen')}</Button>}
-      <Button variant="outline" onClick={() => openModal({ kind: 'deal', initial: deal })}><Pencil /> {t('common.edit')}</Button>
+      {isOpen && won && <IconAction label={t('deals.won')} onClick={() => moveDeal(deal, won)}><Trophy className="text-emerald-500" /></IconAction>}
+      {isOpen && <IconAction label={t('deals.lost')} onClick={onLost}><ThumbsDown className="text-rose-500" /></IconAction>}
+      {!isOpen && firstOpen && <IconAction label={t('deals.reopen')} onClick={() => moveDeal(deal, firstOpen)}><RotateCcw /></IconAction>}
+      <IconAction label={t('common.edit')} onClick={() => openModal({ kind: 'deal', initial: deal })}><Pencil /></IconAction>
       <DeleteRecordButton table="deals" id={deal.id} title={t('deals.deleteTitle')} description={t('deals.deleteDesc', { title: deal.title })} redirectTo="/deals" />
     </>
   )
@@ -43,69 +49,42 @@ function DealActions({ deal, onLost }: { deal: Deal; onLost: () => void }) {
 
 export default function DealDetailPage() {
   const { id = '' } = useParams()
-  const { isLoading, dealById, stages, stageById, companyById, activities } = useCrm()
+  const { isLoading, dealById, stageById, activities } = useCrm()
   const moveDeal = useMoveDeal()
-  const [askLost, setAskLost] = useState(false)
+  const { can } = useAccess()
   const { t } = useTranslation()
+  // The lost stage to move to once a reason is given (from the stage selector or the thumbs-down action).
+  const [lostTarget, setLostTarget] = useState<Stage | null>(null)
+  const stages = useDealStages(dealById.get(id)?.stage_id)
 
   if (isLoading) return <PageSkeleton />
   const deal = dealById.get(id)
   if (!deal) return <RecordNotFound icon={Handshake} label={t('entity.deal')} backTo="/deals" />
 
   const stage = stageById.get(deal.stage_id)
-  const company = deal.company_id ? companyById.get(deal.company_id) : undefined
-  const lostStage = stages.find((s) => s.is_lost)
+  const pick = (target: Stage) => (target.is_lost ? setLostTarget(target) : moveDeal(deal, target))
+  const links = { deal_id: deal.id, company_id: deal.company_id, contact_id: deal.contact_id }
 
   return (
     <>
-      <BackLink to="/deals" label={t('nav.deals')} />
-      <RecordHeader
-        media={<CompanyLogo name={company?.name ?? deal.title} size="lg" className="rounded-xl" />}
-        title={deal.title}
-        badge={<StatusBadge status={dealStatus(deal, stageById)} />}
-        subtitle={
+      <RecordCard
+        link="deal_id"
+        recordId={deal.id}
+        activities={activities.filter((a) => a.deal_id === deal.id)}
+        links={links}
+        info={
           <>
-            <span className="text-lg font-semibold tabular-nums text-foreground">{money(deal.amount, deal.currency)}</span>
-            {company && <Link to={`/companies/${company.id}`} className="hover:text-foreground hover:underline">· {company.name}</Link>}
-            {isStale(deal, stageById) && <span className="font-medium text-rose-600 dark:text-rose-400">· {t('deals.idleDays', { days: daysSince(deal.updated_at) })}</span>}
+            <InfoHeader back={<BackLink to="/deals" label={t('nav.deals')} />} title={deal.title} shortId={deal.id.slice(0, 8).toUpperCase()}
+              actions={<DealActions deal={deal} onLost={() => setLostTarget(stages.find((s) => s.is_lost) ?? null)} />}>
+              <StageSelector deal={deal} onPick={pick} readOnly={!can('deals', 'edit')} />
+            </InfoHeader>
+            <DealInfo deal={deal} lost={!!stage?.is_lost} />
           </>
         }
-        actions={<DealActions deal={deal} onLost={() => setAskLost(true)} />}
+        widgets={<><StageTimesWidget deal={deal} /><AssociationCards deal={deal} /></>}
       />
-      <Card className="mb-5 p-2">
-        <StagePath deal={deal} stages={stages} onSelect={(s) => (s.is_lost ? setAskLost(true) : moveDeal(deal, s))} />
-        {stage?.is_lost && deal.lost_reason && (
-          <p className="mt-3 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700 dark:bg-rose-500/10 dark:text-rose-300"><b className="font-medium">{t('deals.lostReason')}</b> {deal.lost_reason}</p>
-        )}
-      </Card>
-      <RecordLayout
-        side={
-          <>
-            <PropertyList
-              title={t('deals.about')}
-              items={[
-                [t('deals.colAmount'), money(deal.amount, deal.currency)],
-                [t('deals.weighted'), `${money(weightedValue(deal, stageById), deal.currency)} (${stage?.probability ?? 0}%)`],
-                [t('deals.colStage'), stage?.name],
-                [t('deals.colClose'), shortDate(deal.expected_close_date)],
-                [t('deals.colPriority'), <PriorityFlag key="p" priority={deal.priority} withLabel />],
-                [t('deals.colSource'), deal.source],
-                [t('deals.created'), shortDate(deal.created_at)],
-                [t('deals.lastUpdate'), timeAgo(deal.updated_at)],
-                [t('deals.closed'), deal.closed_at && shortDate(deal.closed_at)],
-              ]}
-            />
-            <AssociationCards deal={deal} />
-          </>
-        }
-        main={
-          <>
-            <Composer links={{ deal_id: deal.id, company_id: deal.company_id, contact_id: deal.contact_id }} />
-            <Timeline activities={activities.filter((a) => a.deal_id === deal.id)} />
-          </>
-        }
-      />
-      <LostReasonDialog open={askLost} onOpenChange={setAskLost} onConfirm={(reason) => { if (lostStage) moveDeal(deal, lostStage, reason); setAskLost(false) }} />
+      <LostReasonDialog open={!!lostTarget} onOpenChange={(open) => !open && setLostTarget(null)}
+        onConfirm={(reason) => { if (lostTarget) moveDeal(deal, lostTarget, reason); setLostTarget(null) }} />
     </>
   )
 }
