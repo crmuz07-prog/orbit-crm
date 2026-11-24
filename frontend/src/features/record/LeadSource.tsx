@@ -4,7 +4,7 @@ import { reportsApi } from '@/lib/api'
 import { shortDate } from '@/lib/utils'
 import { InfoSection } from './RecordCard'
 
-const ROWS = ['platform', 'campaign', 'adset', 'ad_name', 'form_name'] as const
+const ROWS = ['platform', 'campaign', 'adset', 'ad_name', 'form_name', 'ad_id', 'form_id'] as const
 
 /** Where the lead came from (Meta lead form or an import): platform, campaign, ad set, ad and form. */
 export function LeadSource({ dealId }: { dealId: string }) {

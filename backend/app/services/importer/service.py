@@ -11,6 +11,7 @@ from app.services.custom_fields import fields_for
 from app.services.importer.apply import Importer
 from app.services.importer.mapping import suggest
 from app.services.importer.reader import Cell, read_table
+from app.services.importer.sheet_meta import ColumnMeta, read_meta
 
 MAX_BYTES = 5 * 1024 * 1024
 
@@ -25,11 +26,15 @@ def decode(file: ImportFile) -> tuple[list[str], list[list[Cell]]]:
     return read_table(file.filename, content)
 
 
+def sheet_meta(file: ImportFile, headers: list[str]) -> dict[int, ColumnMeta]:
+    return read_meta(base64.b64decode(file.content), headers) if file.filename.lower().endswith((".xlsx", ".xlsm")) else {}
+
+
 def preview(db: Session, workspace_id: str, file: ImportFile) -> ImportPreview:
     headers, rows = decode(file)
-    return ImportPreview(rows=len(rows), columns=suggest(headers, rows, fields_for(db, workspace_id)))
+    return ImportPreview(rows=len(rows), columns=suggest(headers, rows, fields_for(db, workspace_id), sheet_meta(file, headers)))
 
 
 def run(db: Session, workspace_id: str, user_id: str, request: ImportRequest) -> ImportResult:
-    _, rows = decode(request)
-    return Importer(db, workspace_id, user_id, request.pipeline_id, request.columns).run(rows)
+    headers, rows = decode(request)
+    return Importer(db, workspace_id, user_id, request.pipeline_id, request.columns, sheet_meta(request, headers)).run(rows)

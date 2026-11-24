@@ -58,4 +58,6 @@ class Attribution(Schema):
     adset: str | None = None
     ad_name: str | None = None
     form_name: str | None = None
+    ad_id: str | None = None
+    form_id: str | None = None
     created_at: datetime

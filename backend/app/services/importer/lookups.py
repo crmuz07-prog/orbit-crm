@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.errors import NotFound
-from app.models import CustomField, LostReason, Pipeline, Stage
+from app.models import Company, CustomField, LostReason, Pipeline, Stage
 from app.schemas.imports import ColumnMap, ImportResult
 from app.services import team
 from app.services.custom_fields import add_options, assign_key, fields_for
@@ -37,6 +37,32 @@ class Lookups:
                 self.members.setdefault(norm(user.full_name.split()[0]), membership.user_id)
         self.fields = {f.key: f for f in fields_for(db, workspace_id)}
         self.reasons = {norm(r.name) for r in db.scalars(select(LostReason).where(LostReason.workspace_id == workspace_id))}
+        self.companies = {norm(c.name): c for c in db.scalars(select(Company).where(Company.workspace_id == workspace_id))}
+
+    def company(self, name: str, owner_id: str | None) -> Company:
+        """The same name (case and spacing aside) is the same company; a new one belongs to the deal's manager."""
+        found = self.companies.get(norm(name))
+        if found:
+            return found
+        company = Company(workspace_id=self.workspace_id, name=name.strip()[:200], owner_id=owner_id, lifecycle="lead")
+        self.db.add(company)
+        self.db.flush()
+        self.companies[norm(name)] = company
+        self.result.companies_created += 1
+        return company
+
+    def follow_order(self, names: list[str]) -> None:
+        """The sheet's stage list is the funnel: its stages take that order (open first, then won / lost); others keep theirs after."""
+        listed = [self.stages[norm(n)] for n in names if norm(n) in self.stages]
+        rest = [s for s in self.stage_list if s not in listed]
+        ordered = [s for s in listed if not s.is_closed] + [s for s in rest if not s.is_closed] + [s for s in listed if s.is_closed] + [s for s in rest if s.is_closed]
+        self.stage_list[:] = ordered
+        for position, stage in enumerate(ordered):
+            stage.position = position
+
+    def describe(self, stage: Stage, description: str | None) -> None:
+        if description and not stage.description:
+            stage.description = description[:500]
 
     def stages_by_id(self, stage_id: str) -> Stage:
         # A re-imported deal may sit in another pipeline; its own stage still decides open/closed.
@@ -96,3 +122,11 @@ class Lookups:
         if norm(name) not in self.reasons:
             self.db.add(LostReason(workspace_id=self.workspace_id, name=name[:120], position=len(self.reasons)))
             self.reasons.add(norm(name))
+
+    def reasons_follow(self, names: list[str]) -> None:
+        """Loss reasons take the sheet's order (the lost dialog and the report list them that way)."""
+        self.db.flush()
+        order = {norm(n): i for i, n in enumerate(names)}
+        rows = list(self.db.scalars(select(LostReason).where(LostReason.workspace_id == self.workspace_id)))
+        for i, reason in enumerate(sorted(rows, key=lambda r: (order.get(norm(r.name), len(order)), r.position))):
+            reason.position = i

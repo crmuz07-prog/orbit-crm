@@ -27,6 +27,7 @@ export interface LostReason extends Row {
 export type ImportTarget =
   | 'ignore' | 'external_id' | 'title' | 'contact_name' | 'phone' | 'email' | 'created_at' | 'stage' | 'owner' | 'amount' | 'source'
   | 'lost_reason' | 'note' | 'next_contact' | 'platform' | 'campaign' | 'adset' | 'ad_name' | 'form_name' | 'custom' | 'new_custom'
+  | 'company' | 'ad_id' | 'form_id'
 
 export interface ColumnMap {
   column: number
@@ -51,6 +52,7 @@ export interface ImportResult {
   fields_created: string[]
   unmatched_owners: string[]
   tasks_created: number
+  companies_created: number
 }
 
 export interface ReportTotals {
@@ -104,5 +106,7 @@ export interface Attribution {
   adset: string | null
   ad_name: string | null
   form_name: string | null
+  ad_id: string | null
+  form_id: string | null
   created_at: string
 }

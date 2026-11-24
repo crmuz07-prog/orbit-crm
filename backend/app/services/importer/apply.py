@@ -11,13 +11,15 @@ from app.schemas.imports import ColumnMap, ImportResult
 from app.services.importer import values as v
 from app.services.importer.lookups import Lookups
 from app.services.importer.reader import Cell
-from app.services.phone_match import find_contact
+from app.services.importer.sheet_meta import ColumnMeta
+from app.services.phone_match import find_contact, phone_key
 
 ATTRIBUTION = ("campaign", "adset", "ad_name", "form_name")
 
 
 class Importer:
-    def __init__(self, db: Session, workspace_id: str, user_id: str, pipeline_id: str, columns: list[ColumnMap]) -> None:
+    def __init__(self, db: Session, workspace_id: str, user_id: str, pipeline_id: str, columns: list[ColumnMap],
+                 meta: dict[int, ColumnMeta] | None = None) -> None:
         self.db, self.workspace_id, self.user_id = db, workspace_id, user_id
         self.result = ImportResult()
         self.look = Lookups(db, workspace_id, pipeline_id, self.result)
@@ -26,10 +28,41 @@ class Importer:
         for column in self.columns:
             if column.target in ("custom", "new_custom") and (field := self.look.field(column)):
                 self.custom.append((column, field))
+        self.warnings: list[tuple[CustomField, list[str]]] = []
+        self.apply_meta(meta or {})
+
+    def apply_meta(self, meta: dict[int, ColumnMeta]) -> None:
+        """The workbook's own lists first: stage order and meaning, every loss reason, list options and red values."""
+        for column in self.columns:
+            info = meta.get(column.column)
+            if info is None:
+                continue
+            if column.target == "stage":
+                for name in info.options:
+                    self.look.describe(self.look.stage(name), info.descriptions.get(name))
+                self.look.follow_order(info.options)
+            elif column.target == "lost_reason":
+                for name in info.options:
+                    self.look.lost_reason(name)
+                self.look.reasons_follow(info.options)
+        for column, field in self.custom:
+            info = meta.get(column.column)
+            if info is None or field.type not in ("select", "multiselect"):
+                continue
+            options = [o for o in (v.answer(x) for x in info.options) if o]
+            field.options = [*options, *(o for o in field.options if o not in options)]
+            self.warnings.append((field, info.warn))
+
+    def apply_warnings(self) -> None:
+        """After the rows, when every value is an option: a red rule marks a value only if the field really has it
+        (some sheets keep colour rules pointing at a shifted column)."""
+        for field, warn in self.warnings:
+            field.warn_options = [*field.warn_options, *(w for w in warn if w in field.options and w not in field.warn_options)]
 
     def run(self, rows: list[list[Cell]]) -> ImportResult:
         for row in rows:
             self.row(row)
+        self.apply_warnings()
         self.db.commit()
         return self.result
 
@@ -58,6 +91,10 @@ class Importer:
         is_new = deal is None
         lead = lead or (self.lead_of(deal.id) if deal else None)
         deal = self.save_deal(deal, row, contact, name or contact.first_name, created)
+        if company_name := v.text(self.cell(row, "company")):
+            company = self.look.company(company_name, deal.owner_id)
+            contact.company_id = contact.company_id or company.id
+            deal.company_id = deal.company_id or company.id
         self.save_lead(lead, deal, contact, row, external, created)
         self.save_note(deal, row)
         self.save_task(deal, row, contact.first_name)
@@ -122,7 +159,15 @@ class Importer:
         self.db.flush()
         return deal
 
+    @staticmethod
+    def canonical(field: CustomField, value: str | None) -> str | None:
+        """"CREATED" and "created" are one option: the first spelling the field has wins."""
+        if value is None:
+            return None
+        return next((o for o in field.options if o.casefold() == value.casefold()), value)
+
     def custom_values(self, row: list[Cell]) -> dict[str, Any]:
+        primary_phone = v.phone(self.cell(row, "phone"))
         values: dict[str, Any] = {}
         for column, field in self.custom:
             raw = row[column.column] if column.column < len(row) else None
@@ -135,9 +180,12 @@ class Importer:
                 answer = v.answer(raw)
                 value = [p.strip() for p in answer.split(",") if p.strip()] if answer else None
             elif field.type == "select":
-                value = v.answer(raw)
+                value = self.canonical(field, v.answer(raw))
             else:
                 value = v.text(raw) or None
+                # A second phone equal to the contact's number (most rows) adds nothing.
+                if value and phone_key(value) and len(phone_key(value)) >= 7 and phone_key(value) == phone_key(primary_phone):
+                    value = None
             if value is not None:
                 self.look.grow_options(field, value if isinstance(value, list) else [str(value)])
                 values[field.key] = value
@@ -153,6 +201,8 @@ class Importer:
                                external_id=external or f"deal:{deal.id}", created_at=created or utcnow())
             self.db.add(lead)
         lead.deal_id, lead.contact_id, lead.platform = deal.id, contact.id, platform or lead.platform
+        lead.ad_id = v.meta_id(self.cell(row, "ad_id")) or lead.ad_id
+        lead.form_id = v.meta_id(self.cell(row, "form_id")) or lead.form_id
         for key, value in attribution.items():
             setattr(lead, key, value or getattr(lead, key))
 

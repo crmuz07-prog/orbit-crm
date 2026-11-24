@@ -12,7 +12,7 @@ export const process = {
     noTask: 'Vazifasiz', buckets: { overdue: 'Muddati oʻtgan', today: 'Bugun', tomorrow: 'Ertaga', week: 'Shu hafta', later: 'Keyinroq', undated: 'Sanasiz', done: 'Bajarilgan' },
   },
   leadSource: {
-    title: 'Lid manbasi', platform: 'Platforma', campaign: 'Kampaniya', adset: 'Reklama guruhi', ad_name: 'Reklama', form_name: 'Forma', received: 'Kelgan sana: {{date}}',
+    ad_id: 'Reklama ID', form_id: 'Forma ID', title: 'Lid manbasi', platform: 'Platforma', campaign: 'Kampaniya', adset: 'Reklama guruhi', ad_name: 'Reklama', form_name: 'Forma', received: 'Kelgan sana: {{date}}',
     platforms: { instagram: 'Instagram', facebook: 'Facebook', messenger: 'Messenger', whatsapp: 'WhatsApp', audience_network: 'Audience Network', import: 'Import' },
   },
   customFields: {
@@ -30,11 +30,11 @@ export const process = {
     button: 'Import', title: 'Excel / CSV dan bitimlarni import qilish', pick: '.xlsx yoki .csv faylni tanlang', pickHint: 'Meta lid eksporti va oʻz jadvallaringiz. 5 MB gacha.',
     reading: 'Fayl oʻqilmoqda…', rows_one: '{{count}} qator', rows_other: '{{count}} qator', pipeline: 'Voronka', column: 'Ustun', sample: 'Namuna', target: 'Qayerga',
     newField: 'Yangi maydon', newFieldType: 'Turi', existingField: 'Maydon', run: '{{count}} qatorni import qilish', running: 'Import qilinmoqda…',
-    doneTitle: 'Import tugadi', created: 'Yangi bitimlar', updated: 'Yangilandi', skipped: 'Oʻtkazib yuborildi (boʻsh yoki test)', tasks: 'Yaratilgan vazifalar',
+    companies: 'Yaratilgan kompaniyalar', doneTitle: 'Import tugadi', created: 'Yangi bitimlar', updated: 'Yangilandi', skipped: 'Oʻtkazib yuborildi (boʻsh yoki test)', tasks: 'Yaratilgan vazifalar',
     stagesCreated: 'Yangi bosqichlar', fieldsCreated: 'Yangi maydonlar', unmatched: 'Topilmagan menejerlar — ularni Sozlamalar → Jamoa boʻlimida qoʻshib, qayta import qiling (bitimlar dublikat boʻlmaydi, yangilanadi):',
     again: 'Boshqa fayl', close: 'Yopish', reimportHint: 'Shu faylni qayta import qilsangiz, bitimlar dublikat boʻlmaydi — yangilanadi.',
     targets: {
-      ignore: 'Oʻtkazib yuborish', external_id: 'Lid ID', title: 'Bitim nomi', contact_name: 'Mijoz ismi', phone: 'Telefon', email: 'E-mail', created_at: 'Yaratilgan sana',
+      company: 'Kompaniya', ad_id: 'Reklama ID', form_id: 'Forma ID', ignore: 'Oʻtkazib yuborish', external_id: 'Lid ID', title: 'Bitim nomi', contact_name: 'Mijoz ismi', phone: 'Telefon', email: 'E-mail', created_at: 'Yaratilgan sana',
       stage: 'Bosqich', owner: 'Menejer', amount: 'Summa', source: 'Manba', lost_reason: 'Rad etish sababi', note: 'Izoh', next_contact: 'Keyingi aloqa (vazifa)',
       platform: 'Platforma', campaign: 'Kampaniya', adset: 'Reklama guruhi', ad_name: 'Reklama', form_name: 'Forma', custom: 'Mavjud maydon', new_custom: 'Yangi maydon',
     },

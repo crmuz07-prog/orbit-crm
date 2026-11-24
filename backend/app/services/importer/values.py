@@ -101,3 +101,8 @@ def platform(value: Cell) -> str | None:
 
 def lead_id(value: Cell) -> str | None:
     return text(value).removeprefix("l:") or None
+
+
+def meta_id(value: Cell) -> str | None:
+    """Meta export ids carry a type prefix ("ag:1202…" ad, "f:2670…" form); the number is what the Graph API uses."""
+    return re.sub(r"^[a-z]{1,3}:", "", text(value))[:64] or None

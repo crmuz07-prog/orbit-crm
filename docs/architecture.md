@@ -62,7 +62,10 @@ actor) for companies, contacts and deals; `/events` serves them for a visible re
 and `deals.custom` holds the values by key (cleaned by `services/custom_fields.py` on save; history logs `custom.<key>`).
 `lost_reasons` is the fixed list the lost dialog offers. `/api/import/deals/preview` suggests a meaning for each column of an
 uploaded .xlsx/.csv (Meta lead exports recognised); `/api/import/deals` applies the mapping (`services/importer/`): one deal
-per row with contact, attribution in `inbound_leads`, note and next-contact task; re-imports update by lead id / phone.
+per row with contact, company, attribution in `inbound_leads` (incl. Meta ad / form ids), note and next-contact task;
+re-imports update by lead id / phone. `importer/sheet_meta.py` reads what the workbook knows beyond its cells — dropdown lists,
+a lists sheet (same header) with descriptions, red colour rules — and turns it into stage order and descriptions, the full
+loss-reason list, list options and warning values.
 `/api/reports/leads` computes the period report (funnel, platform, campaign, ad set, ad, source, list fields, loss reasons,
 managers, overdue / today / missing tasks).
 
@@ -132,6 +135,6 @@ tailwindcss-animate handles Radix enter/exit states. `MotionConfig reducedMotion
 
 ## Quality gates
 - `scripts/check-lines.sh` enforces a maximum of 250 lines per file.
-- `pytest`: 82 tests covering auth, isolation, CRUD, rules, dashboard, calls, reminders, telephony, teams, superadmin, closed access, access roles and scope, sessions, accounts, migrations and error codes.
+- `pytest`: 84 tests covering auth, isolation, CRUD, rules, dashboard, calls, reminders, telephony, teams, superadmin, closed access, access roles and scope, sessions, accounts, migrations and error codes.
 - Alembic migrations (`backend/migrations`) run on boot; legacy databases are stamped at the baseline first.
 - `tsc` strict, with no `any`.

@@ -6,18 +6,23 @@ from app.models import CustomField
 from app.schemas.imports import ColumnMap
 from app.services.custom_fields import slug
 from app.services.importer.reader import Cell, preview_cell
+from app.services.importer.sheet_meta import ColumnMeta
 
 # Targets a column can carry at most once (notes may come from several columns).
 SINGLE = {"external_id", "title", "contact_name", "phone", "email", "created_at", "stage", "owner", "amount", "source",
-          "lost_reason", "next_contact", "platform", "campaign", "adset", "ad_name", "form_name"}
+          "lost_reason", "next_contact", "platform", "campaign", "adset", "ad_name", "form_name", "company", "ad_id", "form_id"}
 # Header fragments (lower-case, any language the clients use); the first matching rule wins.
 ALIASES: list[tuple[str, tuple[str, ...]]] = [
-    ("ignore", ("ad_id", "adset_id", "campaign_id", "form_id", "is_organic", "lead_status", "lid sanasi", "ogohlantirish")),
+    ("ad_id", ("ad_id",)),
+    ("form_id", ("form_id",)),
+    # Ids of ad sets / campaigns add nothing to their names; the other two are formulas over columns already imported.
+    ("ignore", ("adset_id", "campaign_id", "is_organic", "lid sanasi", "ogohlantirish")),
     ("created_at", ("created_time", "created at", "дата создания", "yaratilgan")),
     ("campaign", ("campaign_name", "campaign", "кампания", "kampaniya")),
     ("adset", ("adset_name", "ad set", "adset", "группа объявлений")),
     ("ad_name", ("ad_name", "объявление", "reklama nomi")),
     ("form_name", ("form_name", "форма")),
+    ("company", ("kompaniya", "company", "компания", "firma", "tashkilot", "organization", "organisation", "korxona")),
     ("platform", ("platform", "платформа")),
     ("phone", ("phone_number", "phone", "телефон", "telefon")),
     ("email", ("email", "e-mail", "почта")),
@@ -59,7 +64,7 @@ def guess_type(values: list[Cell]) -> str:
     return "text"
 
 
-def suggest(headers: list[str], rows: list[list[Cell]], fields: list[CustomField]) -> list[ColumnMap]:
+def suggest(headers: list[str], rows: list[list[Cell]], fields: list[CustomField], meta: dict[int, ColumnMeta] | None = None) -> list[ColumnMap]:
     by_label = {f.label.lower(): f for f in fields} | {f.key: f for f in fields}
     used: set[str] = set()
     result: dict[int, ColumnMap] = {}
@@ -71,12 +76,18 @@ def suggest(headers: list[str], rows: list[list[Cell]], fields: list[CustomField
         target = "external_id" if samples and all(s.startswith("l:") for s in samples) else target_for(header)
         if not samples:
             target = "ignore"
+        # A second phone (the number typed in the form, often different from Meta's) is kept as a field, not dropped.
+        second_phone = target == "phone" and "phone" in used
         if target in SINGLE and target in used:
-            target = "ignore"
+            target = None if second_phone else "ignore"
         mapped = ColumnMap(column=i, header=header, samples=samples, target=target or "custom")
         if target is None:
             existing = by_label.get(header.lower()) or by_label.get(slug(header))
             kind = guess_type(values)
+            # A dropdown, a lists-sheet column or a colour rule says it is a list, whatever few rows show.
+            info = (meta or {}).get(i)
+            if info and (info.options or info.warn) and kind in ("text", "number"):
+                kind = "multiselect" if any(", " in preview_cell(x) for x in values if x) else "select"
             if existing:
                 mapped.field_key = existing.key
             elif header.startswith("#") and kind == "text":

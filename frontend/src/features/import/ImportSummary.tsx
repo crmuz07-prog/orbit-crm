@@ -26,6 +26,7 @@ export function ImportSummary({ result }: { result: ImportResult }) {
         <Stat label={t('importer.updated')} value={result.updated} />
         <Stat label={t('importer.tasks')} value={result.tasks_created} />
         <Stat label={t('importer.skipped')} value={result.skipped} />
+        {result.companies_created > 0 && <Stat label={t('importer.companies')} value={result.companies_created} />}
       </div>
       <Names title={t('importer.stagesCreated')} names={result.stages_created} />
       <Names title={t('importer.fieldsCreated')} names={result.fields_created} />

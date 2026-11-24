@@ -8,6 +8,7 @@ from app.schemas.fields import FieldType
 Target = Literal[
     "ignore", "external_id", "title", "contact_name", "phone", "email", "created_at", "stage", "owner", "amount", "source",
     "lost_reason", "note", "next_contact", "platform", "campaign", "adset", "ad_name", "form_name", "custom", "new_custom",
+    "company", "ad_id", "form_id",
 ]
 
 
@@ -46,3 +47,4 @@ class ImportResult(Schema):
     fields_created: list[str] = Field(default_factory=list)
     unmatched_owners: list[str] = Field(default_factory=list)
     tasks_created: int = 0
+    companies_created: int = 0

@@ -5,8 +5,8 @@ import type { ColumnMap, CustomField, FieldType, ImportTarget } from '@/lib/type
 import { cn } from '@/lib/utils'
 
 export const TARGETS: ImportTarget[] = [
-  'ignore', 'contact_name', 'phone', 'email', 'title', 'stage', 'owner', 'amount', 'source', 'created_at', 'next_contact', 'note', 'lost_reason',
-  'platform', 'campaign', 'adset', 'ad_name', 'form_name', 'external_id', 'custom', 'new_custom',
+  'ignore', 'contact_name', 'phone', 'email', 'company', 'title', 'stage', 'owner', 'amount', 'source', 'created_at', 'next_contact', 'note', 'lost_reason',
+  'platform', 'campaign', 'adset', 'ad_name', 'form_name', 'ad_id', 'form_id', 'external_id', 'custom', 'new_custom',
 ]
 const TYPES: FieldType[] = ['select', 'multiselect', 'text', 'number', 'date']
 

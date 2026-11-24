@@ -16,7 +16,7 @@ export const process = {
     noTask: 'Без задачи', buckets: { overdue: 'Просрочено', today: 'Сегодня', tomorrow: 'Завтра', week: 'На этой неделе', later: 'Позже', undated: 'Без даты', done: 'Выполнено' },
   },
   leadSource: {
-    title: 'Источник лида', platform: 'Платформа', campaign: 'Кампания', adset: 'Группа объявлений', ad_name: 'Объявление', form_name: 'Форма', received: 'Получен {{date}}',
+    ad_id: 'ID объявления', form_id: 'ID формы', title: 'Источник лида', platform: 'Платформа', campaign: 'Кампания', adset: 'Группа объявлений', ad_name: 'Объявление', form_name: 'Форма', received: 'Получен {{date}}',
     platforms: { instagram: 'Instagram', facebook: 'Facebook', messenger: 'Messenger', whatsapp: 'WhatsApp', audience_network: 'Audience Network', import: 'Импорт' },
   },
   customFields: {
@@ -35,11 +35,11 @@ export const process = {
     reading: 'Читаем файл…', rows_one: '{{count}} строка', rows_few: '{{count}} строки', rows_many: '{{count}} строк', rows_other: '{{count}} строки',
     pipeline: 'Воронка', column: 'Столбец', sample: 'Пример', target: 'Куда', newField: 'Новое поле', newFieldType: 'Тип', existingField: 'Поле',
     run: 'Импортировать ({{count}})', running: 'Импортируем…',
-    doneTitle: 'Импорт завершён', created: 'Новые сделки', updated: 'Обновлено', skipped: 'Пропущено (пустые или тестовые)', tasks: 'Создано задач',
+    companies: 'Создано компаний', doneTitle: 'Импорт завершён', created: 'Новые сделки', updated: 'Обновлено', skipped: 'Пропущено (пустые или тестовые)', tasks: 'Создано задач',
     stagesCreated: 'Новые этапы', fieldsCreated: 'Новые поля', unmatched: 'Менеджеры не найдены — добавьте их в Настройки → Команда и импортируйте снова (сделки обновятся, а не задвоятся):',
     again: 'Другой файл', close: 'Закрыть', reimportHint: 'Повторный импорт того же файла обновляет сделки, а не создаёт дубли.',
     targets: {
-      ignore: 'Пропустить', external_id: 'ID лида', title: 'Название сделки', contact_name: 'Имя контакта', phone: 'Телефон', email: 'E-mail', created_at: 'Дата создания',
+      company: 'Компания', ad_id: 'ID объявления', form_id: 'ID формы', ignore: 'Пропустить', external_id: 'ID лида', title: 'Название сделки', contact_name: 'Имя контакта', phone: 'Телефон', email: 'E-mail', created_at: 'Дата создания',
       stage: 'Этап', owner: 'Менеджер', amount: 'Сумма', source: 'Источник', lost_reason: 'Причина отказа', note: 'Примечание', next_contact: 'Следующий контакт (задача)',
       platform: 'Платформа', campaign: 'Кампания', adset: 'Группа объявлений', ad_name: 'Объявление', form_name: 'Форма', custom: 'Существующее поле', new_custom: 'Новое поле',
     },

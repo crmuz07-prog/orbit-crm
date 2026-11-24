@@ -12,7 +12,7 @@ export const process = {
     noTask: 'No task', buckets: { overdue: 'Overdue', today: 'Today', tomorrow: 'Tomorrow', week: 'This week', later: 'Later', undated: 'No date', done: 'Done' },
   },
   leadSource: {
-    title: 'Lead source', platform: 'Platform', campaign: 'Campaign', adset: 'Ad set', ad_name: 'Ad', form_name: 'Form', received: 'Received {{date}}',
+    ad_id: 'Ad ID', form_id: 'Form ID', title: 'Lead source', platform: 'Platform', campaign: 'Campaign', adset: 'Ad set', ad_name: 'Ad', form_name: 'Form', received: 'Received {{date}}',
     platforms: { instagram: 'Instagram', facebook: 'Facebook', messenger: 'Messenger', whatsapp: 'WhatsApp', audience_network: 'Audience Network', import: 'Import' },
   },
   customFields: {
@@ -30,11 +30,11 @@ export const process = {
     button: 'Import', title: 'Import deals from Excel / CSV', pick: 'Choose an .xlsx or .csv file', pickHint: 'Meta lead exports and your own sheets. Up to 5 MB.',
     reading: 'Reading the file…', rows_one: '{{count}} row', rows_other: '{{count}} rows', pipeline: 'Pipeline', column: 'Column', sample: 'Example', target: 'Goes to',
     newField: 'New field', newFieldType: 'Type', existingField: 'Field', run: 'Import {{count}} rows', running: 'Importing…',
-    doneTitle: 'Import finished', created: 'New deals', updated: 'Updated', skipped: 'Skipped (empty or test)', tasks: 'Tasks created',
+    companies: 'Companies created', doneTitle: 'Import finished', created: 'New deals', updated: 'Updated', skipped: 'Skipped (empty or test)', tasks: 'Tasks created',
     stagesCreated: 'New stages', fieldsCreated: 'New fields', unmatched: 'Managers not found — add them in Settings → Team and import again (deals are updated, not duplicated):',
     again: 'Import another file', close: 'Close', reimportHint: 'Importing the same file again updates the deals instead of duplicating them.',
     targets: {
-      ignore: 'Skip', external_id: 'Lead ID', title: 'Deal name', contact_name: 'Contact name', phone: 'Phone', email: 'E-mail', created_at: 'Created at',
+      company: 'Company', ad_id: 'Ad ID', form_id: 'Form ID', ignore: 'Skip', external_id: 'Lead ID', title: 'Deal name', contact_name: 'Contact name', phone: 'Phone', email: 'E-mail', created_at: 'Created at',
       stage: 'Stage', owner: 'Manager', amount: 'Amount', source: 'Source', lost_reason: 'Loss reason', note: 'Note', next_contact: 'Next contact (task)',
       platform: 'Platform', campaign: 'Campaign', adset: 'Ad set', ad_name: 'Ad', form_name: 'Form', custom: 'Existing field', new_custom: 'New field',
     },
