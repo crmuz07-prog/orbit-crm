@@ -1,4 +1,4 @@
-import { Building2, CalendarCheck, ChevronDown, Handshake, Menu, Moon, Phone, Plus, Search, Sun, Users } from 'lucide-react'
+import { Building2, CalendarCheck, Handshake, Menu, Moon, Phone, Plus, Search, Sun, Users } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
