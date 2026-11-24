@@ -1,4 +1,12 @@
 export const process = {
+  people: {
+    section: 'Kontaktlar va kompaniyalar', shown: '{{total}} tadan {{shown}} tasi', allDeals: 'Barcha bitimlar', deals: { open: 'Ochiq bitimi bor', none: 'Ochiq bitimi yoʻq' },
+    reset: 'Filtrlarni tozalash', colLast: 'Oxirgi faollik', selected_one: '{{count}} ta tanlandi', selected_other: '{{count}} ta tanlandi', clear: 'Tanlovni bekor qilish',
+    assignTo: 'Masʼulga berish…', assign: 'Berish', assignTitle_one: '{{count}} ta yozuv {{name}}ga berilsinmi?', assignTitle_other: '{{count}} ta yozuv {{name}}ga berilsinmi?',
+    assignDesc: 'Yangi masʼul ular uchun javobgar boʻladi va ularni oʻz roʻyxatlarida koʻradi.', assigned_one: '{{count}} ta yozuv berildi', assigned_other: '{{count}} ta yozuv berildi',
+    deleteTitle_one: '{{count}} ta yozuv oʻchirilsinmi?', deleteTitle_other: '{{count}} ta yozuv oʻchirilsinmi?', deleted_one: '{{count}} ta yozuv oʻchirildi', deleted_other: '{{count}} ta yozuv oʻchirildi',
+    deleteDesc: { contacts: 'Ularning bitim va faoliyatlari saqlanadi, lekin bogʻlanmagan boʻlib qoladi.', companies: 'Ularning kontakt, bitim va faoliyatlari saqlanadi, lekin bogʻlanmagan boʻlib qoladi.' },
+  },
   tasks: {
     none: 'Vazifa yoʻq', overdueSince: 'Kechikdi · {{when}}', filter: 'Barcha vazifalar', overdue: 'Muddati oʻtgan', today: 'Bugun', planned: 'Rejalashtirilgan',
     noTask: 'Vazifasiz', buckets: { overdue: 'Muddati oʻtgan', today: 'Bugun', tomorrow: 'Ertaga', week: 'Shu hafta', later: 'Keyinroq', undated: 'Sanasiz', done: 'Bajarilgan' },

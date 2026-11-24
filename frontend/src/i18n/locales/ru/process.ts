@@ -1,4 +1,16 @@
 export const process = {
+  people: {
+    section: 'Контакты и компании', shown: '{{shown}} из {{total}}', allDeals: 'Все сделки', deals: { open: 'С открытыми сделками', none: 'Без открытых сделок' },
+    reset: 'Сбросить фильтры', colLast: 'Последняя активность',
+    selected_one: 'Выбрана {{count}}', selected_few: 'Выбрано {{count}}', selected_many: 'Выбрано {{count}}', selected_other: 'Выбрано {{count}}', clear: 'Снять выделение',
+    assignTo: 'Назначить…', assign: 'Назначить',
+    assignTitle_one: 'Передать {{count}} запись: {{name}}?', assignTitle_few: 'Передать {{count}} записи: {{name}}?', assignTitle_many: 'Передать {{count}} записей: {{name}}?', assignTitle_other: 'Передать {{count}} записи: {{name}}?',
+    assignDesc: 'Новый ответственный будет отвечать за них и увидит их в своих списках.',
+    assigned_one: 'Передана {{count}} запись', assigned_few: 'Передано {{count}} записи', assigned_many: 'Передано {{count}} записей', assigned_other: 'Передано {{count}} записи',
+    deleteTitle_one: 'Удалить {{count}} запись?', deleteTitle_few: 'Удалить {{count}} записи?', deleteTitle_many: 'Удалить {{count}} записей?', deleteTitle_other: 'Удалить {{count}} записи?',
+    deleted_one: 'Удалена {{count}} запись', deleted_few: 'Удалено {{count}} записи', deleted_many: 'Удалено {{count}} записей', deleted_other: 'Удалено {{count}} записи',
+    deleteDesc: { contacts: 'Их сделки и действия сохранятся, но будут отвязаны.', companies: 'Их контакты, сделки и действия сохранятся, но будут отвязаны.' },
+  },
   tasks: {
     none: 'Нет задачи', overdueSince: 'Просрочено · {{when}}', filter: 'Все задачи', overdue: 'Просроченные', today: 'Сегодня', planned: 'Запланированные',
     noTask: 'Без задачи', buckets: { overdue: 'Просрочено', today: 'Сегодня', tomorrow: 'Завтра', week: 'На этой неделе', later: 'Позже', undated: 'Без даты', done: 'Выполнено' },

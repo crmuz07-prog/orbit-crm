@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
@@ -6,67 +5,61 @@ import { CompanyLogo, PersonAvatar } from '@/components/common/avatars'
 import { DataTable, type Column } from '@/components/common/data-table'
 import { EmptyState } from '@/components/common/states'
 import { Card } from '@/components/ui/card'
+import { DealsCell, EmailCell, LastActivityCell, PhoneCell, TaskCell } from '@/features/people/cells'
+import type { Rollup } from '@/features/people/useDealRollups'
 import { useOwnerColumn } from '@/features/team/OwnerField'
 import { useCrm } from '@/hooks/useData'
-import { dealStatus } from '@/lib/metrics'
+import { useLastActivity, type NextTask } from '@/hooks/useNextTasks'
 import type { Contact } from '@/lib/types'
-import { fullName, money, shortDate } from '@/lib/utils'
+import { fullName, shortDate } from '@/lib/utils'
 
-function useOpenPipelineByContact() {
-  const { deals, stageById } = useCrm()
-  return useMemo(() => {
-    const map = new Map<string, number>()
-    for (const d of deals) {
-      if (d.contact_id && dealStatus(d, stageById) === 'open') map.set(d.contact_id, (map.get(d.contact_id) ?? 0) + d.amount)
-    }
-    return map
-  }, [deals, stageById])
+interface Props {
+  contacts: Contact[]
+  rollup: (id: string) => Rollup
+  nextTask: (id: string) => NextTask
+  selection: { selected: Set<string>; onChange: (next: Set<string>) => void }
 }
 
-function useContactColumns(): Column<Contact>[] {
+function useContactColumns({ rollup, nextTask }: Pick<Props, 'rollup' | 'nextTask'>): Column<Contact>[] {
   const owner = useOwnerColumn<Contact>()
   const { companyById } = useCrm()
-  const open = useOpenPipelineByContact()
+  const last = useLastActivity('contact_id')
   const { t } = useTranslation()
   const company = (c: Contact) => (c.company_id ? companyById.get(c.company_id) : undefined)
   return [
     {
-      key: 'name',
-      header: t('contacts.colName'),
-      sortValue: (c) => fullName(c),
+      key: 'name', header: t('contacts.colName'), sortValue: (c) => fullName(c),
       cell: (c) => (
-        <div className="flex items-center gap-3">
-          <PersonAvatar name={fullName(c)} />
-          <div>
-            <p className="font-medium">{fullName(c)}</p>
-            {c.email && <p className="text-xs text-muted-foreground">{c.email}</p>}
+        <div className="flex items-center gap-2.5">
+          <PersonAvatar name={fullName(c)} size="xs" />
+          <div className="min-w-0">
+            <p className="max-w-[220px] truncate font-medium">{fullName(c)}</p>
+            {c.title && <p className="max-w-[220px] truncate text-[11px] text-muted-foreground">{c.title}</p>}
           </div>
         </div>
       ),
     },
-    { key: 'title', header: t('contacts.colTitle'), sortValue: (c) => c.title ?? '', cell: (c) => c.title ?? '—' },
+    { key: 'phone', header: t('contacts.colPhone'), sortValue: (c) => c.phone ?? '', cell: (c) => <PhoneCell phone={c.phone} links={{ contact_id: c.id, ...(c.company_id ? { company_id: c.company_id } : {}) }} /> },
+    { key: 'email', header: t('fields.email'), sortValue: (c) => c.email ?? '', cell: (c) => <EmailCell email={c.email} /> },
     {
-      key: 'company',
-      header: t('contacts.colCompany'),
-      sortValue: (c) => company(c)?.name ?? '',
-      cell: (c) => {
-        const co = company(c)
-        return co ? <span className="inline-flex items-center gap-2"><CompanyLogo name={co.name} size="xs" className="rounded" /> {co.name}</span> : '—'
-      },
+      key: 'company', header: t('contacts.colCompany'), sortValue: (c) => company(c)?.name ?? '',
+      cell: (c) => { const co = company(c); return co ? <span className="inline-flex items-center gap-1.5"><CompanyLogo name={co.name} size="xs" /> {co.name}</span> : '—' },
     },
-    { key: 'phone', header: t('contacts.colPhone'), cell: (c) => c.phone ?? '—' },
-    { key: 'open', header: t('contacts.colOpen'), align: 'right', sortValue: (c) => open.get(c.id) ?? 0, cell: (c) => money(open.get(c.id) ?? 0) },
+    { key: 'deals', header: t('contacts.colOpen'), align: 'right', sortValue: (c) => rollup(c.id).openAmount, cell: (c) => <DealsCell count={rollup(c.id).open} amount={rollup(c.id).openAmount} /> },
+    { key: 'task', header: t('deals.colTask'), sortValue: (c) => nextTask(c.id).task?.due_at ?? '9999', cell: (c) => <TaskCell next={nextTask(c.id)} /> },
+    { key: 'last', header: t('people.colLast'), sortValue: (c) => last.get(c.id) ?? '', cell: (c) => <LastActivityCell at={last.get(c.id)} /> },
     owner,
     { key: 'created', header: t('contacts.colCreated'), sortValue: (c) => c.created_at, cell: (c) => <span className="text-muted-foreground">{shortDate(c.created_at)}</span> },
   ]
 }
 
-export function ContactsTable({ contacts }: { contacts: Contact[] }) {
+export function ContactsTable({ contacts, rollup, nextTask, selection }: Props) {
   const navigate = useNavigate()
   const { t } = useTranslation()
   return (
     <Card>
-      <DataTable rows={contacts} columns={useContactColumns()} onRowClick={(c) => navigate(`/contacts/${c.id}`)} empty={<EmptyState icon={Search} title={t('contacts.noMatch')} />} />
+      <DataTable rows={contacts} columns={useContactColumns({ rollup, nextTask })} selection={selection} minWidth={980}
+        onRowClick={(c) => navigate(`/contacts/${c.id}`)} empty={<EmptyState icon={Search} title={t('contacts.noMatch')} />} />
     </Card>
   )
 }

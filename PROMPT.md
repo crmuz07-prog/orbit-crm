@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/029-one-confirmation-per-card.md](docs/prompts/029-one-confirmation-per-card.md)
+Latest: [docs/prompts/030-amocrm-contacts-companies.md](docs/prompts/030-amocrm-contacts-companies.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -34,3 +34,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [027 — Compact, collapsible sidebar](docs/prompts/027-compact-collapsible-sidebar.md)
 - [028 — Every consequential action asks first](docs/prompts/028-confirm-consequential-actions.md)
 - [029 — One confirmation for all changes on a record card](docs/prompts/029-one-confirmation-per-card.md)
+- [030 — Contacts and companies like amoCRM](docs/prompts/030-amocrm-contacts-companies.md)

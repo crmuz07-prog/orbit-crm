@@ -1,4 +1,12 @@
 export const process = {
+  people: {
+    section: 'Contacts and companies', shown: '{{shown}} of {{total}}', allDeals: 'All deals', deals: { open: 'With open deals', none: 'Without open deals' },
+    reset: 'Clear filters', colLast: 'Last activity', selected_one: '{{count}} selected', selected_other: '{{count}} selected', clear: 'Clear selection',
+    assignTo: 'Assign to…', assign: 'Assign', assignTitle_one: 'Assign {{count}} record to {{name}}?', assignTitle_other: 'Assign {{count}} records to {{name}}?',
+    assignDesc: 'The new manager becomes responsible for them and sees them in their lists.', assigned_one: '{{count}} record reassigned', assigned_other: '{{count}} records reassigned',
+    deleteTitle_one: 'Delete {{count}} record?', deleteTitle_other: 'Delete {{count}} records?', deleted_one: '{{count}} record deleted', deleted_other: '{{count}} records deleted',
+    deleteDesc: { contacts: 'Their deals and activities are kept but unlinked.', companies: 'Their contacts, deals and activities are kept but unlinked.' },
+  },
   tasks: {
     none: 'No task', overdueSince: 'Late · {{when}}', filter: 'All tasks', overdue: 'Overdue', today: 'Today', planned: 'Planned',
     noTask: 'No task', buckets: { overdue: 'Overdue', today: 'Today', tomorrow: 'Tomorrow', week: 'This week', later: 'Later', undated: 'No date', done: 'Done' },

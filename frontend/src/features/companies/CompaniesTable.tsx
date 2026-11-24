@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
@@ -6,72 +5,60 @@ import { CompanyLogo } from '@/components/common/avatars'
 import { DataTable, type Column } from '@/components/common/data-table'
 import { EmptyState } from '@/components/common/states'
 import { Card } from '@/components/ui/card'
+import { DealsCell, LastActivityCell, TaskCell } from '@/features/people/cells'
+import type { Rollup } from '@/features/people/useDealRollups'
 import { useOwnerColumn } from '@/features/team/OwnerField'
-import { useCrm } from '@/hooks/useData'
 import { useLabels } from '@/hooks/useLabels'
+import { useLastActivity, type NextTask } from '@/hooks/useNextTasks'
 import { LIFECYCLES } from '@/lib/constants'
-import { dealStatus } from '@/lib/metrics'
 import type { Company } from '@/lib/types'
-import { money, shortDate } from '@/lib/utils'
+import { money } from '@/lib/utils'
 import { LifecycleBadge } from './LifecycleBadge'
 
-type Rollup = { contacts: number; open: number; won: number }
-
-/** Per-company roll-ups of contacts and pipeline (HubSpot association metrics). */
-function useCompanyRollups() {
-  const { contacts, deals, stageById } = useCrm()
-  return useMemo(() => {
-    const map = new Map<string, Rollup>()
-    const get = (id: string) => map.get(id) ?? map.set(id, { contacts: 0, open: 0, won: 0 }).get(id)!
-    contacts.forEach((c) => c.company_id && get(c.company_id).contacts++)
-    deals.forEach((d) => {
-      const status = d.company_id && dealStatus(d, stageById)
-      if (status === 'open') get(d.company_id!).open += d.amount
-      if (status === 'won') get(d.company_id!).won += d.amount
-    })
-    return map
-  }, [contacts, deals, stageById])
+interface Props {
+  companies: Company[]
+  rollup: (id: string) => Rollup
+  nextTask: (id: string) => NextTask
+  selection: { selected: Set<string>; onChange: (next: Set<string>) => void }
 }
 
-function useCompanyColumns(): Column<Company>[] {
+function useCompanyColumns({ rollup, nextTask }: Pick<Props, 'rollup' | 'nextTask'>): Column<Company>[] {
   const owner = useOwnerColumn<Company>()
-  const rollups = useCompanyRollups()
+  const last = useLastActivity('company_id')
   const { t } = useTranslation()
   const labels = useLabels()
-  const stat = (c: Company, key: keyof Rollup) => rollups.get(c.id)?.[key] ?? 0
   return [
     {
-      key: 'name',
-      header: t('companies.colCompany'),
-      sortValue: (c) => c.name,
+      key: 'name', header: t('companies.colCompany'), sortValue: (c) => c.name,
       cell: (c) => (
-        <div className="flex items-center gap-3">
-          <CompanyLogo name={c.name} />
-          <div>
-            <p className="font-medium">{c.name}</p>
-            <p className="text-xs text-muted-foreground">{c.domain ?? '—'}</p>
+        <div className="flex items-center gap-2.5">
+          <CompanyLogo name={c.name} size="xs" />
+          <div className="min-w-0">
+            <p className="max-w-[220px] truncate font-medium">{c.name}</p>
+            {(c.domain || c.city) && <p className="max-w-[220px] truncate text-[11px] text-muted-foreground">{[c.domain, c.city].filter(Boolean).join(' · ')}</p>}
           </div>
         </div>
       ),
     },
     { key: 'lifecycle', header: t('fields.lifecycle'), sortValue: (c) => LIFECYCLES.findIndex((l) => l.value === c.lifecycle), cell: (c) => <LifecycleBadge value={c.lifecycle} /> },
     { key: 'industry', header: t('fields.industry'), sortValue: (c) => c.industry ?? '', cell: (c) => labels.industry(c.industry) || '—' },
-    { key: 'location', header: t('companies.colLocation'), sortValue: (c) => c.country ?? '', cell: (c) => [c.city, c.country].filter(Boolean).join(', ') || '—' },
-    { key: 'employees', header: t('fields.employees'), cell: (c) => c.employees ?? '—' },
-    { key: 'contacts', header: t('companies.colContacts'), align: 'right', sortValue: (c) => stat(c, 'contacts'), cell: (c) => stat(c, 'contacts') },
-    { key: 'open', header: t('companies.colOpen'), align: 'right', sortValue: (c) => stat(c, 'open'), cell: (c) => money(stat(c, 'open')) },
-    { key: 'won', header: t('companies.colWon'), align: 'right', sortValue: (c) => stat(c, 'won'), cell: (c) => <span className="text-emerald-600 dark:text-emerald-400">{money(stat(c, 'won'))}</span> },
+    { key: 'contacts', header: t('companies.colContacts'), align: 'right', sortValue: (c) => rollup(c.id).contacts, cell: (c) => rollup(c.id).contacts || '—' },
+    { key: 'deals', header: t('companies.colOpen'), align: 'right', sortValue: (c) => rollup(c.id).openAmount, cell: (c) => <DealsCell count={rollup(c.id).open} amount={rollup(c.id).openAmount} /> },
+    { key: 'won', header: t('companies.colWon'), align: 'right', sortValue: (c) => rollup(c.id).won,
+      cell: (c) => (rollup(c.id).won ? <span className="text-emerald-600 dark:text-emerald-400">{money(rollup(c.id).won, undefined, true)}</span> : <span className="text-muted-foreground">—</span>) },
+    { key: 'task', header: t('deals.colTask'), sortValue: (c) => nextTask(c.id).task?.due_at ?? '9999', cell: (c) => <TaskCell next={nextTask(c.id)} /> },
+    { key: 'last', header: t('people.colLast'), sortValue: (c) => last.get(c.id) ?? '', cell: (c) => <LastActivityCell at={last.get(c.id)} /> },
     owner,
-    { key: 'created', header: t('companies.colCreated'), sortValue: (c) => c.created_at, cell: (c) => <span className="text-muted-foreground">{shortDate(c.created_at)}</span> },
   ]
 }
 
-export function CompaniesTable({ companies }: { companies: Company[] }) {
+export function CompaniesTable({ companies, rollup, nextTask, selection }: Props) {
   const navigate = useNavigate()
   const { t } = useTranslation()
   return (
     <Card>
-      <DataTable rows={companies} columns={useCompanyColumns()} onRowClick={(c) => navigate(`/companies/${c.id}`)} empty={<EmptyState icon={Search} title={t('companies.noMatch')} />} />
+      <DataTable rows={companies} columns={useCompanyColumns({ rollup, nextTask })} selection={selection} minWidth={980}
+        onRowClick={(c) => navigate(`/companies/${c.id}`)} empty={<EmptyState icon={Search} title={t('companies.noMatch')} />} />
     </Card>
   )
 }
