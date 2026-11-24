@@ -9,11 +9,13 @@ import { authApi } from '@/lib/api'
 import { newPassword, rules } from '@/lib/validation'
 import { AuthLayout } from './AuthLayout'
 import { useAsyncAction } from './useAsyncAction'
+import { useConfirmedSignOut } from './useSignOut'
 
 /** First sign-in with an admin-issued password: the person must choose their own before using the CRM. */
 export function PasswordGate() {
   const { t } = useTranslation()
-  const { session, signIn, signOut } = useAuth()
+  const { session, signIn } = useAuth()
+  const signOut = useConfirmedSignOut()
   const errors = useFormErrors<'current' | 'next' | 'confirm'>('gate-form')
   // A wrong current password belongs under that field, not in a toast.
   const { busy, run } = useAsyncAction((e) => errors.fromApi(e, { new_password: 'next', current_password: 'current' }, { code: 'wrong_password', field: 'current' }))

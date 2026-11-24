@@ -1,14 +1,15 @@
 import { CalendarX, LogOut, ShieldBan } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useAuth, useWorkspaceSession } from '@/auth/AuthProvider'
+import { useWorkspaceSession } from '@/auth/AuthProvider'
 import { Button } from '@/components/ui/button'
 import { AuthLayout } from '@/features/auth/AuthLayout'
 import { WorkspaceSwitcher } from '@/features/auth/WorkspaceSwitcher'
+import { useConfirmedSignOut } from '@/features/auth/useSignOut'
 
 /** Shown instead of the CRM when the active company's subscription ended or it was blocked. */
 export function SubscriptionClosed() {
   const { t } = useTranslation()
-  const { signOut } = useAuth()
+  const signOut = useConfirmedSignOut()
   const { workspace } = useWorkspaceSession()
   const blocked = workspace.status === 'blocked'
   const Icon = blocked ? ShieldBan : CalendarX

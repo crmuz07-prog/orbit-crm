@@ -6,6 +6,7 @@ import { ConfirmDialog } from '@/components/common/confirm-dialog'
 import { CredentialsCard } from '@/components/common/credentials-card'
 import { PasswordField, generatePassword } from '@/components/common/password-field'
 import { useFormErrors } from '@/hooks/useFormErrors'
+import { useMemberChange } from './useMemberChange'
 import { newPassword } from '@/lib/validation'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -71,6 +72,7 @@ export function MemberRow({ member, isSelf, canManage, actorRole, actions, acces
   const { t } = useTranslation()
   const [confirm, setConfirm] = useState(false)
   const editable = canManage && !isSelf && (member.role !== 'owner' || actorRole === 'owner')
+  const change = useMemberChange(member, actions.update)
 
   return (
     <li className="flex flex-wrap items-center gap-3 px-5 py-3">
@@ -86,7 +88,7 @@ export function MemberRow({ member, isSelf, canManage, actorRole, actions, acces
         </p>
       </div>
       {editable ? (
-        <RoleSelect value={member.role} actorRole={actorRole} className="w-40" onChange={(role) => actions.update.mutate({ userId: member.user_id, patch: { role } })} />
+        <RoleSelect value={member.role} actorRole={actorRole} className="w-40" onChange={(role) => change({ role }, t('team.role'), t(`roles.${role}`))} />
       ) : (
         <Badge tone={member.role === 'owner' ? 'violet' : member.role === 'admin' ? 'blue' : 'gray'}>{t(`roles.${member.role}`)}</Badge>
       )}

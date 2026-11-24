@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ShieldBan, ShieldCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { ConfirmDialog } from '@/components/common/confirm-dialog'
+import { useConfirm } from '@/components/common/confirm-provider'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { adminApi } from '@/lib/api'
@@ -38,6 +39,11 @@ function BillingBody({ company, actions }: { company: PlatformCompany; actions: 
   const payments = useQuery({ queryKey: ['admin', 'payments', company.id], queryFn: () => adminApi.companyPayments(company.id) })
   const blocked = company.status === 'blocked'
   const toggle = () => actions.updateCompany.mutate({ id: company.id, patch: { status: blocked ? 'active' : 'blocked' } })
+  const confirmAction = useConfirm()
+  const unblock = async () => {
+    const name = { name: company.name }
+    if (await confirmAction({ title: t('confirm.unblock.title', name), description: t('confirm.unblock.desc'), confirmLabel: t('confirm.unblock.action'), tone: 'default' })) toggle()
+  }
   const seats = company.seat_limit ? t('billing.seatsUsed', { used: company.seats_used, limit: company.seat_limit }) : `${company.seats_used} · ${t('billing.unlimited')}`
 
   return (
@@ -52,7 +58,7 @@ function BillingBody({ company, actions }: { company: PlatformCompany; actions: 
       <Section title={t('billing.limits')}><LimitsForm key={`${company.seat_limit}-${company.subscription_ends_at}`} company={company} update={actions.updateCompany} /></Section>
       <Section title={t('billing.history')}><PaymentsTable payments={payments.data ?? []} /></Section>
       <div className="flex justify-end border-t border-foreground/[0.06] pt-4">
-        {blocked ? <Button variant="outline" onClick={toggle}><ShieldCheck /> {t('billing.unblock')}</Button>
+        {blocked ? <Button variant="outline" onClick={unblock}><ShieldCheck /> {t('billing.unblock')}</Button>
           : <Button variant="destructive" onClick={() => setConfirm(true)}><ShieldBan /> {t('billing.block')}</Button>}
       </div>
       <ConfirmDialog open={confirm} onOpenChange={setConfirm} title={t('billing.blockConfirm', { name: company.name })}

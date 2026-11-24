@@ -6,6 +6,7 @@ import { MotionConfig } from 'framer-motion'
 import { Toaster } from 'sonner'
 import { AuthProvider } from '@/auth/AuthProvider'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { ConfirmProvider } from '@/components/common/confirm-provider'
 import { ErrorBoundary } from '@/components/common/error-boundary'
 import { reloadOnStaleBuild } from '@/lib/stale-build'
 import App from './App'
@@ -26,9 +27,11 @@ createRoot(document.getElementById('root')!).render(
         <MotionConfig reducedMotion="user">
           <TooltipProvider delayDuration={300}>
             <AuthProvider>
-              <ErrorBoundary>
-                <App />
-              </ErrorBoundary>
+              <ConfirmProvider>
+                <ErrorBoundary>
+                  <App />
+                </ErrorBoundary>
+              </ConfirmProvider>
               <Toaster position="bottom-right" richColors closeButton />
             </AuthProvider>
           </TooltipProvider>

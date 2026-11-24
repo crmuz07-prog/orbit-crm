@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Plus, Star, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { ConfirmDialog } from '@/components/common/confirm-dialog'
+import { SaveBar } from '@/components/common/save-bar'
+import { useBeforeUnload } from '@/hooks/useUnsaved'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader } from '@/components/ui/card'
@@ -13,6 +15,7 @@ import { stagesOf, useCurrentPipeline, usePipelines } from '@/hooks/usePipelines
 import type { Pipeline, Stage } from '@/lib/types'
 import { StageRow } from './StageRow'
 import { IconButton } from '@/components/common/icon-button'
+import { useConfirm } from '@/components/common/confirm-provider'
 
 /** Name, default flag and delete of the selected pipeline. */
 function PipelineToolbar({ pipeline, onDeleted }: { pipeline: Pipeline; onDeleted: () => void }) {
@@ -21,14 +24,22 @@ function PipelineToolbar({ pipeline, onDeleted }: { pipeline: Pipeline; onDelete
   const shown = useLabels().pipeline(pipeline.name)
   const [name, setName] = useState(shown)
   const [confirm, setConfirm] = useState(false)
-  const rename = () => name.trim() && name.trim() !== shown && actions.update.mutate({ id: pipeline.id, patch: { name: name.trim() } })
+  const ask = useConfirm()
+  const dirty = !!name.trim() && name.trim() !== shown
+  useBeforeUnload(dirty)
+  const rename = () => dirty && actions.update.mutate({ id: pipeline.id, patch: { name: name.trim() } })
+  const makeDefault = async () => {
+    const options = { title: t('confirm.defaultPipeline.title', { name: shown }), description: t('confirm.defaultPipeline.desc'), confirmLabel: t('confirm.defaultPipeline.action'), tone: 'default' as const }
+    if (await ask(options)) actions.update.mutate({ id: pipeline.id, patch: { is_default: true } })
+  }
   return (
     <div className="flex flex-wrap items-center gap-2 border-b border-foreground/[0.06] px-5 py-3">
-      <Input value={name} onChange={(e) => setName(e.target.value)} onBlur={rename} onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
+      <Input value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') rename(); if (e.key === 'Escape') setName(shown) }}
         aria-label={t('pipelines.name')} className="h-8 max-w-xs flex-1" />
+      {dirty && <SaveBar dirty onSave={rename} onCancel={() => setName(shown)} />}
       {pipeline.is_default ? <Badge tone="violet">{t('pipelines.default')}</Badge> : (
         <>
-          <IconButton label={t('pipelines.makeDefault')} onClick={() => actions.update.mutate({ id: pipeline.id, patch: { is_default: true } })}><Star /></IconButton>
+          <IconButton label={t('pipelines.makeDefault')} onClick={makeDefault}><Star /></IconButton>
           <IconButton label={t('common.delete')} onClick={() => setConfirm(true)}><Trash2 /></IconButton>
         </>
       )}

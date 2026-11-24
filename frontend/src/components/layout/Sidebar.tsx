@@ -4,6 +4,7 @@ import { useAuth } from '@/auth/AuthProvider'
 import { PersonAvatar } from '@/components/common/avatars'
 import { IconButton } from '@/components/common/icon-button'
 import { Tooltip } from '@/components/ui/tooltip'
+import { useConfirmedSignOut } from '@/features/auth/useSignOut'
 import { WorkspaceSwitcher } from '@/features/auth/WorkspaceSwitcher'
 import { useAccess } from '@/hooks/useAccess'
 import { useCrm } from '@/hooks/useData'
@@ -45,7 +46,8 @@ function PlatformNav(nav: NavProps) {
 
 /** Who is signed in: avatar and name (e-mail in the tooltip) and sign-out. */
 function UserCard({ collapsed }: { collapsed?: boolean }) {
-  const { session, signOut } = useAuth()
+  const { session } = useAuth()
+  const signOut = useConfirmedSignOut()
   const { t } = useTranslation()
   if (!session) return null
   const avatar = <span className="shrink-0"><PersonAvatar name={session.user.full_name} /></span>

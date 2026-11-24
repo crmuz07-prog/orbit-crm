@@ -11,6 +11,7 @@ import { MODULES, type AccessRole } from '@/lib/types'
 import { RoleDialog } from './RoleDialog'
 import type { AccessActions } from './useAccessConfig'
 import { IconButton } from '@/components/common/icon-button'
+import { useConfirm } from '@/components/common/confirm-provider'
 
 /** One chip per visible section: "Deals · Own". */
 function Summary({ role }: { role: AccessRole }) {
@@ -31,6 +32,11 @@ function Summary({ role }: { role: AccessRole }) {
 function RoleRow({ role, onEdit, onDelete, actions }: { role: AccessRole; onEdit: () => void; onDelete: () => void; actions: AccessActions }) {
   const { t } = useTranslation()
   const labels = useLabels()
+  const confirm = useConfirm()
+  const makeDefault = async () => {
+    const options = { title: t('confirm.defaultRole.title', { name: labels.role(role.name) }), description: t('confirm.defaultRole.desc'), confirmLabel: t('confirm.defaultRole.action'), tone: 'default' as const }
+    if (await confirm(options)) actions.updateRole.mutate({ id: role.id, is_default: true })
+  }
   return (
     <li className="flex items-center gap-3 px-5 py-3">
       <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary"><ShieldCheck className="size-4" /></span>
@@ -42,7 +48,7 @@ function RoleRow({ role, onEdit, onDelete, actions }: { role: AccessRole; onEdit
         <Summary role={role} />
       </div>
       {!role.is_default && (
-        <IconButton label={t('access.makeDefault')} onClick={() => actions.updateRole.mutate({ id: role.id, is_default: true })}><Star /></IconButton>
+        <IconButton label={t('access.makeDefault')} onClick={makeDefault}><Star /></IconButton>
       )}
       <IconButton label={t('access.editRole')} onClick={onEdit}><Pencil /></IconButton>
       {!role.is_default && (

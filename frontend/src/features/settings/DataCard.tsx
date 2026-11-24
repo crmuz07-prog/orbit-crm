@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardHeader } from '@/components/ui/card'
 import { api } from '@/lib/api'
 import { errorMessage } from '@/lib/utils'
+import { useConfirm } from '@/components/common/confirm-provider'
 
 function DataAction({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
   return (
@@ -28,6 +29,10 @@ export function DataCard() {
   const [busy, setBusy] = useState(false)
   const [confirmReset, setConfirmReset] = useState(false)
   const { t } = useTranslation()
+  const confirm = useConfirm()
+  const addSample = async () => {
+    if (await confirm({ title: t('confirm.sample.title'), description: t('confirm.sample.desc'), confirmLabel: t('confirm.sample.action'), tone: 'default' })) run(api.seed, t('settings.sampleDone'))
+  }
 
   const run = async (action: () => Promise<void>, success: string) => {
     setBusy(true)
@@ -48,7 +53,7 @@ export function DataCard() {
       {/* The demo is read-only and has its own reset; real workspaces can load sample data. */}
       {!session?.workspace?.is_demo && (
         <DataAction title={t('settings.sampleTitle')} description={t('settings.sampleDesc')}>
-          <Button variant="outline" disabled={busy} onClick={() => run(api.seed, t('settings.sampleDone'))}><Database /> {t('settings.sampleTitle')}</Button>
+          <Button variant="outline" disabled={busy} onClick={addSample}><Database /> {t('settings.sampleTitle')}</Button>
         </DataAction>
       )}
       {session?.workspace?.is_demo && (

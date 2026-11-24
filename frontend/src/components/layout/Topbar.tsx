@@ -22,7 +22,9 @@ function NewMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button><Plus /> <span className="hidden sm:inline">{t('nav.new')}</span> <ChevronDown className="opacity-70" /></Button>
+        <Button><Plus /> 
+         {/* <ChevronDown className="opacity-70" /> */}
+         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44">
         <DropdownMenuLabel>{t('nav.create')}</DropdownMenuLabel>
