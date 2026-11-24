@@ -1,7 +1,12 @@
 import { useTranslation } from 'react-i18next'
+import { DataTable, type Column } from '@/components/common/data-table'
 import { Card, CardHeader } from '@/components/ui/card'
 import { useLabels } from '@/hooks/useLabels'
-import type { Breakdown } from '@/lib/types'
+import type { Breakdown, GroupRow } from '@/lib/types'
+
+type Row = GroupRow & { id: string }
+const conversion = (r: GroupRow) => (r.total ? Math.round((r.won / r.total) * 100) : 0)
+const dash = (n: number) => n || '—'
 
 /** One grouping of the period's leads (managers, campaigns, a list field…): total, in progress, won, lost, conversion. */
 export function BreakdownCard({ breakdown }: { breakdown: Breakdown }) {
@@ -13,36 +18,24 @@ export function BreakdownCard({ breakdown }: { breakdown: Breakdown }) {
     if (breakdown.key === 'platform') return t(`leadSource.platforms.${value as 'instagram'}`, { defaultValue: value })
     return breakdown.key === 'source' ? labels.source(value) || value : value
   }
-  const lostOnly = breakdown.key === 'lost_reason'
+  const columns: Column<Row>[] = [
+    { key: 'label', header: t('reports.label'), sortValue: (r) => r.label ?? '', cell: (r) => <span className="block max-w-[220px] truncate" title={r.label ?? undefined}>{label(r.label)}</span> },
+    { key: 'total', header: t('reports.total'), align: 'right', sortValue: (r) => r.total, cell: (r) => <span className="font-medium">{r.total}</span> },
+  ]
+  // Loss reasons only ever count lost deals; the status columns would repeat the total.
+  if (breakdown.key !== 'lost_reason') {
+    columns.push(
+      { key: 'open', header: t('reports.open'), align: 'right', sortValue: (r) => r.open, cell: (r) => r.open },
+      { key: 'won', header: t('reports.won'), align: 'right', sortValue: (r) => r.won, cell: (r) => <span className="text-emerald-700 dark:text-emerald-400">{dash(r.won)}</span> },
+      { key: 'lost', header: t('reports.lost'), align: 'right', sortValue: (r) => r.lost, cell: (r) => <span className="text-rose-600 dark:text-rose-400">{dash(r.lost)}</span> },
+      { key: 'conversion', header: t('reports.conversion'), align: 'right', sortValue: conversion, cell: (r) => <span className="text-muted-foreground">{conversion(r)}%</span> },
+    )
+  }
+  const rows = breakdown.rows.map((r) => ({ ...r, id: r.label ?? '∅' }))
   return (
     <Card className="overflow-hidden">
       <CardHeader title={title} />
-      <div className="overflow-x-auto">
-        <table className="w-full text-[13px]">
-          <thead className="text-[11px] text-muted-foreground">
-            <tr>
-              <th className="px-4 py-1.5 text-left font-medium">{t('reports.label')}</th>
-              <th className="px-2 py-1.5 text-right font-medium">{t('reports.total')}</th>
-              {!lostOnly && <th className="px-2 py-1.5 text-right font-medium">{t('reports.open')}</th>}
-              {!lostOnly && <th className="px-2 py-1.5 text-right font-medium">{t('reports.won')}</th>}
-              {!lostOnly && <th className="px-2 py-1.5 text-right font-medium">{t('reports.lost')}</th>}
-              {!lostOnly && <th className="px-4 py-1.5 text-right font-medium">{t('reports.conversion')}</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {breakdown.rows.map((r) => (
-              <tr key={r.label ?? '∅'} className="border-t border-foreground/[0.05]">
-                <td className="max-w-[220px] truncate px-4 py-1.5" title={r.label ?? undefined}>{label(r.label)}</td>
-                <td className="px-2 py-1.5 text-right font-medium tabular-nums">{r.total}</td>
-                {!lostOnly && <td className="px-2 py-1.5 text-right tabular-nums">{r.open}</td>}
-                {!lostOnly && <td className="px-2 py-1.5 text-right tabular-nums text-emerald-700 dark:text-emerald-400">{r.won || '—'}</td>}
-                {!lostOnly && <td className="px-2 py-1.5 text-right tabular-nums text-rose-600 dark:text-rose-400">{r.lost || '—'}</td>}
-                {!lostOnly && <td className="px-4 py-1.5 text-right tabular-nums text-muted-foreground">{r.total ? Math.round((r.won / r.total) * 100) : 0}%</td>}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DataTable rows={rows} columns={columns} minWidth={0} />
     </Card>
   )
 }

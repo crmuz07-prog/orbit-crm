@@ -29,7 +29,7 @@ export function CompanyInfo({ company }: { company: Company }) {
       <InlineField label={t('feedFields.employees')} raw={company.employees ?? ''} editor={{ kind: 'select', options: list(EMPLOYEE_RANGES), emptyLabel: '—' }} readOnly={readOnly} onSave={save('employees')} />
       {text('country', t('feedFields.country'))}
       {text('city', t('feedFields.city'))}
-      <InlineField label={t('feedFields.annual_revenue')} raw={company.annual_revenue?.toString() ?? ''} display={company.annual_revenue != null && money(company.annual_revenue, 'USD', true)}
+      <InlineField label={t('feedFields.annual_revenue')} raw={company.annual_revenue?.toString() ?? ''} display={company.annual_revenue != null && money(company.annual_revenue, undefined, true)}
         editor={{ kind: 'number' }} readOnly={readOnly} onSave={save('annual_revenue', 'number')} />
       <InlineField label={t('feedFields.description')} raw={company.description ?? ''} editor={{ kind: 'textarea' }} readOnly={readOnly} onSave={save('description')} />
       <p className="mt-3 text-xs text-muted-foreground">{t('companies.created')}: {shortDate(company.created_at)}</p>

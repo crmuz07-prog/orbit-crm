@@ -10,6 +10,7 @@ import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { spring } from '@/lib/motion'
 import { cn, duration } from '@/lib/utils'
 import { useCallEvents, type LiveCall } from './CallEventsProvider'
+import { IconButton } from '@/components/common/icon-button'
 
 function useElapsed(since?: number) {
   const [now, setNow] = useState(Date.now())
@@ -64,7 +65,7 @@ function CallCard({ live }: { live: LiveCall }) {
           <p className="truncate font-semibold">{name}</p>
           <p className="truncate text-xs text-muted-foreground">{[live.company_name, live.deal_title].filter(Boolean).join(' · ') || call.phone}</p>
         </div>
-        <Button variant="ghost" size="icon" onClick={() => dismiss(call.id)} aria-label={t('telephony.dismiss')}><X /></Button>
+        <IconButton label={t('telephony.dismiss')} onClick={() => dismiss(call.id)}><X /></IconButton>
       </div>
       <div className="mt-3 flex items-center justify-between gap-2 text-sm">
         <StatusLine live={live} />

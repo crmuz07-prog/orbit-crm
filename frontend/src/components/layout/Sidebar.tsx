@@ -4,8 +4,6 @@ import { BarChart3, Building2, CalendarCheck, Handshake, Instagram, LayoutDashbo
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/auth/AuthProvider'
 import { PersonAvatar } from '@/components/common/avatars'
-import { Button } from '@/components/ui/button'
-import { Tooltip } from '@/components/ui/tooltip'
 import { WorkspaceSwitcher } from '@/features/auth/WorkspaceSwitcher'
 import { useAccess } from '@/hooks/useAccess'
 import { useCrm } from '@/hooks/useData'
@@ -14,6 +12,7 @@ import { spring } from '@/lib/motion'
 import type { Module } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { Logo } from './Logo'
+import { IconButton } from '@/components/common/icon-button'
 
 type NavItem = { to: string; label: string; icon: LucideIcon; end?: boolean; badge?: number; module?: Module }
 type Navigate = { onNavigate?: () => void }
@@ -100,9 +99,7 @@ function UserCard() {
         <p className="truncate text-sm font-medium">{session.user.full_name}</p>
         <p className="truncate text-xs text-muted-foreground">{session.user.email}</p>
       </div>
-      <Tooltip content={t('nav.signOut')}>
-        <Button variant="ghost" size="icon" onClick={signOut} aria-label={t('nav.signOut')}><LogOut /></Button>
-      </Tooltip>
+      <IconButton label={t('nav.signOut')} onClick={signOut}><LogOut /></IconButton>
     </div>
   )
 }

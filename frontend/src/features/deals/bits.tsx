@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { useLabels } from '@/hooks/useLabels'
 import { PRIORITIES, STAGE_COLORS } from '@/lib/constants'
 import type { DealStatus, Priority, Stage } from '@/lib/types'
+import { Tooltip } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
 export function StageBadge({ stage }: { stage?: Stage }) {
@@ -23,10 +24,12 @@ export function PriorityFlag({ priority, withLabel }: { priority: Priority; with
   const p = PRIORITIES.find((x) => x.value === priority) ?? PRIORITIES[1]
   const label = t(`enums.priority.${priority}`)
   return (
-    <span className={cn('inline-flex items-center gap-1 text-xs', p.className)} title={t('enums.priorityFilter', { label })}>
-      <Flag className="size-3.5" fill={priority === 'low' ? 'none' : 'currentColor'} />
-      {withLabel && <span className="text-muted-foreground">{label}</span>}
-    </span>
+    <Tooltip content={t('enums.priorityFilter', { label })}>
+      <span className={cn('inline-flex items-center gap-1 text-xs', p.className)} aria-label={withLabel ? undefined : label}>
+        <Flag className="size-3.5" fill={priority === 'low' ? 'none' : 'currentColor'} />
+        {withLabel && <span className="text-muted-foreground">{label}</span>}
+      </span>
+    </Tooltip>
   )
 }
 

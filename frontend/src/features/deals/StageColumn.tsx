@@ -19,7 +19,7 @@ function ColumnHeader({ stage, deals }: { stage: Stage; deals: Deal[] }) {
     <div className="mb-2 px-1 text-center">
       <h3 className="truncate text-[12px] font-bold uppercase tracking-wider">{labels.stage(stage.name)}</h3>
       <p className="mt-0.5 text-xs tabular-nums text-muted-foreground">
-        {t('board.header', { count: deals.length, sum: money(sumAmount(deals), 'USD', true) })}
+        {t('board.header', { count: deals.length, sum: money(sumAmount(deals), undefined, true) })}
         {!stage.is_won && !stage.is_lost && <span className="opacity-70"> · {stage.probability}%</span>}
       </p>
       <div className={cn('mt-2 h-[3px] rounded-full', STAGE_COLORS[stage.color].dot)} />

@@ -59,7 +59,7 @@ class DealIn(Schema):
     contact_id: str | None = None
     stage_id: str
     amount: float = Field(default=0, ge=0)
-    currency: str = Field(default="USD", min_length=3, max_length=3)
+    currency: str = Field(default="UZS", min_length=3, max_length=3)
     expected_close_date: date | None = None
     priority: Priority = "medium"
     source: str | None = None

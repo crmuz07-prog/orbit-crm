@@ -6,7 +6,6 @@ import { TextField } from '@/components/common/form-fields'
 import { Button } from '@/components/ui/button'
 import { useFormErrors } from '@/hooks/useFormErrors'
 import { authApi } from '@/lib/api'
-import { ApiError } from '@/lib/http'
 import { newPassword, rules } from '@/lib/validation'
 import { AuthLayout } from './AuthLayout'
 import { useAsyncAction } from './useAsyncAction'
@@ -17,10 +16,9 @@ export function PasswordGate() {
   const { session, signIn, signOut } = useAuth()
   const errors = useFormErrors<'current' | 'next' | 'confirm'>('gate-form')
   // A wrong current password belongs under that field, not in a toast.
-  const { busy, run } = useAsyncAction((e) => errors.fromApi(e, { new_password: 'next', current_password: 'current' }) || wrongCurrent(e))
+  const { busy, run } = useAsyncAction((e) => errors.fromApi(e, { new_password: 'next', current_password: 'current' }, { code: 'wrong_password', field: 'current' }))
   const [form, setForm] = useState({ current: '', next: '', confirm: '' })
   const set = (key: keyof typeof form) => (value: string) => { setForm((f) => ({ ...f, [key]: value })); errors.clear(key) }
-  const wrongCurrent = (e: unknown) => e instanceof ApiError && e.code === 'wrong_password' && errors.fromApi(new ApiError(400, '', 'wrong_password', [{ field: 'current', code: 'wrong_password' }]))
   if (!session) return null
 
   const submit = async (e: FormEvent) => {

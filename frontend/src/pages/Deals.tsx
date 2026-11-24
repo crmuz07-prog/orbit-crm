@@ -8,6 +8,7 @@ import { matches, SearchInput } from '@/components/common/search-input'
 import { EmptyState, PageLoading } from '@/components/common/states'
 import { Card } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tooltip } from '@/components/ui/tooltip'
 import { DealBoard } from '@/features/deals/DealBoard'
 import { useDealFilters } from '@/features/deals/DealFilters'
 import { DealsTable } from '@/features/deals/DealsTable'
@@ -68,8 +69,8 @@ export default function DealsPage() {
         {view === 'list' && <SelectBox value={status} onChange={setStatus} emptyLabel={t('deals.allStatuses')} options={STATUSES.map((s) => ({ value: s, label: t(`enums.status.${s}`) }))} className="w-36" />}
         <Tabs value={view} onValueChange={(v) => setView(v as (typeof VIEWS)[number])} className="ml-auto">
           <TabsList>
-            <TabsTrigger value="board"><KanbanSquare /> {t('deals.board')}</TabsTrigger>
-            <TabsTrigger value="list"><List /> {t('deals.list')}</TabsTrigger>
+            <Tooltip content={t('deals.board')}><TabsTrigger value="board" aria-label={t('deals.board')}><KanbanSquare /></TabsTrigger></Tooltip>
+            <Tooltip content={t('deals.list')}><TabsTrigger value="list" aria-label={t('deals.list')}><List /></TabsTrigger></Tooltip>
           </TabsList>
         </Tabs>
       </div>

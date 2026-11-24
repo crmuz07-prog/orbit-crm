@@ -39,7 +39,7 @@ function useContactColumns(): Column<Contact>[] {
           <PersonAvatar name={fullName(c)} />
           <div>
             <p className="font-medium">{fullName(c)}</p>
-            <p className="text-xs text-muted-foreground">{c.email ?? '—'}</p>
+            {c.email && <p className="text-xs text-muted-foreground">{c.email}</p>}
           </div>
         </div>
       ),

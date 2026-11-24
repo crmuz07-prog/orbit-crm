@@ -10,11 +10,11 @@ import { newPassword } from '@/lib/validation'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Tooltip } from '@/components/ui/tooltip'
 import type { AccessOverview, Role, TeamMember } from '@/lib/types'
 import { MemberAccess } from './MemberAccess'
 import { RoleSelect } from './RoleSelect'
 import type { TeamActions } from './useTeam'
+import { IconButton } from '@/components/common/icon-button'
 
 interface Props {
   member: TeamMember
@@ -47,9 +47,7 @@ function SetPasswordButton({ member, setPassword }: { member: TeamMember; setPas
 
   return (
     <>
-      <Tooltip content={t('team.setPassword')}>
-        <Button variant="ghost" size="icon" onClick={show} aria-label={t('team.setPassword')}><KeyRound /></Button>
-      </Tooltip>
+      <IconButton label={t('team.setPassword')} onClick={show}><KeyRound /></IconButton>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
@@ -58,7 +56,7 @@ function SetPasswordButton({ member, setPassword }: { member: TeamMember; setPas
           </DialogHeader>
           {issued ? <CredentialsCard email={member.email} password={issued} /> : (
             <form id="member-password-form" onSubmit={submit} noValidate className="space-y-4">
-              <PasswordField label={t('team.tempPassword')} value={password} onChange={(v) => { setValue(v); errors.clear('password') }} error={errors.message('password')} />
+              <PasswordField label={t('team.tempPassword')} value={password} onChange={errors.bind('password', setValue)} error={errors.message('password')} />
               <div className="flex justify-end"><Button type="submit" disabled={setPassword.isPending}>{t('team.setPassword')}</Button></div>
             </form>
           )}
@@ -96,9 +94,7 @@ export function MemberRow({ member, isSelf, canManage, actorRole, actions, acces
       {editable && (
         <div className="flex gap-0.5">
           <SetPasswordButton member={member} setPassword={actions.setPassword} />
-          <Tooltip content={t('team.remove')}>
-            <Button variant="ghost" size="icon" onClick={() => setConfirm(true)} aria-label={t('team.remove')}><UserMinus /></Button>
-          </Tooltip>
+          <IconButton label={t('team.remove')} onClick={() => setConfirm(true)}><UserMinus /></IconButton>
         </div>
       )}
       <ConfirmDialog

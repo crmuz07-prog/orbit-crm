@@ -4,6 +4,7 @@ import { Mail, Pencil, Phone, Users } from 'lucide-react'
 import { BackLink } from '@/components/common/record'
 import { DeleteRecordButton, RecordNotFound } from '@/components/common/record-actions'
 import { RecordSkeleton } from '@/components/common/states'
+import { IconButton } from '@/components/common/icon-button'
 import { Button } from '@/components/ui/button'
 import { Tooltip } from '@/components/ui/tooltip'
 import { DealsListCard } from '@/features/deals/DealsListCard'
@@ -39,9 +40,9 @@ export default function ContactDetailPage() {
           <InfoHeader back={<BackLink to="/contacts" label={t('nav.contacts')} />} title={name} shortId={id.slice(0, 8).toUpperCase()}
             actions={
               <>
-                <Tooltip content={t('contacts.call')}><Button variant="ghost" size="icon" onClick={() => openModal({ kind: 'call', initial: links })} aria-label={t('contacts.call')}><Phone className="text-emerald-500" /></Button></Tooltip>
+                <IconButton label={t('contacts.call')} onClick={() => openModal({ kind: 'call', initial: links })}><Phone className="text-emerald-500" /></IconButton>
                 {contact.email && <Tooltip content={t('contacts.email')}><Button variant="ghost" size="icon" asChild><a href={`mailto:${contact.email}`} aria-label={t('contacts.email')}><Mail /></a></Button></Tooltip>}
-                <Tooltip content={t('common.edit')}><Button variant="ghost" size="icon" onClick={() => openModal({ kind: 'contact', initial: contact })} aria-label={t('common.edit')}><Pencil /></Button></Tooltip>
+                <IconButton label={t('common.edit')} onClick={() => openModal({ kind: 'contact', initial: contact })}><Pencil /></IconButton>
                 <DeleteRecordButton table="contacts" id={id} title={t('contacts.deleteTitle', { name })} description={t('contacts.deleteDesc')} redirectTo="/contacts" />
               </>
             }>

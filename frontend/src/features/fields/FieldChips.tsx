@@ -1,17 +1,20 @@
 import { AlertTriangle } from 'lucide-react'
 import type { CustomField, Deal } from '@/lib/types'
+import { Tooltip } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import { chipFields, isWarning, valueList } from './useFields'
 
 /** A value chip; red when the value is one of the field's warning values. */
 export function ValueChip({ value, warn, title }: { value: string; warn?: boolean; title?: string }) {
-  return (
-    <span title={title} className={cn('inline-flex max-w-full items-center gap-1 truncate rounded-md px-1.5 py-0.5 text-[11px] font-medium leading-tight',
+  const chip = (
+    <span className={cn('inline-flex max-w-full items-center gap-1 truncate rounded-md px-1.5 py-0.5 text-[11px] font-medium leading-tight',
       warn ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300' : 'bg-foreground/[0.06] text-muted-foreground')}>
       {warn && <AlertTriangle className="size-3 shrink-0" />}
       <span className="truncate">{value}</span>
     </span>
   )
+  // The field name on hover (board cards show values only).
+  return title ? <Tooltip content={title}>{chip}</Tooltip> : chip
 }
 
 /** The deal's list-field values as chips (board cards, tables); `limit` keeps cards short. */

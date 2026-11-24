@@ -78,7 +78,7 @@ export function SetPasswordDialog({ user, onClose, setPassword }: { user: AdminU
     <IssueDialog open={!!user} onOpenChange={(o) => !o && close()} title={t('team.setPassword')} description={user ? t('team.setPasswordHint', { name: user.full_name }) : undefined}
       issued={user && issued ? { email: user.email, password: issued } : null}>
       <form id="admin-password-form" onSubmit={submit} noValidate className="space-y-4">
-        <PasswordField label={t('team.tempPassword')} value={password} onChange={(v) => { setValue(v); passwordErrors.clear('password') }} error={passwordErrors.message('password')} />
+        <PasswordField label={t('team.tempPassword')} value={password} onChange={passwordErrors.bind('password', setValue)} error={passwordErrors.message('password')} />
         <div className="flex justify-end"><Button type="submit" disabled={setPassword.isPending}>{t('team.setPassword')}</Button></div>
       </form>
     </IssueDialog>

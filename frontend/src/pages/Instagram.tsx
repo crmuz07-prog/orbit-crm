@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Clock, Gauge, Inbox, Instagram, MessageCircle, Settings2 } from 'lucide-react'
+import { Instagram, MessageCircle, Settings2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { SelectBox } from '@/components/common/form-fields'
@@ -24,10 +24,10 @@ const count = (n: number) => String(Math.round(n))
 function useKpis(s: InstagramStats) {
   const { t } = useTranslation()
   return [
-    { label: t('instagram.leads'), value: s.leads, format: count, sub: `${t('instagram.messages')}: ${s.messages} · ${t('instagram.leadForms')}: ${s.lead_forms}`, icon: Inbox },
-    { label: t('instagram.conversion'), value: s.conversion, format: percent, sub: `${t('instagram.won')}: ${s.won}`, icon: Gauge },
-    { label: t('instagram.avgResponse'), value: s.avg_first_response_seconds ?? 0, format: (n: number) => (s.avg_first_response_seconds == null ? '—' : formatDuration(n, t)), sub: t('igReply.window'), icon: Clock },
-    { label: t('instagram.unanswered'), value: s.unanswered, format: count, sub: t('instagram.messages'), icon: MessageCircle },
+    { label: t('instagram.leads'), value: s.leads, format: count, sub: `${t('instagram.messages')}: ${s.messages} · ${t('instagram.leadForms')}: ${s.lead_forms}` },
+    { label: t('instagram.conversion'), value: s.conversion, format: percent, sub: `${t('instagram.won')}: ${s.won}` },
+    { label: t('instagram.avgResponse'), value: s.avg_first_response_seconds ?? 0, format: (n: number) => (s.avg_first_response_seconds == null ? '—' : formatDuration(n, t)), sub: t('igReply.window') },
+    { label: t('instagram.unanswered'), value: s.unanswered, format: count, sub: t('instagram.messages') },
   ]
 }
 

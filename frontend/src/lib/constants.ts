@@ -53,7 +53,7 @@ export const INDUSTRIES = [
 ]
 export const EMPLOYEE_RANGES = ['1–10', '11–50', '51–200', '201–500', '501–1,000', '1,001–5,000', '5,000+']
 export const DEAL_SOURCES = ['Inbound', 'Outbound', 'Referral', 'Partner', 'Event', 'Website']
-export const CURRENCIES = ['USD', 'EUR', 'GBP', 'UZS', 'RUB', 'AED']
+export const CURRENCIES = ['UZS', 'USD', 'EUR', 'RUB', 'GBP', 'AED']
 
 /** Pipedrive-style "rotting": an open deal with no update for this many days is at risk. */
 export const STALE_AFTER_DAYS = 14

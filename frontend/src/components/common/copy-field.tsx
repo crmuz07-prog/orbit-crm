@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { IconButton } from '@/components/common/icon-button'
 
 /** Read-only value with copy (and optional reveal for secrets). */
 export function CopyField({ label, value, secret }: { label: string; value: string; secret?: boolean }) {
@@ -23,9 +24,9 @@ export function CopyField({ label, value, secret }: { label: string; value: stri
       <div className="flex gap-2">
         <Input readOnly value={visible ? value : '•'.repeat(24)} className="font-mono text-xs" onFocus={(e) => e.currentTarget.select()} />
         {secret && (
-          <Button variant="outline" size="icon" className="size-9" onClick={() => setVisible((v) => !v)} aria-label={visible ? t('telephony.hide') : t('telephony.reveal')}>
+          <IconButton label={visible ? t('telephony.hide') : t('telephony.reveal')} variant="outline" className="size-9" onClick={() => setVisible((v) => !v)}>
             {visible ? <EyeOff /> : <Eye />}
-          </Button>
+          </IconButton>
         )}
         <Button variant="outline" onClick={copy}>{copied ? <Check className="text-emerald-500" /> : <Copy />} {copied ? t('telephony.copied') : t('telephony.copy')}</Button>
       </div>

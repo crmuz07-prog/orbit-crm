@@ -3,7 +3,7 @@ import type { core as en } from '../en/core'
 
 export const core: Locale<typeof en> = {
   common: {
-    save: 'Сохранить', cancel: 'Отмена', delete: 'Удалить', edit: 'Изменить', add: 'Добавить', back: 'Назад', reset: 'Сбросить',
+    som: 'сум', save: 'Сохранить', cancel: 'Отмена', delete: 'Удалить', edit: 'Изменить', add: 'Добавить', back: 'Назад', reset: 'Сбросить',
     saveChanges: 'Сохранить изменения', pleaseWait: 'Подождите…', deleted: 'Удалено', viewAll: 'Все', none: '—',
     noResults: 'Ничего не найдено.', cannotUndo: 'Это действие нельзя отменить.', notFound: '{{label}}: не найдено',
     notFoundDesc: 'Возможно, запись была удалена.', created: '{{entity}}: создано', updated: '{{entity}}: обновлено',

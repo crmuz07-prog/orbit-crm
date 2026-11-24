@@ -14,7 +14,15 @@ const DATE_LOCALES: Record<string, Locale> = { en: enUS, ru, uz }
 const dateLocale = () => DATE_LOCALES[i18n.language] ?? enUS
 const intlLocale = () => LANGUAGES.find((l) => l.code === i18n.language)?.intl ?? 'en-US'
 
-export function money(value: number | null | undefined, currency = 'USD', compact = false) {
+/** The workspace currency: deals are in so'm unless one says otherwise. */
+export const DEFAULT_CURRENCY = 'UZS'
+
+export function money(value: number | null | undefined, currency = DEFAULT_CURRENCY, compact = false) {
+  // Browsers print so'm as "UZS 12,500,000" outside Uzbek; the local word reads naturally in every language.
+  if (currency === 'UZS') {
+    const n = new Intl.NumberFormat(intlLocale(), { notation: compact ? 'compact' : 'standard', maximumFractionDigits: compact ? 1 : 0 }).format(value ?? 0)
+    return `${n} ${i18n.t('common.som')}`
+  }
   try {
     return new Intl.NumberFormat(intlLocale(), {
       style: 'currency', currency, notation: compact ? 'compact' : 'standard', maximumFractionDigits: compact ? 1 : 0,

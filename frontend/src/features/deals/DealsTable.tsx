@@ -39,10 +39,10 @@ function useDealColumns(): Column<Deal>[] {
       sortValue: (d) => d.title,
       cell: (d) => (
         <div className="flex items-center gap-3">
-          <CompanyLogo name={companyName(d) ?? d.title} />
+          {companyName(d) && <CompanyLogo name={companyName(d)!} />}
           <div className="min-w-0">
             <p className="max-w-[320px] truncate font-medium">{d.title}</p>
-            <p className="text-xs text-muted-foreground">{companyName(d) ?? t('deals.noCompany')}</p>
+            {companyName(d) && <p className="text-xs text-muted-foreground">{companyName(d)}</p>}
           </div>
         </div>
       ),
@@ -57,7 +57,7 @@ function useDealColumns(): Column<Deal>[] {
       sortValue: (d) => d.expected_close_date ?? '9999',
       cell: (d) => <span className={cn(isCloseOverdue(d, stageById) && 'font-medium text-rose-600 dark:text-rose-400')}>{shortDate(d.expected_close_date)}</span>,
     },
-    { key: 'priority', header: t('deals.colPriority'), sortValue: (d) => PRIORITIES.findIndex((p) => p.value === d.priority), cell: (d) => <PriorityFlag priority={d.priority} withLabel /> },
+    { key: 'priority', header: t('deals.colPriority'), sortValue: (d) => PRIORITIES.findIndex((p) => p.value === d.priority), cell: (d) => <PriorityFlag priority={d.priority} /> },
     { key: 'source', header: t('deals.colSource'), sortValue: (d) => d.source ?? '', cell: (d) => labels.source(d.source) || '—' },
     ...custom,
     owner,

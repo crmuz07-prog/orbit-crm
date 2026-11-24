@@ -7,7 +7,7 @@ import { useLabels } from '@/hooks/useLabels'
 import { stagesOf, useCurrentPipeline } from '@/hooks/usePipelines'
 import { CURRENCIES, PRIORITIES } from '@/lib/constants'
 import type { Deal, Priority, Stage } from '@/lib/types'
-import { fullName } from '@/lib/utils'
+import { fullName, DEFAULT_CURRENCY } from '@/lib/utils'
 
 type Props = { initial?: Partial<Deal>; onDone: (row?: Deal) => void }
 
@@ -28,7 +28,7 @@ export function DealForm({ initial, onDone }: Props) {
       owner_id: d?.owner_id ?? (isNew(d) ? myId : ''),
       title: d?.title ?? '',
       amount: d?.amount?.toString() ?? '',
-      currency: d?.currency ?? 'USD',
+      currency: d?.currency ?? DEFAULT_CURRENCY,
       company_id: d?.company_id ?? '',
       contact_id: d?.contact_id ?? '',
       stage_id: d?.stage_id ?? firstOpen(current.stages)?.id ?? '',

@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react'
 import { Building2, Pencil, Phone, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
@@ -7,7 +6,6 @@ import { BackLink, ListCard, RowLink } from '@/components/common/record'
 import { DeleteRecordButton, RecordNotFound } from '@/components/common/record-actions'
 import { RecordSkeleton } from '@/components/common/states'
 import { Button } from '@/components/ui/button'
-import { Tooltip } from '@/components/ui/tooltip'
 import { DealsListCard } from '@/features/deals/DealsListCard'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { CompanyInfo } from '@/features/record/ClientInfo'
@@ -15,6 +13,7 @@ import { InfoHeader, RecordCard } from '@/features/record/RecordCard'
 import { useCrm } from '@/hooks/useData'
 import { dealStatus, sumAmount } from '@/lib/metrics'
 import { fullName, money } from '@/lib/utils'
+import { IconButton } from '@/components/common/icon-button'
 
 /** Everything associated with a company: its people, deals and their activity roll-up. */
 function useCompanyRecord(id: string) {
@@ -41,9 +40,6 @@ export default function CompanyDetailPage() {
 
   const addDeal = () => openModal({ kind: 'deal', initial: { company_id: id } })
   const addContact = () => openModal({ kind: 'contact', initial: { company_id: id } })
-  const action = (label: string, onClick: () => void, icon: ReactNode) => (
-    <Tooltip content={label}><Button variant="ghost" size="icon" onClick={onClick} aria-label={label}>{icon}</Button></Tooltip>
-  )
 
   return (
     <RecordCard
@@ -56,8 +52,8 @@ export default function CompanyDetailPage() {
           <InfoHeader back={<BackLink to="/companies" label={t('nav.companies')} />} title={company.name} shortId={id.slice(0, 8).toUpperCase()}
             actions={
               <>
-                {action(t('calls.logCall'), () => openModal({ kind: 'call', initial: { company_id: id } }), <Phone className="text-emerald-500" />)}
-                {action(t('common.edit'), () => openModal({ kind: 'company', initial: company }), <Pencil />)}
+                <IconButton label={t('calls.logCall')} onClick={() => openModal({ kind: 'call', initial: { company_id: id } })}><Phone className="text-emerald-500" /></IconButton>
+                <IconButton label={t('common.edit')} onClick={() => openModal({ kind: 'company', initial: company })}><Pencil /></IconButton>
                 <DeleteRecordButton table="companies" id={id} title={t('companies.deleteTitle', { name: company.name })} description={t('companies.deleteDesc')} redirectTo="/companies" />
               </>
             }>

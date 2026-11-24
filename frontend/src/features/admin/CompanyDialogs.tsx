@@ -35,7 +35,7 @@ export function CreateCompanyDialog({ open, onOpenChange, create }: { open: bool
   return (
     <IssueDialog open={open} onOpenChange={reset} title={t('admin.newCompany')} issued={issued}>
       <form id="new-company-form" onSubmit={submit} noValidate className="grid gap-4 sm:grid-cols-2">
-        <TextField wide name="name" label={t('admin.companyName')} autoFocus value={name} onChange={(v) => { setName(v); errors.clear('name') }} error={errors.message('name')} />
+        <TextField wide name="name" label={t('admin.companyName')} autoFocus value={name} onChange={errors.bind('name', setName)} error={errors.message('name')} />
         <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground sm:col-span-2">{t('admin.owner')}</p>
         <LoginFields value={owner} onChange={setOwner} onEdit={errors.clear}
           errors={{ full_name: errors.message('full_name'), email: errors.message('email'), password: errors.message('password') }} />
@@ -56,7 +56,7 @@ function RenameForm({ company, onDone, rename }: { company: PlatformCompany; onD
   }
   return (
     <form id="rename-company-form" onSubmit={submit} noValidate className="space-y-4">
-      <TextField name="name" label={t('admin.companyName')} autoFocus value={name} onChange={(v) => { setName(v); errors.clear('name') }} error={errors.message('name')} />
+      <TextField name="name" label={t('admin.companyName')} autoFocus value={name} onChange={errors.bind('name', setName)} error={errors.message('name')} />
       <div className="flex justify-end"><Button type="submit" disabled={rename.isPending}>{t('common.save')}</Button></div>
     </form>
   )

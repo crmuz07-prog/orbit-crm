@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { ArrowDown, ArrowUp, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useRemoveRow, useUpdateRow } from '@/hooks/useData'
 import { useLabels } from '@/hooks/useLabels'
@@ -12,6 +11,7 @@ import { STAGE_COLORS } from '@/lib/constants'
 import { spring } from '@/lib/motion'
 import type { Stage, StageColor } from '@/lib/types'
 import { cn } from '@/lib/utils'
+import { IconButton } from '@/components/common/icon-button'
 
 interface Props {
   stage: Stage
@@ -83,9 +83,9 @@ export function StageRow({ stage, dealCount, onMove, canUp, canDown }: Props) {
         <Badge tone={stage.is_won ? 'green' : 'red'} className="w-[100px] justify-center">{stage.is_won ? t('settings.wonStage') : t('settings.lostStage')}</Badge>
       ) : (
         <div className="flex w-[100px] justify-end gap-0.5">
-          <Button variant="ghost" size="icon" disabled={!canUp} onClick={() => onMove?.(-1)} aria-label={t('settings.moveUp')}><ArrowUp /></Button>
-          <Button variant="ghost" size="icon" disabled={!canDown} onClick={() => onMove?.(1)} aria-label={t('settings.moveDown')}><ArrowDown /></Button>
-          <Button variant="ghost" size="icon" onClick={() => remove.mutate(stage.id)} aria-label={t('settings.deleteStage')}><Trash2 /></Button>
+          <IconButton label={t('settings.moveUp')} disabled={!canUp} onClick={() => onMove?.(-1)}><ArrowUp /></IconButton>
+          <IconButton label={t('settings.moveDown')} disabled={!canDown} onClick={() => onMove?.(1)}><ArrowDown /></IconButton>
+          <IconButton label={t('settings.deleteStage')} onClick={() => remove.mutate(stage.id)}><Trash2 /></IconButton>
         </div>
       )}
       </div>

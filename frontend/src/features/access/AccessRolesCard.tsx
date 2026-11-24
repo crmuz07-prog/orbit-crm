@@ -6,11 +6,11 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Tooltip } from '@/components/ui/tooltip'
 import { useLabels } from '@/hooks/useLabels'
 import { MODULES, type AccessRole } from '@/lib/types'
 import { RoleDialog } from './RoleDialog'
 import type { AccessActions } from './useAccessConfig'
+import { IconButton } from '@/components/common/icon-button'
 
 /** One chip per visible section: "Deals · Own". */
 function Summary({ role }: { role: AccessRole }) {
@@ -42,17 +42,11 @@ function RoleRow({ role, onEdit, onDelete, actions }: { role: AccessRole; onEdit
         <Summary role={role} />
       </div>
       {!role.is_default && (
-        <Tooltip content={t('access.makeDefault')}>
-          <Button variant="ghost" size="icon" onClick={() => actions.updateRole.mutate({ id: role.id, is_default: true })} aria-label={t('access.makeDefault')}><Star /></Button>
-        </Tooltip>
+        <IconButton label={t('access.makeDefault')} onClick={() => actions.updateRole.mutate({ id: role.id, is_default: true })}><Star /></IconButton>
       )}
-      <Tooltip content={t('access.editRole')}>
-        <Button variant="ghost" size="icon" onClick={onEdit} aria-label={t('access.editRole')}><Pencil /></Button>
-      </Tooltip>
+      <IconButton label={t('access.editRole')} onClick={onEdit}><Pencil /></IconButton>
       {!role.is_default && (
-        <Tooltip content={t('common.delete')}>
-          <Button variant="ghost" size="icon" onClick={onDelete} aria-label={t('common.delete')}><Trash2 /></Button>
-        </Tooltip>
+        <IconButton label={t('common.delete')} onClick={onDelete}><Trash2 /></IconButton>
       )}
     </li>
   )

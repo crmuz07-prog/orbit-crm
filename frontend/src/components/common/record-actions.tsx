@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Download, Trash2, type LucideIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Tooltip } from '@/components/ui/tooltip'
 import { TABLE_MODULE, useAccess } from '@/hooks/useAccess'
 import { useRemoveRow } from '@/hooks/useData'
 import { api } from '@/lib/api'
@@ -12,6 +11,7 @@ import type { Module, TableName } from '@/lib/types'
 import { errorMessage } from '@/lib/utils'
 import { ConfirmDialog } from './confirm-dialog'
 import { EmptyState } from './states'
+import { IconButton } from '@/components/common/icon-button'
 
 interface DeleteProps {
   table: TableName
@@ -40,9 +40,7 @@ export function DeleteRecordButton({ table, id, title, description, redirectTo }
 
   return (
     <>
-      <Tooltip content={t('common.delete')}>
-        <Button variant="ghost" size="icon" className="size-9" onClick={() => setOpen(true)} aria-label={t('common.delete')}><Trash2 /></Button>
-      </Tooltip>
+      <IconButton label={t('common.delete')} className="size-9" onClick={() => setOpen(true)}><Trash2 /></IconButton>
       <ConfirmDialog open={open} onOpenChange={setOpen} title={title} description={description} onConfirm={confirm} />
     </>
   )
@@ -78,5 +76,5 @@ export function ExportButton({ table }: { table: TableName }) {
     setBusy(true)
     api.exportCsv(table).then(() => toast.success(t('exported')), (e) => toast.error(errorMessage(e))).finally(() => setBusy(false))
   }
-  return <Button variant="outline" disabled={busy} onClick={run}><Download /> {t('exportCsv')}</Button>
+  return <IconButton label={t('exportCsv')} variant="outline" className="size-9" disabled={busy} onClick={run}><Download /></IconButton>
 }

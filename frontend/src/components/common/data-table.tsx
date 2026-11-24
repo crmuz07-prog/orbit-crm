@@ -19,6 +19,8 @@ interface DataTableProps<T> {
   onRowClick?: (row: T) => void
   empty?: ReactNode
   initialSort?: Sort
+  /** Px the table keeps before scrolling sideways; list pages need room, small report cards do not. */
+  minWidth?: number
 }
 
 function compare(a: string | number, b: string | number) {
@@ -43,13 +45,13 @@ function SortIcon({ active, dir }: { active: boolean; dir?: 'asc' | 'desc' }) {
 }
 
 /** Sortable table used by every list page (Attio-style dense rows). */
-export function DataTable<T extends { id: string }>({ rows, columns, onRowClick, empty, initialSort = null }: DataTableProps<T>) {
+export function DataTable<T extends { id: string }>({ rows, columns, onRowClick, empty, initialSort = null, minWidth = 720 }: DataTableProps<T>) {
   const [sort, setSort] = useState<Sort>(initialSort)
   const sorted = useSorted(rows, columns, sort)
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[720px] text-sm">
+      <table className="w-full text-sm" style={{ minWidth }}>
         <thead>
           <tr className="border-b border-foreground/[0.06]">
             {columns.map((c) => (

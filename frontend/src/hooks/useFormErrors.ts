@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ApiError } from '@/lib/http'
-import { check, issueKey, type Issue, type Rule } from '@/lib/validation'
+import { check, issueKey, type Issue, type Rule, type RuleCode } from '@/lib/validation'
 
 /**
  * Inline field errors for a form: client rules before sending, and the API's 422 field errors after.
@@ -24,8 +24,17 @@ export function useFormErrors<F extends string>(formId: string) {
     return Object.keys(found).length === 0
   }
 
-  /** Puts an API validation error on its fields; false when it was not a field error (show a toast instead). */
-  const fromApi = (error: unknown, alias: Partial<Record<string, F>> = {}) => {
+  /**
+   * Puts an API validation error on its fields; false when it was not a field error (show a toast instead).
+   * `alias` maps API field names to this form's; a business error code can be pinned to a field too
+   * (e.g. `{ code: 'wrong_password', field: 'current' }`).
+   */
+  const fromApi = (error: unknown, alias: Partial<Record<string, F>> = {}, pin?: { code: RuleCode; field: F }) => {
+    if (pin && error instanceof ApiError && error.code === pin.code) {
+      setIssues({ [pin.field]: { code: pin.code } } as Partial<Record<F, Issue>>)
+      focusFirst([pin.field])
+      return true
+    }
     if (!(error instanceof ApiError) || !error.fields?.length) return false
     const found: Partial<Record<F, Issue>> = {}
     for (const f of error.fields) {
@@ -45,5 +54,11 @@ export function useFormErrors<F extends string>(formId: string) {
   /** Clears one field's error while the person fixes it. */
   const clear = useCallback((field: F) => setIssues((all) => (field in all ? { ...all, [field]: undefined } : all)), [])
 
-  return { validate, fromApi, message, clear }
+  /** onChange for a field: stores the value and clears that field's error. */
+  const bind = (field: F, setValue: (value: string) => void) => (value: string) => {
+    setValue(value)
+    clear(field)
+  }
+
+  return { validate, fromApi, message, clear, bind }
 }

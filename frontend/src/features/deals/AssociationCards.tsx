@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom'
 import { Mail, Phone } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { CompanyLogo, PersonAvatar } from '@/components/common/avatars'
-import { Button } from '@/components/ui/button'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { Card, CardHeader } from '@/components/ui/card'
 import { useCrm } from '@/hooks/useData'
 import { useLabels } from '@/hooks/useLabels'
 import type { Deal } from '@/lib/types'
 import { fullName } from '@/lib/utils'
+import { IconButton } from '@/components/common/icon-button'
 
 function AssociationCard({ title, to, media, name, detail, extra }: { title: string; to: string; media: ReactNode; name: string; detail?: string | null; extra?: ReactNode }) {
   return (
@@ -52,7 +52,7 @@ export function AssociationCards({ deal }: { deal: Deal }) {
           extra={
             <>
               {contact.email && <a href={`mailto:${contact.email}`} className={iconLink} aria-label={t('contacts.email')}><Mail className="size-4" /></a>}
-              <Button variant="ghost" size="icon" className="text-emerald-600" aria-label={t('contacts.call')} onClick={() => openModal({ kind: 'call', initial: { contact_id: contact.id, deal_id: deal.id, company_id: deal.company_id } })}><Phone /></Button>
+              <IconButton label={t('contacts.call')} className="text-emerald-600" onClick={() => openModal({ kind: 'call', initial: { contact_id: contact.id, deal_id: deal.id, company_id: deal.company_id } })}><Phone /></IconButton>
             </>
           }
         />

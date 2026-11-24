@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/024-auth-validation.md](docs/prompts/024-auth-validation.md)
+Latest: [docs/prompts/025-som-icons-dry.md](docs/prompts/025-som-icons-dry.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -29,3 +29,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [022 — Calendar date fields from the erp1 template](docs/prompts/022-erp1-date-pickers.md)
 - [023 — CRM parity on the Paket Makon process, compact UI, Excel import](docs/prompts/023-paket-makon-crm-parity.md)
 - [024 — Form validation and auth: inline, translated, consistent with the API](docs/prompts/024-auth-validation.md)
+- [025 — So'm by default, icons with tooltips, no decorative clutter, DRY UI](docs/prompts/025-som-icons-dry.md)

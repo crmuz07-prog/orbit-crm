@@ -8,7 +8,9 @@ import type { Dashboard } from '@/lib/types'
 import { money, monthLabel } from '@/lib/utils'
 
 export const axis = { fontSize: 11, fill: 'hsl(var(--muted-foreground))' }
-const compact = (v: number) => money(v, 'USD', true)
+const compact = (v: number) => money(v, undefined, true)
+// Long stage names would overlap under the bars; the full name is in the chart tooltip.
+const short = (name: string) => (name.length > 11 ? `${name.slice(0, 10)}…` : name)
 
 function ChartTooltip({ active, payload, label }: TooltipProps<number, string>) {
   if (!active || !payload?.length) return null
@@ -49,7 +51,7 @@ export function PipelineChart({ data, className }: { data: Dashboard['by_stage']
     <ChartCard title={t('dashboard.pipelineTitle')} description={t('dashboard.pipelineDesc')} className={className}>
       <BarChart data={rows} margin={{ left: 0, right: 8, top: 8 }}>
         {grid}
-        <XAxis dataKey="name" tick={axis} tickLine={false} axisLine={false} interval={0} />
+        <XAxis dataKey="name" tick={axis} tickLine={false} axisLine={false} interval={0} tickFormatter={short} />
         {yAxis}
         <Tooltip content={<ChartTooltip />} cursor={{ fill: 'hsl(var(--foreground) / 0.04)' }} />
         <Bar dataKey="value" name={t('dashboard.value')} radius={[6, 6, 0, 0]} maxBarSize={56} animationDuration={700}>

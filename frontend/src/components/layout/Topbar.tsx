@@ -2,11 +2,11 @@ import { Building2, CalendarCheck, ChevronDown, Handshake, Menu, Moon, Phone, Pl
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Tooltip } from '@/components/ui/tooltip'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { ReminderBell } from '@/features/reminders/ReminderBell'
 import { useTheme } from '@/hooks/useTheme'
 import { LanguageSwitcher } from './LanguageSwitcher'
+import { IconButton } from '@/components/common/icon-button'
 
 const CREATE_ITEMS = [
   { kind: 'deal', icon: Handshake },
@@ -40,7 +40,7 @@ export function Topbar({ onOpenNav, onOpenPalette, inWorkspace }: { onOpenNav: (
   const { t } = useTranslation()
   return (
     <header className="glass sticky top-0 z-10 flex h-14 items-center gap-3 rounded-none border-x-0 border-t-0 px-4 sm:px-6">
-      <Button variant="ghost" size="icon" className="lg:hidden" onClick={onOpenNav} aria-label={t('nav.openMenu')}><Menu /></Button>
+      <IconButton label={t('nav.openMenu')} className="lg:hidden" onClick={onOpenNav}><Menu /></IconButton>
       {inWorkspace && <button
         onClick={onOpenPalette}
         className="glass-subtle flex h-9 w-full max-w-md items-center gap-2 rounded-lg px-3 text-sm text-muted-foreground transition hover:text-foreground"
@@ -52,9 +52,7 @@ export function Topbar({ onOpenNav, onOpenPalette, inWorkspace }: { onOpenNav: (
       <div className="ml-auto flex items-center gap-2">
         <LanguageSwitcher />
         {inWorkspace && <ReminderBell />}
-        <Tooltip content={theme === 'dark' ? t('nav.lightMode') : t('nav.darkMode')}>
-          <Button variant="ghost" size="icon" onClick={toggle} aria-label={t('nav.darkMode')}>{theme === 'dark' ? <Sun /> : <Moon />}</Button>
-        </Tooltip>
+        <IconButton label={t('nav.darkMode')} onClick={toggle}>{theme === 'dark' ? <Sun /> : <Moon />}</IconButton>
         {inWorkspace && <NewMenu />}
       </div>
     </header>

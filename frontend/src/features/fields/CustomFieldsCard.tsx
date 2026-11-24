@@ -10,6 +10,7 @@ import type { CustomField } from '@/lib/types'
 import { CustomFieldDialog } from './CustomFieldDialog'
 import { ValueChip } from './FieldChips'
 import { useCustomFields } from './useFields'
+import { IconButton } from '@/components/common/icon-button'
 
 /** Settings: the workspace's deal fields (amoCRM "Поля"). */
 export function CustomFieldsCard() {
@@ -37,8 +38,8 @@ export function CustomFieldsCard() {
                   <div className="mt-1 flex flex-wrap gap-1">{f.options.slice(0, 12).map((o) => <ValueChip key={o} value={o} warn={f.warn_options.includes(o)} />)}</div>
                 )}
               </div>
-              <Button size="icon" variant="ghost" aria-label={t('common.edit')} onClick={() => edit(f)}><Pencil /></Button>
-              <Button size="icon" variant="ghost" aria-label={t('common.delete')} onClick={() => setDeleting(f)}><Trash2 /></Button>
+              <IconButton label={t('common.edit')} onClick={() => edit(f)}><Pencil /></IconButton>
+              <IconButton label={t('common.delete')} onClick={() => setDeleting(f)}><Trash2 /></IconButton>
             </li>
           ))}
         </ul>

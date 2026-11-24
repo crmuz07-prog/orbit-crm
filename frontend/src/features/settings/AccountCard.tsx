@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { useAsyncAction } from '@/features/auth/useAsyncAction'
 import { useFormErrors } from '@/hooks/useFormErrors'
 import { authApi } from '@/lib/api'
-import { ApiError } from '@/lib/http'
 import { newPassword, rules } from '@/lib/validation'
 
 function ProfileForm() {
@@ -29,7 +28,7 @@ function ProfileForm() {
 
   return (
     <form id="profile-form" onSubmit={submit} noValidate className="flex flex-wrap items-start gap-3">
-      <div className="min-w-[220px] flex-1"><TextField name="name" label={t('account.name')} value={name} onChange={(v) => { setName(v); errors.clear('name') }} error={errors.message('name')} /></div>
+      <div className="min-w-[220px] flex-1"><TextField name="name" label={t('account.name')} value={name} onChange={errors.bind('name', setName)} error={errors.message('name')} /></div>
       <Button type="submit" variant="outline" className="mt-6" disabled={busy}>{t('account.saveProfile')}</Button>
     </form>
   )
@@ -39,13 +38,12 @@ function PasswordForm() {
   const { t } = useTranslation()
   const { session, signIn } = useAuth()
   const errors = useFormErrors<'current' | 'next'>('password-form')
-  const wrongCurrent = (err: unknown) => err instanceof ApiError && err.code === 'wrong_password' && errors.fromApi(new ApiError(400, '', err.code, [{ field: 'current', code: 'wrong_password' }]))
-  const { busy, run } = useAsyncAction((err) => errors.fromApi(err, { new_password: 'next', current_password: 'current' }) || wrongCurrent(err))
+  const { busy, run } = useAsyncAction((err) => errors.fromApi(err, { new_password: 'next', current_password: 'current' }, { code: 'wrong_password', field: 'current' }))
   const hasPassword = session?.user.has_password ?? true
   const [current, setCurrentValue] = useState('')
   const [next, setNextValue] = useState('')
-  const setCurrent = (v: string) => { setCurrentValue(v); errors.clear('current') }
-  const setNext = (v: string) => { setNextValue(v); errors.clear('next') }
+  const setCurrent = errors.bind('current', setCurrentValue)
+  const setNext = errors.bind('next', setNextValue)
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()

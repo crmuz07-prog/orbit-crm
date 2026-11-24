@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { FileUp } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { Button } from '@/components/ui/button'
+import { IconButton } from '@/components/common/icon-button'
 import { useWorkspaceSession } from '@/auth/AuthProvider'
 import { ImportDialog } from './ImportDialog'
 
@@ -13,7 +13,7 @@ export function ImportButton() {
   if (session.role === 'member') return null
   return (
     <>
-      <Button variant="outline" size="sm" onClick={() => setOpen(true)}><FileUp /> {t('importer.button')}</Button>
+      <IconButton label={t('importer.title')} variant="outline" className="size-9" onClick={() => setOpen(true)}><FileUp /></IconButton>
       <ImportDialog open={open} onOpenChange={setOpen} />
     </>
   )

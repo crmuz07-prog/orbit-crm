@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import { errorProps, FieldError } from './form-fields'
+import { IconButton } from '@/components/common/icon-button'
 
 // No look-alike characters (0/O, 1/l/I) so a password read out loud or copied by hand works first time.
 const ALPHABET = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'
@@ -30,9 +31,9 @@ export function PasswordField({ label, value, onChange, name = 'password', error
       <Label>{label}</Label>
       <div className="flex gap-2">
         <Input name={name} type={visible ? 'text' : 'password'} autoComplete="new-password" value={value} onChange={(e) => onChange(e.target.value)} {...invalid} className={cn('font-mono', invalid.className)} />
-        <Button variant="outline" size="icon" className="size-9" onClick={() => setVisible((v) => !v)} aria-label={visible ? t('telephony.hide') : t('telephony.reveal')}>
+        <IconButton label={visible ? t('telephony.hide') : t('telephony.reveal')} variant="outline" className="size-9" onClick={() => setVisible((v) => !v)}>
           {visible ? <EyeOff /> : <Eye />}
-        </Button>
+        </IconButton>
         <Button variant="outline" onClick={generate}><Wand2 /> {t('team.generate')}</Button>
       </div>
       {error && <FieldError id={`${id}-error`}>{error}</FieldError>}

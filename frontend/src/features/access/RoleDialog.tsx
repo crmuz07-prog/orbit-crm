@@ -35,7 +35,7 @@ function RoleForm({ role, actions, onDone }: { role: AccessRole | null; actions:
 
   return (
     <form id="role-form" onSubmit={submit} noValidate className="space-y-4">
-      <TextField name="name" label={t('access.roleName')} autoFocus value={name} onChange={(v) => { setName(v); errors.clear('name') }} error={errors.message('name')} />
+      <TextField name="name" label={t('access.roleName')} autoFocus value={name} onChange={errors.bind('name', setName)} error={errors.message('name')} />
       <PermissionMatrix value={permissions} onChange={setPermissions} />
       <div className="flex justify-end gap-2">
         <Button variant="outline" onClick={onDone}>{t('common.cancel')}</Button>

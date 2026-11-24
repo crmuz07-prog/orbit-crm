@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { Bell, BellRing, Check } from 'lucide-react'
 import { EmptyState } from '@/components/common/states'
+import { IconButton } from '@/components/common/icon-button'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -29,7 +30,7 @@ function ReminderItem({ reminder: r, due }: { reminder: Activity; due: boolean }
           {SNOOZE_OPTIONS.map((o) => <DropdownMenuItem key={o.key} onSelect={() => actions.snooze(r, o.until())}>{t(`reminder.${o.key}`)}</DropdownMenuItem>)}
         </DropdownMenuContent>
       </DropdownMenu>
-      <Button variant="ghost" size="icon" onClick={() => actions.done(r)} aria-label={t('reminder.done')}><Check /></Button>
+      <IconButton label={t('reminder.done')} onClick={() => actions.done(r)}><Check /></IconButton>
     </motion.li>
   )
 }

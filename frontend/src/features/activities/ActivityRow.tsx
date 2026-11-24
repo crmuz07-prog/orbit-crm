@@ -1,15 +1,14 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BellRing, Pencil, Pin, PinOff, Trash2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Tooltip } from '@/components/ui/tooltip'
 import { CallDetails } from '@/features/calls/CallDetails'
 import type { Activity } from '@/lib/types'
 import { cn, relativeDay } from '@/lib/utils'
 import { ActivityIcon } from './ActivityIcon'
 import { useSubject } from './useSubject'
 import { useActivityActions } from './useActivityActions'
+import { IconButton } from '@/components/common/icon-button'
 
 interface Props {
   activity: Activity
@@ -23,12 +22,10 @@ function RowActions({ activity: a }: { activity: Activity }) {
   return (
     <div className="flex gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
       {a.type === 'note' && (
-        <Tooltip content={a.pinned ? t('activities.unpin') : t('activities.pin')}>
-          <Button variant="ghost" size="icon" onClick={() => actions.togglePin(a)} aria-label={t('activities.pin')}>{a.pinned ? <PinOff /> : <Pin />}</Button>
-        </Tooltip>
+        <IconButton label={t('activities.pin')} onClick={() => actions.togglePin(a)}>{a.pinned ? <PinOff /> : <Pin />}</IconButton>
       )}
-      <Button variant="ghost" size="icon" onClick={() => actions.edit(a)} aria-label={t('common.edit')}><Pencil /></Button>
-      <Button variant="ghost" size="icon" onClick={() => actions.remove(a)} aria-label={t('common.delete')}><Trash2 /></Button>
+      <IconButton label={t('common.edit')} onClick={() => actions.edit(a)}><Pencil /></IconButton>
+      <IconButton label={t('common.delete')} onClick={() => actions.remove(a)}><Trash2 /></IconButton>
     </div>
   )
 }

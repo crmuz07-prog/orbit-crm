@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { AlarmClock, AlertTriangle, BarChart3, CalendarX, Gauge, Inbox, Trophy, XCircle } from 'lucide-react'
+import { BarChart3 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Page } from '@/components/common/page'
 import { EmptyState, PageLoading } from '@/components/common/states'
@@ -20,13 +20,13 @@ const count = (n: number) => String(Math.round(n))
 function useKpis(s: ReportTotals) {
   const { t } = useTranslation()
   return [
-    { label: t('reports.total'), value: s.total, format: count, sub: `${t('reports.open')}: ${s.open}`, icon: Inbox },
-    { label: t('reports.won'), value: s.won, format: count, sub: `${t('reports.conversion')}: ${percent(s.conversion)}`, icon: Trophy },
-    { label: t('reports.lost'), value: s.lost, format: count, sub: s.total ? percent((s.lost / s.total) * 100) : '—', icon: XCircle },
-    { label: t('reports.conversion'), value: s.conversion, format: percent, sub: `${t('reports.won')}: ${s.won} / ${s.total}`, icon: Gauge },
-    { label: t('reports.overdue'), value: s.tasks_overdue, format: count, sub: `${t('reports.today')}: ${s.tasks_today}`, icon: AlarmClock },
-    { label: t('reports.noTask'), value: s.no_task, format: count, sub: t('reports.open'), icon: CalendarX },
-    { label: t('reports.warnings'), value: s.warnings, format: count, sub: t('customFields.warn'), icon: AlertTriangle },
+    { label: t('reports.total'), value: s.total, format: count, sub: `${t('reports.open')}: ${s.open}` },
+    { label: t('reports.won'), value: s.won, format: count, sub: `${t('reports.conversion')}: ${percent(s.conversion)}` },
+    { label: t('reports.lost'), value: s.lost, format: count, sub: s.total ? percent((s.lost / s.total) * 100) : '—' },
+    { label: t('reports.conversion'), value: s.conversion, format: percent, sub: `${t('reports.won')}: ${s.won} / ${s.total}` },
+    { label: t('reports.overdue'), value: s.tasks_overdue, format: count, sub: `${t('reports.today')}: ${s.tasks_today}` },
+    { label: t('reports.noTask'), value: s.no_task, format: count, sub: t('reports.open') },
+    { label: t('reports.warnings'), value: s.warnings, format: count, sub: t('customFields.warn') },
   ]
 }
 

@@ -79,7 +79,7 @@ class Deal(OwnedMixin, Base):
     contact_id: Mapped[str | None] = optional_fk("contacts")
     stage_id: Mapped[str] = mapped_column(ForeignKey("pipeline_stages.id", ondelete="RESTRICT"), index=True)
     amount: Mapped[float] = mapped_column(default=0)
-    currency: Mapped[str] = mapped_column(String(3), default="USD")
+    currency: Mapped[str] = mapped_column(String(3), default="UZS")
     expected_close_date: Mapped[date | None] = mapped_column(Date)
     priority: Mapped[str] = mapped_column(String(10), default="medium")
     source: Mapped[str | None] = mapped_column(String(40))

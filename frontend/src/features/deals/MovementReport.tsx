@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { BarChart3 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { SelectBox } from '@/components/common/form-fields'
-import { Button } from '@/components/ui/button'
+import { IconButton } from '@/components/common/icon-button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { formatDuration } from '@/features/record/duration'
 import { useAccess } from '@/hooks/useAccess'
@@ -59,7 +59,7 @@ export function MovementReport({ pipeline, stages }: { pipeline?: Pipeline; stag
   if (!pipeline || !can('reports', 'view')) return null
   return (
     <>
-      <Button variant="outline" onClick={() => setOpen(true)}><BarChart3 /> {t('board.report')}</Button>
+      <IconButton label={t('board.report')} variant="outline" className="size-9" onClick={() => setOpen(true)}><BarChart3 /></IconButton>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader><DialogTitle>{t('report.title')} · {labels.pipeline(pipeline.name)}</DialogTitle></DialogHeader>

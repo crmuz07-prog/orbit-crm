@@ -33,9 +33,9 @@ export function PaymentForm({ company, record }: { company: PlatformCompany; rec
 
   return (
     <form id="payment-form" onSubmit={submit} noValidate className="grid gap-3 sm:grid-cols-2">
-      <TextField name="amount" label={t('billing.amount')} type="number" min={1} value={amount} onChange={(v) => { setAmount(v); errors.clear('amount') }} error={errors.message('amount')} />
-      <TextField name="months" label={t('billing.months')} type="number" min={1} max={120} value={months} onChange={(v) => { setMonths(v); errors.clear('months') }} error={errors.message('months')} />
-      <TextField name="seats" label={t('billing.seatsField')} type="number" min={1} value={seats} onChange={(v) => { setSeats(v); errors.clear('seats') }} error={errors.message('seats')} placeholder={company.seat_limit ? String(company.seat_limit) : ''} />
+      <TextField name="amount" label={t('billing.amount')} type="number" min={1} value={amount} onChange={errors.bind('amount', setAmount)} error={errors.message('amount')} />
+      <TextField name="months" label={t('billing.months')} type="number" min={1} max={120} value={months} onChange={errors.bind('months', setMonths)} error={errors.message('months')} />
+      <TextField name="seats" label={t('billing.seatsField')} type="number" min={1} value={seats} onChange={errors.bind('seats', setSeats)} error={errors.message('seats')} placeholder={company.seat_limit ? String(company.seat_limit) : ''} />
       <TextField label={t('billing.note')} value={note} onChange={setNote} maxLength={500} />
       <div className="flex flex-wrap items-center justify-between gap-2 sm:col-span-2">
         <p className="text-xs text-muted-foreground">{t('billing.newEnd', { date: shortDate(newEnd) })}</p>

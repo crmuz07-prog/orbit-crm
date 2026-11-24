@@ -6,13 +6,13 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Tooltip } from '@/components/ui/tooltip'
 import { PipelineSwitcher } from '@/features/deals/PipelineSwitcher'
 import { useCreateRow, useCrm, useUpdateRow } from '@/hooks/useData'
 import { useLabels } from '@/hooks/useLabels'
 import { stagesOf, useCurrentPipeline, usePipelines } from '@/hooks/usePipelines'
 import type { Pipeline, Stage } from '@/lib/types'
 import { StageRow } from './StageRow'
+import { IconButton } from '@/components/common/icon-button'
 
 /** Name, default flag and delete of the selected pipeline. */
 function PipelineToolbar({ pipeline, onDeleted }: { pipeline: Pipeline; onDeleted: () => void }) {
@@ -28,12 +28,8 @@ function PipelineToolbar({ pipeline, onDeleted }: { pipeline: Pipeline; onDelete
         aria-label={t('pipelines.name')} className="h-8 max-w-xs flex-1" />
       {pipeline.is_default ? <Badge tone="violet">{t('pipelines.default')}</Badge> : (
         <>
-          <Tooltip content={t('pipelines.makeDefault')}>
-            <Button variant="ghost" size="icon" onClick={() => actions.update.mutate({ id: pipeline.id, patch: { is_default: true } })} aria-label={t('pipelines.makeDefault')}><Star /></Button>
-          </Tooltip>
-          <Tooltip content={t('common.delete')}>
-            <Button variant="ghost" size="icon" onClick={() => setConfirm(true)} aria-label={t('common.delete')}><Trash2 /></Button>
-          </Tooltip>
+          <IconButton label={t('pipelines.makeDefault')} onClick={() => actions.update.mutate({ id: pipeline.id, patch: { is_default: true } })}><Star /></IconButton>
+          <IconButton label={t('common.delete')} onClick={() => setConfirm(true)}><Trash2 /></IconButton>
         </>
       )}
       <ConfirmDialog open={confirm} onOpenChange={setConfirm} title={t('pipelines.deleteConfirm', { name: pipeline.name })} description={t('pipelines.deleteDesc')}

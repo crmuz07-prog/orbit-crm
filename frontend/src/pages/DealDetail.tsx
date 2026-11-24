@@ -5,8 +5,6 @@ import { Handshake, Pencil, RotateCcw, ThumbsDown, Trophy } from 'lucide-react'
 import { BackLink } from '@/components/common/record'
 import { DeleteRecordButton, RecordNotFound } from '@/components/common/record-actions'
 import { RecordSkeleton } from '@/components/common/states'
-import { Button } from '@/components/ui/button'
-import { Tooltip } from '@/components/ui/tooltip'
 import { AssociationCards } from '@/features/deals/AssociationCards'
 import { LostReasonDialog } from '@/features/deals/LostReasonDialog'
 import { useMoveDeal } from '@/features/deals/useMoveDeal'
@@ -20,10 +18,7 @@ import { useAccess } from '@/hooks/useAccess'
 import { useCrm } from '@/hooks/useData'
 import { useDealStages } from '@/hooks/usePipelines'
 import type { Deal, Stage } from '@/lib/types'
-
-function IconAction({ label, onClick, children }: { label: string; onClick: () => void; children: React.ReactNode }) {
-  return <Tooltip content={label}><Button variant="ghost" size="icon" onClick={onClick} aria-label={label}>{children}</Button></Tooltip>
-}
+import { IconButton } from '@/components/common/icon-button'
 
 /** Won / lost / reopen within the deal's own pipeline, plus edit and delete. */
 function DealActions({ deal, onLost }: { deal: Deal; onLost: () => void }) {
@@ -39,10 +34,10 @@ function DealActions({ deal, onLost }: { deal: Deal; onLost: () => void }) {
   if (!can('deals', 'edit')) return null
   return (
     <>
-      {isOpen && won && <IconAction label={t('deals.won')} onClick={() => moveDeal(deal, won)}><Trophy className="text-emerald-500" /></IconAction>}
-      {isOpen && <IconAction label={t('deals.lost')} onClick={onLost}><ThumbsDown className="text-rose-500" /></IconAction>}
-      {!isOpen && firstOpen && <IconAction label={t('deals.reopen')} onClick={() => moveDeal(deal, firstOpen)}><RotateCcw /></IconAction>}
-      <IconAction label={t('common.edit')} onClick={() => openModal({ kind: 'deal', initial: deal })}><Pencil /></IconAction>
+      {isOpen && won && <IconButton label={t('deals.won')} onClick={() => moveDeal(deal, won)}><Trophy className="text-emerald-500" /></IconButton>}
+      {isOpen && <IconButton label={t('deals.lost')} onClick={onLost}><ThumbsDown className="text-rose-500" /></IconButton>}
+      {!isOpen && firstOpen && <IconButton label={t('deals.reopen')} onClick={() => moveDeal(deal, firstOpen)}><RotateCcw /></IconButton>}
+      <IconButton label={t('common.edit')} onClick={() => openModal({ kind: 'deal', initial: deal })}><Pencil /></IconButton>
       <DeleteRecordButton table="deals" id={deal.id} title={t('deals.deleteTitle')} description={t('deals.deleteDesc', { title: deal.title })} redirectTo="/deals" />
     </>
   )

@@ -14,6 +14,7 @@ import { CompanyBillingDialog } from './billing/CompanyBillingDialog'
 import { CompanyStatusBadge, PaidUntil } from './billing/CompanyStatusBadge'
 import { CreateCompanyDialog, RenameCompanyDialog } from './CompanyDialogs'
 import type { AdminActions } from './useAdmin'
+import { IconButton } from '@/components/common/icon-button'
 
 function useColumns(onRename: (c: PlatformCompany) => void, onBilling: (c: PlatformCompany) => void): Column<PlatformCompany>[] {
   const { t } = useTranslation()
@@ -40,8 +41,8 @@ function useColumns(onRename: (c: PlatformCompany) => void, onBilling: (c: Platf
       key: 'actions', header: '', align: 'right',
       cell: (c) => (
         <div className="flex justify-end gap-0.5">
-          <Button variant="ghost" size="icon" onClick={() => onBilling(c)} aria-label={t('billing.manage')}><CreditCard /></Button>
-          <Button variant="ghost" size="icon" onClick={() => onRename(c)} aria-label={t('admin.rename')}><Pencil /></Button>
+          <IconButton label={t('billing.manage')} onClick={() => onBilling(c)}><CreditCard /></IconButton>
+          <IconButton label={t('admin.rename')} onClick={() => onRename(c)}><Pencil /></IconButton>
         </div>
       ),
     },
