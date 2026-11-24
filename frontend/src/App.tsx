@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAuth } from '@/auth/AuthProvider'
 import { PageSkeleton } from '@/components/common/states'
-import { AdminShell } from '@/components/layout/AdminShell'
 import { AppShell } from '@/components/layout/AppShell'
 import { PasswordGate } from '@/features/auth/PasswordGate'
 import { RequireView } from '@/features/auth/RequireView'
@@ -66,19 +65,9 @@ export default function App() {
   // A closed (expired or blocked) company shows why; the platform operator still works inside it.
   if (session.workspace && session.workspace.status !== 'active' && !session.user.is_superadmin) return <SubscriptionClosed />
 
-  // A platform superadmin outside any company only has the admin panel.
-  if (!session.workspace) {
-    return (
-      <Suspense fallback={<PageSkeleton />}>
-        <Routes key={i18n.language}>
-          <Route element={<AdminShell />}>
-            <Route path="/admin" element={<Admin />} />
-            <Route path="*" element={<Navigate to="/admin" replace />} />
-          </Route>
-        </Routes>
-      </Suspense>
-    )
-  }
+  // A platform superadmin outside any company gets the same shell with the platform sections only.
+  const inWorkspace = !!session.workspace
+  const admin = session.user.is_superadmin && <Route path="admin/:section?" element={<Admin />} />
 
   return (
     <EntityModalProvider>
@@ -87,12 +76,12 @@ export default function App() {
           {linkRoutes}
           <Route path="/login" element={<Navigate to="/" replace />} />
           <Route element={<AppShell />}>
-            <Route index element={<RequireView module="reports"><Dashboard /></RequireView>} />
-            {APP_ROUTES.map(([path, Component, module]) => (
+            {inWorkspace && <Route index element={<RequireView module="reports"><Dashboard /></RequireView>} />}
+            {inWorkspace && APP_ROUTES.map(([path, Component, module]) => (
               <Route key={path} path={path} element={<RequireView module={module}><Component /></RequireView>} />
             ))}
-            {session.user.is_superadmin && <Route path="admin" element={<Admin />} />}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {admin}
+            <Route path="*" element={<Navigate to={inWorkspace ? '/' : '/admin/companies'} replace />} />
           </Route>
         </Routes>
       </Suspense>

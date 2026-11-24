@@ -11,7 +11,8 @@ export function useAccess() {
   const { session } = useAuth()
   const permissions = session?.permissions
   return {
-    can: (module: Module | null, action: Action) => module === null || !!permissions?.[module]?.[action],
+    // Outside a company (a platform superadmin) there is no CRM data to touch at all.
+    can: (module: Module | null, action: Action) => !!session?.workspace && (module === null || !!permissions?.[module]?.[action]),
     scope: (module: Module): Scope => permissions?.[module]?.scope ?? 'own',
     isAdmin: session?.role === 'owner' || session?.role === 'admin',
   }

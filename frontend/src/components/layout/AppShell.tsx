@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
@@ -36,16 +36,28 @@ function DemoBanner() {
   )
 }
 
+/** CRM-only machinery: live call events, the incoming-call pop-up and the ⌘K record palette. */
+function WorkspaceExtras({ palette, setPalette, children }: { palette: boolean; setPalette: (open: boolean) => void; children: ReactNode }) {
+  return (
+    <CallEventsProvider>
+      {children}
+      <CommandPalette open={palette} onOpenChange={setPalette} />
+      <CallScreenPop />
+    </CallEventsProvider>
+  )
+}
+
+/** The only app layout: CRM users and platform superadmins share the same sidebar, top bar and page frame. */
 export function AppShell() {
   const [mobileNav, setMobileNav] = useState(false)
   const [palette, setPalette] = useState(false)
   const location = useLocation()
   const { t } = useTranslation()
-  useHotkey('k', useCallback(() => setPalette((p) => !p), []))
+  const inWorkspace = !!useAuth().session?.workspace
+  useHotkey('k', useCallback(() => inWorkspace && setPalette((p) => !p), [inWorkspace]))
   useEffect(() => setMobileNav(false), [location.pathname])
 
-  return (
-    <CallEventsProvider>
+  const frame = (
     <div className="min-h-screen">
       <aside className="glass fixed inset-y-0 left-0 z-20 hidden w-60 rounded-none border-y-0 border-l-0 lg:block">
         <Sidebar />
@@ -61,7 +73,7 @@ export function AppShell() {
         <DemoBanner />
         <SubscriptionBanner />
         <VerifyBanner />
-        <Topbar onOpenNav={() => setMobileNav(true)} onOpenPalette={() => setPalette(true)} />
+        <Topbar onOpenNav={() => setMobileNav(true)} onOpenPalette={() => setPalette(true)} inWorkspace={inWorkspace} />
         <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
           <AnimatePresence mode="wait">
             <motion.div key={location.pathname} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }}>
@@ -70,9 +82,7 @@ export function AppShell() {
           </AnimatePresence>
         </main>
       </div>
-      <CommandPalette open={palette} onOpenChange={setPalette} />
-      <CallScreenPop />
     </div>
-    </CallEventsProvider>
   )
+  return inWorkspace ? <WorkspaceExtras palette={palette} setPalette={setPalette}>{frame}</WorkspaceExtras> : frame
 }
