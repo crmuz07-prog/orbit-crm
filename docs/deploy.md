@@ -21,7 +21,9 @@
 ## Kirish: faqat administrator bergan login va parol (ERP uslubi)
 - Production'da `REGISTRATION_ENABLED=false` va `DEMO_ENABLED=false`: o'zi ro'yxatdan o'tish yo'q.
 - **Superadmin** (platforma operatori): Render → Environment'da `SUPERADMIN_EMAIL` va `SUPERADMIN_PASSWORD`ni
-  o'zingiz kiriting. Backend ishga tushganda shu akkaunt yaratiladi (mavjud bo'lsa superadmin qilinadi, parol o'zgartirilmaydi).
+  o'zingiz kiriting. Backend ishga tushganda shu akkaunt yaratiladi yoki (email mavjud bo'lsa) superadmin qilinadi va paroli
+  Render'dagi qiymatga o'rnatiladi — superadmin paroli Render'da boshqariladi, uni o'zgartirish uchun qiymatni o'zgartiring.
+  Qiymatlar chetidagi bo'sh joy va yangi qatorlar e'tiborga olinmaydi.
   Lokal: `make superadmin EMAIL=siz@kompaniya.uz` (parolni so'raydi).
 - Superadmin `/admin` panelida kompaniya yaratadi va uning egasiga login + vaqtinchalik parol beradi.
 - Kompaniya egasi/administratori Settings → Team'da xodimlarga login beradi, rolini o'zgartiradi, parolini tiklaydi.

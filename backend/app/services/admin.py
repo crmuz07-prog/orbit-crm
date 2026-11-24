@@ -1,5 +1,6 @@
 """Platform administration (superadmin): companies, users, passwords and memberships."""
 
+import logging
 from collections import defaultdict
 from typing import TypeVar
 
@@ -7,12 +8,14 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.errors import Forbidden, NotFound
+from app.core.security import hash_password, verify_password
 from app.models import Membership, User, Workspace, WorkspacePayment
 from app.schemas.admin import AdminUserIn, AdminUserOut, CompanyIn, CompanyOut, MembershipOut, PaymentIn, PaymentOut
 from app.services import billing, team
 from app.services.onboarding import workspace_defaults
 from app.services.users import create_user, find_user_by_email, revoke_sessions
 
+log = logging.getLogger(__name__)
 Row = TypeVar("Row", User, Workspace)
 
 
@@ -144,9 +147,18 @@ def remove_membership(db: Session, user_id: str, workspace_id: str) -> AdminUser
 
 
 def ensure_superadmin(db: Session, email: str, password: str) -> None:
-    """Start-up bootstrap from env: creates the operator once; an existing account is promoted, never overwritten."""
+    """Start-up bootstrap from env (Render): the env password is the source of truth for this operator account.
+
+    An existing account with the same email is promoted and gets the env password, so "the login from Render" always
+    works. Nothing is written when it already matches, so restarts neither churn the hash nor sign anyone out.
+    """
+    email, password = email.strip().lower(), password.strip()
     user = find_user_by_email(db, email)
     if user is None:
         user = create_user(db, "Superadmin", email, password, verified=True)
-    user.is_superadmin, user.is_active = True, True
+        log.info("Superadmin %s created from environment", email)
+    elif not (user.password_hash and verify_password(password, user.password_hash)):
+        user.password_hash = hash_password(password)
+        log.info("Superadmin %s: password set from environment", email)
+    user.is_superadmin, user.is_active, user.must_change_password = True, True, False
     db.commit()

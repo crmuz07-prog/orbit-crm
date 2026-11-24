@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/013-login-page-flicker.md](docs/prompts/013-login-page-flicker.md)
+Latest: [docs/prompts/014-superadmin-env-login.md](docs/prompts/014-superadmin-env-login.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -18,3 +18,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [011 — Subscriptions, seats, payments (erp1 model), Supabase RLS](docs/prompts/011-subscriptions-seats-rls.md)
 - [012 — Blank page after deploy: error boundary, stale-build reload](docs/prompts/012-stale-build-blank-page.md)
 - [013 — Stable login page on refresh, any password length on sign-in](docs/prompts/013-login-page-flicker.md)
+- [014 — Superadmin login from Render env always works](docs/prompts/014-superadmin-env-login.md)

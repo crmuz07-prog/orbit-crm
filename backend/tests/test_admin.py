@@ -55,3 +55,16 @@ def test_closed_registration(client: TestClient) -> None:
         assert client.get("/api/auth/config").json()["registration_enabled"] is False
     finally:
         settings.registration_enabled = True
+
+
+def test_env_superadmin_password_applies_to_an_existing_account(client: TestClient, auth: Headers) -> None:
+    from app.services.admin import ensure_superadmin
+    from tests.conftest import db_session
+
+    # The operator put an existing login into Render, with a stray newline from copy-paste.
+    ensure_superadmin(db_session(), " Rep@Acme.com ", "render-pass-1\n")
+    login = client.post("/api/auth/login", json={"email": "rep@acme.com", "password": "render-pass-1"}).json()
+    assert login["user"]["is_superadmin"] is True and login["user"]["must_change_password"] is False
+    # A restart with the same values changes nothing, so the session stays valid.
+    ensure_superadmin(db_session(), "rep@acme.com", "render-pass-1")
+    assert client.get("/api/auth/me", headers=bearer(login)).status_code == 200
