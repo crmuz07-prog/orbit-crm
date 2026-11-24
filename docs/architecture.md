@@ -41,6 +41,15 @@ are seeded per workspace (Sales rep = default, Team lead, Viewer). Companies, co
 records can be assigned to. The generic CRUD router applies it to list/get/update/delete and `GET /{entity}/export` (CSV);
 the dashboard and call stats use the `reports` scope. The UI mirrors the session's `permissions` (`useAccess`).
 
+### Subscriptions & seats (erp1 model)
+A workspace has `subscription_ends_at` (inclusive calendar date in `BILLING_TIMEZONE`), `seat_limit`, `license_months`,
+`price_paid` and a manual `status`. `services/billing.py` computes the effective status lazily on read (no scheduler):
+expired or blocked companies are refused in `api/deps.py` (`subscription_expired` / `company_blocked`), superadmins and
+the demo excepted. Payments (`workspace_payments`) extend from the later of today and the current end date with month-end
+clamping. Adding or reactivating a member beyond `seat_limit` fails with `seat_limit_reached`. In PostgreSQL every table has
+Row Level Security on without policies, so Supabase's public REST/GraphQL keys can't reach CRM data; the API connects as
+the table owner and is not affected.
+
 ### Sessions & sign-in protection
 Tokens carry the user's `session_version` (`sv`); bumping it (admin password reset, deactivation, own password change)
 signs the user out everywhere. Sign-in is limited to 5 failures per account in 15 minutes; attempts are logged in
@@ -100,6 +109,6 @@ tailwindcss-animate handles Radix enter/exit states. `MotionConfig reducedMotion
 
 ## Quality gates
 - `scripts/check-lines.sh` enforces a maximum of 250 lines per file.
-- `pytest`: 56 tests covering auth, isolation, CRUD, rules, dashboard, calls, reminders, telephony, teams, superadmin, closed access, access roles and scope, sessions, accounts, migrations and error codes.
+- `pytest`: 63 tests covering auth, isolation, CRUD, rules, dashboard, calls, reminders, telephony, teams, superadmin, closed access, access roles and scope, sessions, accounts, migrations and error codes.
 - Alembic migrations (`backend/migrations`) run on boot; legacy databases are stamped at the baseline first.
 - `tsc` strict, with no `any`.

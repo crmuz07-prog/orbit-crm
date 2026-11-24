@@ -7,6 +7,7 @@ import { AdminShell } from '@/components/layout/AdminShell'
 import { AppShell } from '@/components/layout/AppShell'
 import { PasswordGate } from '@/features/auth/PasswordGate'
 import { RequireView } from '@/features/auth/RequireView'
+import { SubscriptionClosed } from '@/features/billing/SubscriptionClosed'
 import type { Module } from '@/lib/types'
 import { EntityModalProvider } from '@/features/entity-modal/EntityModalProvider'
 import LoginPage from '@/pages/Login'
@@ -61,6 +62,9 @@ export default function App() {
 
   // Admin-issued temporary password: nothing else is reachable until the person sets their own.
   if (session.user.must_change_password) return <PasswordGate />
+
+  // A closed (expired or blocked) company shows why; the platform operator still works inside it.
+  if (session.workspace && session.workspace.status !== 'active' && !session.user.is_superadmin) return <SubscriptionClosed />
 
   // A platform superadmin outside any company only has the admin panel.
   if (!session.workspace) {

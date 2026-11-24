@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Literal
 
 from pydantic import EmailStr, Field
@@ -33,6 +34,12 @@ class WorkspaceOut(Schema):
     id: str
     name: str
     is_demo: bool
+    # Subscription as the company sees it (filled in for the active workspace of a session).
+    status: Literal["active", "expired", "blocked"] = "active"
+    subscription_ends_at: date | None = None
+    days_left: int | None = None
+    seat_limit: int | None = None
+    seats_used: int | None = None
 
 
 class SessionOut(Schema):

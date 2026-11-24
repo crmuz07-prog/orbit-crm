@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     demo_enabled: bool = True
     # Closed (ERP-style) access: when false only admins create accounts.
     registration_enabled: bool = True
+    # Subscription end dates are calendar dates in this zone (a company is never cut off at UTC midnight).
+    billing_timezone: str = "Asia/Tashkent"
     # Bootstraps the platform operator on start-up (set in the hosting dashboard, never in git).
     superadmin_email: str | None = None
     superadmin_password: str | None = None

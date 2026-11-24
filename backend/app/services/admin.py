@@ -7,9 +7,9 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.errors import Forbidden, NotFound
-from app.models import Membership, User, Workspace
-from app.schemas.admin import AdminUserIn, AdminUserOut, CompanyIn, CompanyOut, MembershipOut
-from app.services import team
+from app.models import Membership, User, Workspace, WorkspacePayment
+from app.schemas.admin import AdminUserIn, AdminUserOut, CompanyIn, CompanyOut, MembershipOut, PaymentIn, PaymentOut
+from app.services import billing, team
 from app.services.onboarding import workspace_defaults
 from app.services.users import create_user, find_user_by_email, revoke_sessions
 
@@ -33,16 +33,22 @@ def list_companies(db: Session) -> list[CompanyOut]:
     for m, u, _ in _all_memberships(db):
         members[m.workspace_id].append((m, u))
     companies = db.scalars(select(Workspace).order_by(Workspace.created_at.desc()))
-    return [
-        CompanyOut(id=w.id, name=w.name, is_demo=w.is_demo, created_at=w.created_at, member_count=len(members[w.id]),
-                   owners=[u.email for m, u in members[w.id] if m.role == "owner"])
-        for w in companies
-    ]
+    return [company_out(w, members[w.id]) for w in companies]
+
+
+def company_out(w: Workspace, members: list[tuple[Membership, User]]) -> CompanyOut:
+    return CompanyOut(
+        id=w.id, name=w.name, is_demo=w.is_demo, created_at=w.created_at, member_count=len(members),
+        owners=[u.email for m, u in members if m.role == "owner"], status=billing.effective_status(w),  # type: ignore[arg-type]
+        subscription_ends_at=w.subscription_ends_at, days_left=billing.days_left(w.subscription_ends_at),
+        seat_limit=w.seat_limit, seats_used=sum(1 for _, u in members if u.is_active),
+        license_months=w.license_months, price_paid=w.price_paid,
+    )
 
 
 def create_company(db: Session, data: CompanyIn) -> CompanyOut:
     """A new company with its default pipeline and an owner login (existing accounts are reused)."""
-    workspace = Workspace(name=data.name)
+    workspace = Workspace(name=data.name, seat_limit=data.seat_limit, subscription_ends_at=data.subscription_ends_at)
     db.add(workspace)
     db.flush()
     db.add_all(workspace_defaults(workspace.id))
@@ -50,9 +56,31 @@ def create_company(db: Session, data: CompanyIn) -> CompanyOut:
     return next(c for c in list_companies(db) if c.id == workspace.id)
 
 
-def rename_company(db: Session, workspace_id: str, name: str) -> None:
-    _get(db, Workspace, workspace_id).name = name
+def update_company(db: Session, workspace_id: str, changes: dict[str, object]) -> None:
+    """Name, manual block/unblock, seat limit, end date and default term (only the fields present are changed)."""
+    workspace = _get(db, Workspace, workspace_id)
+    for field, value in changes.items():
+        setattr(workspace, field, value)
     db.commit()
+
+
+def company(db: Session, workspace_id: str) -> CompanyOut:
+    return next(c for c in list_companies(db) if c.id == workspace_id)
+
+
+def record_payment(db: Session, actor: User, workspace_id: str, data: PaymentIn) -> PaymentOut:
+    workspace = _get(db, Workspace, workspace_id)
+    payment = billing.record_payment(db, workspace, actor.id, data.amount, data.months, data.seats, data.note)
+    return payment_out(payment, workspace.name)
+
+
+def payment_out(payment: WorkspacePayment, workspace_name: str) -> PaymentOut:
+    return PaymentOut(**{c: getattr(payment, c) for c in PaymentOut.model_fields if c != "workspace_name"}, workspace_name=workspace_name)
+
+
+def list_payments(db: Session, workspace_id: str | None = None) -> list[PaymentOut]:
+    names = dict(db.execute(select(Workspace.id, Workspace.name)).tuples().all())
+    return [payment_out(p, names.get(p.workspace_id, "")) for p in billing.payments(db, workspace_id)]
 
 
 def list_users(db: Session) -> list[AdminUserOut]:
@@ -83,6 +111,10 @@ def update_account(db: Session, actor: User, user_id: str, full_name: str | None
     # The operator must not lock themselves out of the platform.
     if user.id == actor.id and (is_active is False or is_superadmin is False):
         raise Forbidden("You cannot deactivate or demote yourself", "self_lockout")
+    if is_active and not user.is_active:
+        # Reactivation takes a seat again in every company the person belongs to.
+        for workspace in db.scalars(select(Workspace).join(Membership).where(Membership.user_id == user.id)):
+            billing.ensure_seat(db, workspace)
     for field, value in {"full_name": full_name, "is_active": is_active, "is_superadmin": is_superadmin}.items():
         if value is not None:
             setattr(user, field, value)

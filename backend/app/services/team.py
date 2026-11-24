@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.core.errors import Conflict, Forbidden, NotFound
 from app.core.security import hash_password
 from app.models import AccessRole, Membership, SalesTeam, User, Workspace
+from app.services import billing
 from app.services.access import get_owned
 from app.services.users import create_user, find_user_by_email, revoke_sessions
 from app.services.workspaces import ROLE_RANK
@@ -36,13 +37,15 @@ def join(db: Session, workspace: Workspace, full_name: str, email: str, role: st
     """
     user = find_user_by_email(db, email)
     created = user is None
+    if user is not None and db.get(Membership, (workspace.id, user.id)) is not None:
+        raise Conflict("This person is already in the workspace", "already_member")
+    if user is None or user.is_active:
+        billing.ensure_seat(db, workspace)
     if user is None:
         if password is None:
             raise NotFound("User not found", "not_found")
         user = create_user(db, full_name, email, None, verified=True)  # the admin vouches for the address
         set_temporary_password(user, password)
-    elif db.get(Membership, (workspace.id, user.id)) is not None:
-        raise Conflict("This person is already in the workspace", "already_member")
     membership = Membership(workspace_id=workspace.id, user_id=user.id, role=role)
     db.add(membership)
     db.commit()

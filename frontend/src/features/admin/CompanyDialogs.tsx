@@ -4,7 +4,7 @@ import { TextField } from '@/components/common/form-fields'
 import { emptyLogin, LoginFields } from '@/components/common/login-fields'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import type { Company, NewLogin } from '@/lib/types'
+import type { PlatformCompany, NewLogin } from '@/lib/types'
 import { IssueDialog } from './IssueDialog'
 import type { AdminActions } from './useAdmin'
 
@@ -40,7 +40,7 @@ export function CreateCompanyDialog({ open, onOpenChange, create }: { open: bool
   )
 }
 
-function RenameForm({ company, onDone, rename }: { company: Company; onDone: () => void; rename: AdminActions['renameCompany'] }) {
+function RenameForm({ company, onDone, rename }: { company: PlatformCompany; onDone: () => void; rename: AdminActions['renameCompany'] }) {
   const { t } = useTranslation()
   const [name, setName] = useState(company.name)
   const submit = (e: FormEvent) => {
@@ -55,7 +55,7 @@ function RenameForm({ company, onDone, rename }: { company: Company; onDone: () 
   )
 }
 
-export function RenameCompanyDialog({ company, onClose, rename }: { company: Company | null; onClose: () => void; rename: AdminActions['renameCompany'] }) {
+export function RenameCompanyDialog({ company, onClose, rename }: { company: PlatformCompany | null; onClose: () => void; rename: AdminActions['renameCompany'] }) {
   const { t } = useTranslation()
   return (
     <Dialog open={!!company} onOpenChange={(o) => !o && onClose()}>

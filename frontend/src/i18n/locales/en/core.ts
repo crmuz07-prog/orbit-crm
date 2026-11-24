@@ -40,6 +40,7 @@ export const core = {
     firstName: 'First name is required', email: 'Email looks invalid', subject: 'Subject is required', writeSomething: 'Write something first',
   },
   errors: {
+    subscription_expired: 'The subscription of this company has ended', company_blocked: 'This company has been blocked by the platform administrator', seat_limit_reached: 'All paid seats are in use — ask the platform administrator for more',
     permission_denied: 'You don’t have permission for this action', owner_out_of_scope: 'You can’t assign records to this person', session_revoked: 'You were signed out — please sign in again', too_many_attempts: 'Too many failed attempts. Try again in 15 minutes', default_role: 'The default role can’t be deleted', name_taken: 'This name is already used',
     registration_disabled: 'Accounts are created by your administrator', account_disabled: 'This account has been deactivated — contact your administrator', self_lockout: 'You cannot deactivate or demote yourself',
     forbidden: 'You do not have permission to do this', invalid_token: 'This link is invalid or has expired', invite_email_mismatch: 'This invitation was sent to a different email', last_owner: 'A workspace needs at least one owner', demo_read_only: 'This cannot be changed in the demo', already_member: 'This person is already in the workspace', wrong_password: 'The current password is incorrect',

@@ -1,11 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/auth/AuthProvider'
+import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import type { AccessOverview } from '@/lib/types'
 import { AddMemberForm } from './AddMemberForm'
 import { MemberRow } from './MemberRow'
 import { useTeam } from './useTeam'
-import type { AccessOverview } from '@/lib/types'
 
 /** Settings → Team: members with roles; admins issue logins (HubSpot / ERP-style user management). */
 export function TeamCard({ access }: { access?: AccessOverview }) {
@@ -15,10 +16,14 @@ export function TeamCard({ access }: { access?: AccessOverview }) {
   if (!session?.workspace || !session.role) return null
   if (!team) return <Skeleton className="h-64 rounded-2xl" />
 
+  // Paid seats (set by the platform operator); counted from the live list so it updates as people are added.
+  const limit = session.workspace.seat_limit
+  const used = team.members.filter((m) => m.is_active).length
+  const seats = limit != null && <Badge tone={used >= limit ? 'amber' : 'gray'}>{t('billing.teamSeats', { used, limit })}</Badge>
   const hint = session.workspace.is_demo ? t('team.demoReadOnly') : !team.can_manage ? t('team.readOnly') : null
   return (
     <Card>
-      <CardHeader title={t('team.title')} description={t('team.description')} />
+      <CardHeader title={t('team.title')} description={t('team.description')} action={seats} />
       {team.can_manage && (
         <CardContent className="border-b border-foreground/[0.06]">
           <AddMemberForm add={add} actorRole={session.role} />

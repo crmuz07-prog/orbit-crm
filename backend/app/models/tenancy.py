@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import date, datetime
 
-from sqlalchemy import ForeignKey, String, false, text, true
+from sqlalchemy import Date, ForeignKey, String, false, text, true
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.db import Base, UTCDateTime
@@ -12,6 +12,12 @@ class Workspace(IdMixin, TimestampMixin, Base):
 
     name: Mapped[str] = mapped_column(String(120))
     is_demo: Mapped[bool] = mapped_column(default=False)
+    # Subscription (erp1 model, see services/billing.py). Empty end date / seat limit = unlimited.
+    status: Mapped[str] = mapped_column(String(20), default="active", server_default="active")
+    subscription_ends_at: Mapped[date | None] = mapped_column(Date, nullable=True)
+    seat_limit: Mapped[int | None] = mapped_column(nullable=True)
+    license_months: Mapped[int] = mapped_column(default=1, server_default=text("1"))
+    price_paid: Mapped[float] = mapped_column(default=0, server_default=text("0"))
 
 
 class User(IdMixin, TimestampMixin, Base):

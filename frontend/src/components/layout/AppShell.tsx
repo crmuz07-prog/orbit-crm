@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/auth/AuthProvider'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { VerifyBanner } from '@/features/auth/VerifyBanner'
+import { SubscriptionBanner } from '@/features/billing/SubscriptionBanner'
 import { CallEventsProvider } from '@/features/telephony/CallEventsProvider'
 import { CallScreenPop } from '@/features/telephony/CallScreenPop'
 import { CommandPalette } from './CommandPalette'
@@ -58,6 +59,7 @@ export function AppShell() {
 
       <div className="lg:pl-60">
         <DemoBanner />
+        <SubscriptionBanner />
         <VerifyBanner />
         <Topbar onOpenNav={() => setMobileNav(true)} onOpenPalette={() => setPalette(true)} />
         <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">

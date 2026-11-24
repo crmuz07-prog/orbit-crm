@@ -9,7 +9,7 @@ from app.core.db import get_db
 from app.core.errors import Forbidden, Unauthorized
 from app.core.security import decode_access_token
 from app.models import Membership, User, Workspace
-from app.services import permissions, visibility, workspaces
+from app.services import billing, permissions, visibility, workspaces
 from app.services.permissions import Access, Module
 from app.services.visibility import Visibility
 
@@ -67,6 +67,9 @@ def context_for_token(db: Session, token: str | None) -> RequestContext:
     base = user_for_token(db, token)
     # The token's workspace is honoured only while the membership still exists.
     membership, workspace = workspaces.resolve(db, base.user.id, base.workspace_id)
+    # Lazy subscription enforcement (erp1): an expired or blocked company is closed; the operator still gets in.
+    if not base.user.is_superadmin:
+        billing.ensure_open(workspace)
     access = permissions.resolve(db, membership)
     return RequestContext(db=db, user=base.user, workspace=workspace, membership=membership, access=access)
 

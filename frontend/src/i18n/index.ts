@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next'
 import { account as enAccount } from './locales/en/account'
 import { admin as enAdmin } from './locales/en/admin'
 import { access as enAccess } from './locales/en/access'
+import { billing as enBilling } from './locales/en/billing'
 import { core as enCore } from './locales/en/core'
 import { engage as enEngage } from './locales/en/engage'
 import { sales as enSales } from './locales/en/sales'
@@ -10,6 +11,7 @@ import { telephony as enTelephony } from './locales/en/telephony'
 import { account as ruAccount } from './locales/ru/account'
 import { admin as ruAdmin } from './locales/ru/admin'
 import { access as ruAccess } from './locales/ru/access'
+import { billing as ruBilling } from './locales/ru/billing'
 import { core as ruCore } from './locales/ru/core'
 import { engage as ruEngage } from './locales/ru/engage'
 import { sales as ruSales } from './locales/ru/sales'
@@ -17,12 +19,13 @@ import { telephony as ruTelephony } from './locales/ru/telephony'
 import { account as uzAccount } from './locales/uz/account'
 import { admin as uzAdmin } from './locales/uz/admin'
 import { access as uzAccess } from './locales/uz/access'
+import { billing as uzBilling } from './locales/uz/billing'
 import { core as uzCore } from './locales/uz/core'
 import { engage as uzEngage } from './locales/uz/engage'
 import { sales as uzSales } from './locales/uz/sales'
 import { telephony as uzTelephony } from './locales/uz/telephony'
 
-export const en = { ...enCore, ...enSales, ...enEngage, ...enTelephony, ...enAccount, ...enAdmin, ...enAccess }
+export const en = { ...enCore, ...enSales, ...enEngage, ...enTelephony, ...enAccount, ...enAdmin, ...enAccess, ...enBilling }
 
 export const LANGUAGES = [
   { code: 'uz', label: 'Oʻzbekcha', short: 'UZ', intl: 'uz-UZ' },
@@ -60,8 +63,8 @@ i18n.on('languageChanged', (code) => document.documentElement.setAttribute('lang
 void i18n.use(initReactI18next).init({
   resources: {
     en: { translation: en },
-    uz: { translation: { ...uzCore, ...uzSales, ...uzEngage, ...uzTelephony, ...uzAccount, ...uzAdmin, ...uzAccess } },
-    ru: { translation: { ...ruCore, ...ruSales, ...ruEngage, ...ruTelephony, ...ruAccount, ...ruAdmin, ...ruAccess } },
+    uz: { translation: { ...uzCore, ...uzSales, ...uzEngage, ...uzTelephony, ...uzAccount, ...uzAdmin, ...uzAccess, ...uzBilling } },
+    ru: { translation: { ...ruCore, ...ruSales, ...ruEngage, ...ruTelephony, ...ruAccount, ...ruAdmin, ...ruAccess, ...ruBilling } },
   },
   lng: detectLanguage(),
   fallbackLng: 'en',

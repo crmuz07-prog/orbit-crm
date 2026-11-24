@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Building2, Pencil, Plus, Search } from 'lucide-react'
+import { Building2, CreditCard, Pencil, Plus, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { CompanyLogo } from '@/components/common/avatars'
 import { DataTable, type Column } from '@/components/common/data-table'
@@ -8,12 +8,14 @@ import { EmptyState } from '@/components/common/states'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import type { Company } from '@/lib/types'
+import type { PlatformCompany } from '@/lib/types'
 import { shortDate } from '@/lib/utils'
+import { CompanyBillingDialog } from './billing/CompanyBillingDialog'
+import { CompanyStatusBadge, PaidUntil } from './billing/CompanyStatusBadge'
 import { CreateCompanyDialog, RenameCompanyDialog } from './CompanyDialogs'
 import type { AdminActions } from './useAdmin'
 
-function useColumns(onRename: (c: Company) => void): Column<Company>[] {
+function useColumns(onRename: (c: PlatformCompany) => void, onBilling: (c: PlatformCompany) => void): Column<PlatformCompany>[] {
   const { t } = useTranslation()
   return [
     {
@@ -27,9 +29,22 @@ function useColumns(onRename: (c: Company) => void): Column<Company>[] {
       ),
     },
     { key: 'owners', header: t('admin.owner'), cell: (c) => <span className="text-muted-foreground">{c.owners.join(', ') || '—'}</span> },
-    { key: 'members', header: t('team.title'), align: 'right', sortValue: (c) => c.member_count, cell: (c) => t('admin.members', { count: c.member_count }) },
+    { key: 'status', header: t('admin.status'), sortValue: (c) => c.status, cell: (c) => <CompanyStatusBadge company={c} /> },
+    { key: 'paid', header: t('billing.paidUntil'), sortValue: (c) => c.subscription_ends_at ?? '9999', cell: (c) => <PaidUntil company={c} /> },
+    {
+      key: 'seats', header: t('billing.seats'), align: 'right', sortValue: (c) => c.seats_used,
+      cell: (c) => (c.seat_limit ? t('billing.seatsUsed', { used: c.seats_used, limit: c.seat_limit }) : t('admin.members', { count: c.member_count })),
+    },
     { key: 'created', header: t('admin.created'), sortValue: (c) => c.created_at, cell: (c) => <span className="text-muted-foreground">{shortDate(c.created_at)}</span> },
-    { key: 'actions', header: '', align: 'right', cell: (c) => <Button variant="ghost" size="icon" onClick={() => onRename(c)} aria-label={t('admin.rename')}><Pencil /></Button> },
+    {
+      key: 'actions', header: '', align: 'right',
+      cell: (c) => (
+        <div className="flex justify-end gap-0.5">
+          <Button variant="ghost" size="icon" onClick={() => onBilling(c)} aria-label={t('billing.manage')}><CreditCard /></Button>
+          <Button variant="ghost" size="icon" onClick={() => onRename(c)} aria-label={t('admin.rename')}><Pencil /></Button>
+        </div>
+      ),
+    },
   ]
 }
 
@@ -37,8 +52,9 @@ export function CompaniesTab({ actions }: { actions: AdminActions }) {
   const { t } = useTranslation()
   const [query, setQuery] = useState('')
   const [creating, setCreating] = useState(false)
-  const [renaming, setRenaming] = useState<Company | null>(null)
-  const columns = useColumns(setRenaming)
+  const [renaming, setRenaming] = useState<PlatformCompany | null>(null)
+  const [billing, setBilling] = useState<string | null>(null)
+  const columns = useColumns(setRenaming, (c) => setBilling(c.id))
   const companies = (actions.companies.data ?? []).filter((c) => matches(query, c.name, ...c.owners))
 
   return (
@@ -56,6 +72,7 @@ export function CompaniesTab({ actions }: { actions: AdminActions }) {
       </Card>
       <CreateCompanyDialog open={creating} onOpenChange={setCreating} create={actions.createCompany} />
       <RenameCompanyDialog company={renaming} onClose={() => setRenaming(null)} rename={actions.renameCompany} />
+      <CompanyBillingDialog companyId={billing} onClose={() => setBilling(null)} actions={actions} />
     </>
   )
 }

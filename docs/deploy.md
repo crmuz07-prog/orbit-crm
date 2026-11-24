@@ -28,6 +28,12 @@
 - Vaqtinchalik parol bilan birinchi kirishda foydalanuvchi o'z parolini o'rnatmaguncha CRM ochilmaydi.
 - Faolsizlantirilgan foydalanuvchi kira olmaydi, eski sessiyasi ham darhol to'xtaydi.
 
+## Obuna, o'rinlar va to'lovlar
+Superadmin `/admin` → Kompaniyalar → kartochka belgisi orqali to'lov kiritadi (summa, oylar, o'rinlar). Muddat bugundan yoki
+joriy tugash sanasidan uzayadi; tugash sanasi o'sha kun ham kiradi. Muddati o'tgan yoki bloklangan kompaniya a'zolari CRM'ga
+kira olmaydi, egalar va adminlar esa 7 kun oldin ogohlantiriladi. Bo'sh qiymat — cheksiz. Vaqt zonasi: `BILLING_TIMEZONE`
+(standart `Asia/Tashkent`). Supabase jadvallarida RLS yoqilgan — ommaviy REST API orqali CRM ma'lumotlarini o'qib bo'lmaydi.
+
 ## Email (ixtiyoriy)
 Parolni tiklash va email tasdiqlash xatlari uchun Render → Environment'ga SMTP qo'shiladi:
 `SMTP_HOST`, `SMTP_PORT` (587), `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`.

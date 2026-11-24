@@ -8,10 +8,11 @@ from sqlalchemy.orm import Session
 
 from app.core.db import utcnow
 from app.core.errors import NotFound, Unauthorized
-from app.models import Activity, Company, Contact, Deal, TelephonyIntegration
+from app.models import Activity, Company, Contact, Deal, TelephonyIntegration, Workspace
 from app.models.telephony import new_token
 from app.schemas.crm import ActivityOut
 from app.schemas.telephony import CallEventOut, TelephonyEventIn
+from app.services import billing
 from app.services.events import broker
 from app.services.phone_match import create_caller_contact, find_contact, latest_open_deal
 
@@ -34,6 +35,8 @@ def integration_by_token(db: Session, token: str) -> TelephonyIntegration:
     integration = db.scalar(select(TelephonyIntegration).where(TelephonyIntegration.webhook_token == token))
     if integration is None:
         raise NotFound("Unknown webhook", "not_found")
+    # A closed company stops receiving calls too (the PBX keeps retrying until it is paid again).
+    billing.ensure_open(db.get(Workspace, integration.workspace_id))  # type: ignore[arg-type]
     return integration
 
 

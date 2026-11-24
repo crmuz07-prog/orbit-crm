@@ -1,6 +1,6 @@
 import type {
-  AccessOverview, Activity, AdminUser, AuthConfig, CallDirection, CallLog, CallStats, Company, Dashboard, LoginAttempt, MemberPatch, NewLogin,
-  Permissions, ProviderStatus, Role, Session, TableMap, TableName, Team, TeamMember, TelephonySettings, Token, User, WorkspaceChoice,
+  AccessOverview, Activity, AdminUser, AuthConfig, CallDirection, CallLog, CallStats, CompanyPatch, Dashboard, LoginAttempt, MemberPatch, NewLogin,
+  Payment, PaymentDraft, Permissions, PlatformCompany, ProviderStatus, Role, Session, TableMap, TableName, Team, TeamMember, TelephonySettings, Token, User, WorkspaceChoice,
 } from './types'
 import { download, http } from './http'
 
@@ -80,9 +80,12 @@ export const accessApi = {
 
 export const adminApi = {
   loginAttempts: () => http<LoginAttempt[]>('GET', '/admin/login-attempts'),
-  companies: () => http<Company[]>('GET', '/admin/companies'),
-  createCompany: (name: string, owner: NewLogin) => http<Company>('POST', '/admin/companies', { name, owner }),
-  renameCompany: (id: string, name: string) => http<void>('PATCH', `/admin/companies/${id}`, { name }),
+  companies: () => http<PlatformCompany[]>('GET', '/admin/companies'),
+  createCompany: (name: string, owner: NewLogin) => http<PlatformCompany>('POST', '/admin/companies', { name, owner }),
+  updateCompany: (id: string, patch: CompanyPatch) => http<PlatformCompany>('PATCH', `/admin/companies/${id}`, patch),
+  companyPayments: (id: string) => http<Payment[]>('GET', `/admin/companies/${id}/payments`),
+  recordPayment: (id: string, draft: PaymentDraft) => http<Payment>('POST', `/admin/companies/${id}/payments`, draft),
+  payments: () => http<Payment[]>('GET', '/admin/payments'),
   users: () => http<AdminUser[]>('GET', '/admin/users'),
   createUser: (login: NewLogin & { workspace_id: string | null; role: Role }) => http<AdminUser>('POST', '/admin/users', login),
   updateUser: (id: string, patch: Partial<Pick<AdminUser, 'full_name' | 'is_active' | 'is_superadmin'>>) => http<AdminUser>('PATCH', `/admin/users/${id}`, patch),

@@ -6,8 +6,8 @@ from app.core.config import get_settings
 from app.core.errors import Forbidden, Unauthorized
 from app.core.security import create_access_token, verify_password
 from app.models import Membership, User, Workspace
-from app.schemas.auth import LoginIn, RegisterIn, SessionOut, TokenOut, UserOut, WorkspaceChoice, WorkspaceOut
-from app.services import login_guard, permissions, workspaces
+from app.schemas.auth import LoginIn, RegisterIn, SessionOut, TokenOut, UserOut, WorkspaceChoice
+from app.services import billing, login_guard, permissions, workspaces
 from app.services.account import send_verification
 from app.services.onboarding import create_workspace
 from app.services.seed import seed_workspace
@@ -27,7 +27,7 @@ def session_out(db: Session, user: User, workspace_id: str | None = None) -> Ses
         return SessionOut(user=UserOut.model_validate(user), workspace=None, role=None)
     membership, workspace = found
     return SessionOut(
-        user=UserOut.model_validate(user), workspace=WorkspaceOut.model_validate(workspace),
+        user=UserOut.model_validate(user), workspace=billing.workspace_out(db, workspace),
         role=membership.role,  # type: ignore[arg-type]
         permissions=permissions.resolve(db, membership).as_dict(),
     )
@@ -80,7 +80,7 @@ def demo_login(db: Session) -> TokenOut:
 
 
 def list_workspaces(db: Session, user_id: str) -> list[WorkspaceChoice]:
-    return [WorkspaceChoice(id=w.id, name=w.name, is_demo=w.is_demo, role=m.role) for m, w in workspaces.memberships(db, user_id)]  # type: ignore[arg-type]
+    return [WorkspaceChoice(id=w.id, name=w.name, is_demo=w.is_demo, role=m.role, status=billing.effective_status(w)) for m, w in workspaces.memberships(db, user_id)]  # type: ignore[arg-type]
 
 
 def switch_workspace(db: Session, user: User, workspace_id: str) -> TokenOut:

@@ -108,6 +108,11 @@ export interface Workspace {
   id: string
   name: string
   is_demo: boolean
+  status: CompanyStatus
+  subscription_ends_at: string | null
+  days_left: number | null
+  seat_limit: number | null
+  seats_used: number | null
 }
 
 export interface Session {
@@ -208,15 +213,6 @@ export interface CallEvent {
 
 export type ProviderStatus = 'answered' | 'no_answer' | 'busy' | 'voicemail' | 'failed'
 
-export interface Company {
-  id: string
-  name: string
-  is_demo: boolean
-  created_at: string
-  member_count: number
-  owners: string[]
-}
-
 export interface AdminUser {
   id: string
   full_name: string
@@ -236,6 +232,8 @@ export interface NewLogin {
 
 
 export * from './access-types'
+export * from './platform-types'
+import type { CompanyStatus } from './platform-types'
 import type { Permissions } from './access-types'
 
 export type MemberPatch = Partial<Pick<TeamMember, 'role' | 'access_role_id' | 'team_id'>>

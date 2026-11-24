@@ -1,15 +1,16 @@
-import { Building2, ShieldCheck, Users } from 'lucide-react'
+import { Building2, ShieldCheck, Users, Wallet } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Page } from '@/components/common/page'
 import { PageSkeleton } from '@/components/common/states'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { PaymentsTab } from '@/features/admin/billing/PaymentsTab'
 import { CompaniesTab } from '@/features/admin/CompaniesTab'
 import { SecurityTab } from '@/features/admin/SecurityTab'
 import { useAdmin } from '@/features/admin/useAdmin'
 import { UsersTab } from '@/features/admin/UsersTab'
 import { usePersistentState } from '@/hooks/usePersistentState'
 
-const TABS = ['companies', 'users', 'security'] as const
+const TABS = ['companies', 'users', 'payments', 'security'] as const
 
 /** Platform administration for superadmins (ERP-style provisioning of companies and logins). */
 export default function AdminPage() {
@@ -24,10 +25,12 @@ export default function AdminPage() {
         <TabsList className="mb-4">
           <TabsTrigger value="companies"><Building2 /> {t('admin.companies')} <span className="opacity-60">{actions.companies.data?.length}</span></TabsTrigger>
           <TabsTrigger value="users"><Users /> {t('admin.users')} <span className="opacity-60">{actions.users.data?.length}</span></TabsTrigger>
+          <TabsTrigger value="payments"><Wallet /> {t('billing.tab')}</TabsTrigger>
           <TabsTrigger value="security"><ShieldCheck /> {t('security.tab')}</TabsTrigger>
         </TabsList>
         <TabsContent value="companies"><CompaniesTab actions={actions} /></TabsContent>
         <TabsContent value="users"><UsersTab actions={actions} /></TabsContent>
+        <TabsContent value="payments"><PaymentsTab actions={actions} /></TabsContent>
         <TabsContent value="security"><SecurityTab actions={actions} /></TabsContent>
       </Tabs>
     </Page>

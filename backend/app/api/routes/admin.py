@@ -1,7 +1,9 @@
 from fastapi import APIRouter, status
 
 from app.api.deps import SuperCtx
-from app.schemas.admin import AdminUserIn, AdminUserOut, AdminUserPatch, CompanyIn, CompanyOut, CompanyPatch, LoginAttemptOut, MembershipIn
+from app.schemas.admin import (
+    AdminUserIn, AdminUserOut, AdminUserPatch, CompanyIn, CompanyOut, CompanyPatch, LoginAttemptOut, MembershipIn, PaymentIn, PaymentOut,
+)
 from app.schemas.team import SetPasswordIn
 from app.services import admin, login_guard
 
@@ -18,9 +20,26 @@ def create_company(payload: CompanyIn, ctx: SuperCtx) -> CompanyOut:
     return admin.create_company(ctx.db, payload)
 
 
-@router.patch("/companies/{workspace_id}", status_code=status.HTTP_204_NO_CONTENT)
-def rename_company(workspace_id: str, payload: CompanyPatch, ctx: SuperCtx) -> None:
-    admin.rename_company(ctx.db, workspace_id, payload.name)
+@router.patch("/companies/{workspace_id}", response_model=CompanyOut)
+def update_company(workspace_id: str, payload: CompanyPatch, ctx: SuperCtx) -> CompanyOut:
+    admin.update_company(ctx.db, workspace_id, payload.model_dump(exclude_unset=True))
+    return admin.company(ctx.db, workspace_id)
+
+
+@router.get("/companies/{workspace_id}/payments", response_model=list[PaymentOut])
+def company_payments(workspace_id: str, ctx: SuperCtx) -> list[PaymentOut]:
+    return admin.list_payments(ctx.db, workspace_id)
+
+
+@router.post("/companies/{workspace_id}/payments", response_model=PaymentOut, status_code=status.HTTP_201_CREATED)
+def record_payment(workspace_id: str, payload: PaymentIn, ctx: SuperCtx) -> PaymentOut:
+    """Extends the subscription by the term (stacking on a running one) and reactivates the company."""
+    return admin.record_payment(ctx.db, ctx.user, workspace_id, payload)
+
+
+@router.get("/payments", response_model=list[PaymentOut])
+def payments(ctx: SuperCtx) -> list[PaymentOut]:
+    return admin.list_payments(ctx.db)
 
 
 @router.get("/users", response_model=list[AdminUserOut])

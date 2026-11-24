@@ -5,14 +5,14 @@ import { emptyLogin, LoginFields } from '@/components/common/login-fields'
 import { generatePassword, PasswordField } from '@/components/common/password-field'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import type { AdminUser, Company, NewLogin, Role } from '@/lib/types'
+import type { AdminUser, PlatformCompany, NewLogin, Role } from '@/lib/types'
 import { RoleSelect } from '@/features/team/RoleSelect'
 import { Label } from '@/components/ui/label'
 import { IssueDialog } from './IssueDialog'
 import type { AdminActions } from './useAdmin'
 
 function CompanyRolePicker({ companies, companyId, onCompany, role, onRole, optional }: {
-  companies: Company[]; companyId: string; onCompany: (v: string) => void; role: Role; onRole: (r: Role) => void; optional?: boolean
+  companies: PlatformCompany[]; companyId: string; onCompany: (v: string) => void; role: Role; onRole: (r: Role) => void; optional?: boolean
 }) {
   const { t } = useTranslation()
   return (
@@ -24,7 +24,7 @@ function CompanyRolePicker({ companies, companyId, onCompany, role, onRole, opti
   )
 }
 
-export function CreateUserDialog({ open, onOpenChange, companies, create }: { open: boolean; onOpenChange: (o: boolean) => void; companies: Company[]; create: AdminActions['createUser'] }) {
+export function CreateUserDialog({ open, onOpenChange, companies, create }: { open: boolean; onOpenChange: (o: boolean) => void; companies: PlatformCompany[]; create: AdminActions['createUser'] }) {
   const { t } = useTranslation()
   const [login, setLogin] = useState<NewLogin>(emptyLogin)
   const [companyId, setCompanyId] = useState('')
@@ -78,7 +78,7 @@ export function SetPasswordDialog({ user, onClose, setPassword }: { user: AdminU
   )
 }
 
-export function AddToCompanyDialog({ user, onClose, companies, add }: { user: AdminUser | null; onClose: () => void; companies: Company[]; add: AdminActions['addMembership'] }) {
+export function AddToCompanyDialog({ user, onClose, companies, add }: { user: AdminUser | null; onClose: () => void; companies: PlatformCompany[]; add: AdminActions['addMembership'] }) {
   const { t } = useTranslation()
   const [companyId, setCompanyId] = useState('')
   const [role, setRole] = useState<Role>('member')
