@@ -18,16 +18,16 @@ import type { Contact } from '@/lib/types'
 import { fullName } from '@/lib/utils'
 
 export default function ContactsPage() {
-  const { isLoading, contacts, companies } = useCrm()
+  const { isLoading, contacts, companies, companyById } = useCrm()
   const openModal = useEntityModal()
   const { t } = useTranslation()
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState(() => new URLSearchParams(window.location.search).get('q') ?? '')
   const [companyId, setCompanyId] = useState('')
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const rollup = useDealRollups('contact_id')
   const filters = usePeopleFilters<Contact>('contact_id', (c) => rollup(c.id).open, companyId ? 1 : 0)
 
-  const filtered = contacts.filter((c) => (!companyId || c.company_id === companyId) && filters.apply(c) && matches(query, fullName(c), c.email, c.phone, c.title))
+  const filtered = contacts.filter((c) => (!companyId || c.company_id === companyId) && filters.apply(c) && matches(query, fullName(c), c.email, c.phone, c.title, c.company_id ? companyById.get(c.company_id)?.name : undefined))
   const newContact = <CreateButton module="contacts" onClick={() => openModal({ kind: 'contact' })}><Plus /> {t('contacts.newContact')}</CreateButton>
 
   if (isLoading) return <PageLoading title={t('contacts.title')} />

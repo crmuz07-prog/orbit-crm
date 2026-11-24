@@ -41,8 +41,8 @@ export const sales: Locale<typeof en> = {
     count: 'Bitimlar · {{count}}', none: 'Hozircha bitim yoʻq.', closes: 'yopilishi {{date}}',
   },
   companies: {
-    title: 'Kompaniyalar', summary: '{{count}} ta akkaunt · {{customers}} ta mijoz', newCompany: 'Yangi kompaniya',
-    search: 'Nomi, domen, mamlakat boʻyicha qidirish', allLifecycle: 'Barcha bosqichlar', allIndustries: 'Barcha sohalar',
+    looseFound_one: 'Kompaniyasiz {{count}} ta kontakt: {{names}}', looseFound_other: 'Kompaniyasiz {{count}} ta kontakt: {{names}}', looseOpen: 'Kontaktlarda koʻrish →', matchedPerson: 'Mijoz: {{name}}', title: 'Kompaniyalar', summary: '{{count}} ta akkaunt · {{customers}} ta mijoz', newCompany: 'Yangi kompaniya',
+    search: 'Kompaniya, mijoz ismi yoki telefon', allLifecycle: 'Barcha bosqichlar', allIndustries: 'Barcha sohalar',
     empty: 'Hozircha kompaniya yoʻq', emptyDesc: 'Akkauntlar B2B savdoning asosi. Birinchisini qoʻshing.', noMatch: 'Mos kompaniya topilmadi',
     colCompany: 'Kompaniya', colContacts: 'Kontaktlar', colOpen: 'Ochiq pipeline', colWon: 'Yutilgan', colCreated: 'Yaratilgan',
     colLocation: 'Joylashuv', openPipeline: 'Ochiq pipeline', wonRevenue: 'Yutilgan daromad', contacts: 'Kontaktlar',

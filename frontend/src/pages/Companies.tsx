@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Building2, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { SelectBox } from '@/components/common/form-fields'
@@ -10,16 +10,18 @@ import { Card } from '@/components/ui/card'
 import { CompaniesTable } from '@/features/companies/CompaniesTable'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { BulkBar } from '@/features/people/BulkBar'
+import { LoosePeopleHint } from '@/features/people/LoosePeopleHint'
 import { PeopleTabs } from '@/features/people/PeopleTabs'
 import { useDealRollups } from '@/features/people/useDealRollups'
 import { usePeopleFilters } from '@/features/people/usePeopleFilters'
 import { useCrm } from '@/hooks/useData'
 import { useLabels } from '@/hooks/useLabels'
 import { LIFECYCLES } from '@/lib/constants'
-import type { Company } from '@/lib/types'
+import type { Company, Contact } from '@/lib/types'
+import { fullName } from '@/lib/utils'
 
 export default function CompaniesPage() {
-  const { isLoading, companies } = useCrm()
+  const { isLoading, companies, contacts } = useCrm()
   const openModal = useEntityModal()
   const { t } = useTranslation()
   const labels = useLabels()
@@ -30,9 +32,17 @@ export default function CompaniesPage() {
   const rollup = useDealRollups('company_id')
   const filters = usePeopleFilters<Company>('company_id', (c) => rollup(c.id).open, lifecycle || industry ? 1 : 0)
 
+  const people = useMemo(() => {
+    const map = new Map<string, Contact[]>()
+    for (const c of contacts) if (c.company_id) map.set(c.company_id, [...(map.get(c.company_id) ?? []), c])
+    return map
+  }, [contacts])
+  // The person a search found inside a company ("Doniyor" finds his shop), shown on the row.
+  const matchedPerson = (c: Company) => (query.trim() && !matches(query, c.name, c.domain, c.city, c.country)
+    ? people.get(c.id)?.find((p) => matches(query, fullName(p), p.phone, p.email)) : undefined)
   const industries = [...new Set(companies.map((c) => c.industry).filter((i): i is string => !!i))].sort()
   const filtered = companies.filter(
-    (c) => (!lifecycle || c.lifecycle === lifecycle) && (!industry || c.industry === industry) && filters.apply(c) && matches(query, c.name, c.domain, c.city, c.country),
+    (c) => (!lifecycle || c.lifecycle === lifecycle) && (!industry || c.industry === industry) && filters.apply(c) && (matches(query, c.name, c.domain, c.city, c.country) || !!matchedPerson(c)),
   )
   const newCompany = <CreateButton module="companies" onClick={() => openModal({ kind: 'company' })}><Plus /> {t('companies.newCompany')}</CreateButton>
 
@@ -47,10 +57,11 @@ export default function CompaniesPage() {
         <SelectBox value={industry} onChange={setIndustry} emptyLabel={t('companies.allIndustries')} options={industries.map((i) => ({ value: i, label: labels.industry(i) }))} className="w-36" />
         {filters.controls(() => { setLifecycle(''); setIndustry('') })}
       </div>
+      <LoosePeopleHint query={query} />
       <BulkBar table="companies" selected={selected} onClear={() => setSelected(new Set())} />
       {companies.length === 0 ? (
         <Card><EmptyState icon={Building2} title={t('companies.empty')} description={t('companies.emptyDesc')} action={newCompany} /></Card>
-      ) : <CompaniesTable companies={filtered} rollup={rollup} nextTask={filters.nextTask} selection={{ selected, onChange: setSelected }} />}
+      ) : <CompaniesTable companies={filtered} matchedPerson={matchedPerson} rollup={rollup} nextTask={filters.nextTask} selection={{ selected, onChange: setSelected }} />}
     </Page>
   )
 }

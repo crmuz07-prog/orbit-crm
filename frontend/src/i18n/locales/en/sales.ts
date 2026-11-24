@@ -38,8 +38,8 @@ export const sales = {
     count: 'Deals · {{count}}', none: 'No deals yet.', closes: 'closes {{date}}',
   },
   companies: {
-    title: 'Companies', summary: '{{count}} accounts · {{customers}} customers', newCompany: 'New company',
-    search: 'Search name, domain, country', allLifecycle: 'All lifecycle stages', allIndustries: 'All industries',
+    looseFound_one: '{{count}} contact without a company: {{names}}', looseFound_other: '{{count}} contacts without a company: {{names}}', looseOpen: 'Open in contacts →', matchedPerson: 'Contact: {{name}}', title: 'Companies', summary: '{{count}} accounts · {{customers}} customers', newCompany: 'New company',
+    search: 'Company, person or phone', allLifecycle: 'All lifecycle stages', allIndustries: 'All industries',
     empty: 'No companies yet', emptyDesc: 'Accounts are the backbone of B2B sales. Add your first one.', noMatch: 'No matching companies',
     colCompany: 'Company', colContacts: 'Contacts', colOpen: 'Open pipeline', colWon: 'Won', colCreated: 'Created',
     colLocation: 'Location', openPipeline: 'Open pipeline', wonRevenue: 'Won revenue', contacts: 'Contacts',

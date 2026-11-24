@@ -11,18 +11,20 @@ import { useOwnerColumn } from '@/features/team/OwnerField'
 import { useLabels } from '@/hooks/useLabels'
 import { useLastActivity, type NextTask } from '@/hooks/useNextTasks'
 import { LIFECYCLES } from '@/lib/constants'
-import type { Company } from '@/lib/types'
-import { money } from '@/lib/utils'
+import type { Company, Contact } from '@/lib/types'
+import { fullName, money } from '@/lib/utils'
 import { LifecycleBadge } from './LifecycleBadge'
 
 interface Props {
   companies: Company[]
+  /** The contact a search matched inside the company, if the company itself did not match. */
+  matchedPerson?: (c: Company) => Contact | undefined
   rollup: (id: string) => Rollup
   nextTask: (id: string) => NextTask
   selection: Selection
 }
 
-function useCompanyColumns({ rollup, nextTask }: Pick<Props, 'rollup' | 'nextTask'>): Column<Company>[] {
+function useCompanyColumns({ rollup, nextTask, matchedPerson }: Pick<Props, 'rollup' | 'nextTask' | 'matchedPerson'>): Column<Company>[] {
   const owner = useOwnerColumn<Company>()
   const last = useLastActivity('company_id')
   const { t } = useTranslation()
@@ -36,6 +38,7 @@ function useCompanyColumns({ rollup, nextTask }: Pick<Props, 'rollup' | 'nextTas
           <div className="min-w-0">
             <p className="max-w-[220px] truncate font-medium">{c.name}</p>
             {(c.domain || c.city) && <p className="max-w-[220px] truncate text-[11px] text-muted-foreground">{[c.domain, c.city].filter(Boolean).join(' · ')}</p>}
+            {matchedPerson?.(c) && <p className="max-w-[220px] truncate text-[11px] text-primary">{t('companies.matchedPerson', { name: fullName(matchedPerson(c)!) })}</p>}
           </div>
         </div>
       ),
@@ -52,12 +55,12 @@ function useCompanyColumns({ rollup, nextTask }: Pick<Props, 'rollup' | 'nextTas
   ]
 }
 
-export function CompaniesTable({ companies, rollup, nextTask, selection }: Props) {
+export function CompaniesTable({ companies, matchedPerson, rollup, nextTask, selection }: Props) {
   const navigate = useNavigate()
   const { t } = useTranslation()
   return (
     <Card>
-      <DataTable rows={companies} columns={useCompanyColumns({ rollup, nextTask })} selection={selection} minWidth={980}
+      <DataTable rows={companies} columns={useCompanyColumns({ rollup, nextTask, matchedPerson })} selection={selection} minWidth={980}
         onRowClick={(c) => navigate(`/companies/${c.id}`)} empty={<EmptyState icon={Search} title={t('companies.noMatch')} />} />
     </Card>
   )

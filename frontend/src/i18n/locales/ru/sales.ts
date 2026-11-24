@@ -43,8 +43,8 @@ export const sales: Locale<typeof en> = {
     count: 'Сделки · {{count}}', none: 'Сделок пока нет.', closes: 'закрытие {{date}}',
   },
   companies: {
-    title: 'Компании', summary: 'Аккаунтов: {{count}} · клиентов: {{customers}}', newCompany: 'Новая компания',
-    search: 'Поиск по названию, домену, стране', allLifecycle: 'Все стадии', allIndustries: 'Все отрасли',
+    looseFound_one: '{{count}} контакт без компании: {{names}}', looseFound_few: '{{count}} контакта без компании: {{names}}', looseFound_many: '{{count}} контактов без компании: {{names}}', looseFound_other: '{{count}} контакта без компании: {{names}}', looseOpen: 'Открыть в контактах →', matchedPerson: 'Контакт: {{name}}', title: 'Компании', summary: 'Аккаунтов: {{count}} · клиентов: {{customers}}', newCompany: 'Новая компания',
+    search: 'Компания, имя или телефон', allLifecycle: 'Все стадии', allIndustries: 'Все отрасли',
     empty: 'Компаний пока нет', emptyDesc: 'Аккаунты — основа B2B-продаж. Добавьте первый.', noMatch: 'Компании не найдены',
     colCompany: 'Компания', colContacts: 'Контакты', colOpen: 'Открытая воронка', colWon: 'Выиграно', colCreated: 'Создана',
     colLocation: 'Локация', openPipeline: 'Открытая воронка', wonRevenue: 'Выигранная выручка', contacts: 'Контакты',

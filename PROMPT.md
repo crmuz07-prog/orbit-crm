@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/033-amocrm-tasks.md](docs/prompts/033-amocrm-tasks.md)
+Latest: [docs/prompts/034-search-companies-by-person.md](docs/prompts/034-search-companies-by-person.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -38,3 +38,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [031 — Deals like amoCRM](docs/prompts/031-amocrm-deals.md)
 - [032 — Import uses everything useful in the sheet](docs/prompts/032-import-everything-useful.md)
 - [033 — Tasks like amoCRM](docs/prompts/033-amocrm-tasks.md)
+- [034 — Find companies by the people in them](docs/prompts/034-search-companies-by-person.md)
