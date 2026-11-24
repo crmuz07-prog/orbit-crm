@@ -3,9 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { SelectBox, type Option } from '@/components/common/form-fields'
 import { DatePicker } from '@/components/ui/date-picker'
 import { Input, Textarea } from '@/components/ui/input'
+import { MultiPicker } from '@/features/fields/MultiPicker'
 import { cn } from '@/lib/utils'
 
 export type Editor = { kind: 'text' | 'number' | 'date' | 'email' | 'tel' | 'textarea' } | { kind: 'select'; options: Option[]; emptyLabel?: string }
+  | { kind: 'multiselect'; options: string[] }
+
+/** Multi-list values travel through the string-based editor joined by newlines (values may contain commas). */
+export const MULTI_SEPARATOR = '\n'
 
 interface Props {
   label: string
@@ -33,7 +38,9 @@ export function InlineField({ label, raw, display, editor, onSave, readOnly }: P
     if (e.key === 'Enter' && editor.kind !== 'textarea') commit()
   }
 
-  const control = editor.kind === 'select'
+  const control = editor.kind === 'multiselect'
+    ? <MultiPicker options={editor.options} value={draft ? draft.split(MULTI_SEPARATOR) : []} onSave={(v) => commit(v.join(MULTI_SEPARATOR))} onCancel={() => setEditing(false)} />
+    : editor.kind === 'select'
     ? <SelectBox value={draft} onChange={(v) => commit(v)} options={editor.options} emptyLabel={editor.emptyLabel} className="h-8" />
     : editor.kind === 'date'
       ? <DatePicker autoFocus value={draft} onChange={(v) => commit(v)} onDismiss={() => setEditing(false)} aria-label={label} />
@@ -42,7 +49,7 @@ export function InlineField({ label, raw, display, editor, onSave, readOnly }: P
       : <Input autoFocus type={editor.kind} value={draft} onChange={(e) => setDraft(e.target.value)} onBlur={() => commit()} onKeyDown={keys} className="h-8" />
 
   return (
-    <div className="grid grid-cols-[minmax(96px,40%)_1fr] items-start gap-3 py-1.5 text-sm">
+    <div className="grid grid-cols-[minmax(96px,40%)_1fr] items-start gap-2 py-1 text-[13px]">
       <span className="pt-1 text-muted-foreground">{label}</span>
       {editing ? control : (
         <button type="button" onClick={start} disabled={readOnly} title={readOnly ? undefined : t('card.edit')}

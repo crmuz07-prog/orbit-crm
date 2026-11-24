@@ -55,7 +55,7 @@ export function InstagramCard() {
       <CardHeader title={<span className="inline-flex items-center gap-2"><Instagram className="size-4 text-pink-500" /> {t('igSettings.title')}</span>}
         description={t('igSettings.description')}
         action={<Badge tone={connected ? 'green' : 'gray'}>{connected ? t('igSettings.connected') : t('igSettings.notConnected')}</Badge>} />
-      <CardContent className="space-y-5">
+      <CardContent className="space-y-4">
         <ol className="list-decimal space-y-1 pl-5 text-xs text-muted-foreground">
           {(['step1', 'step2', 'step3', 'step4'] as const).map((k) => <li key={k}>{t(`igSettings.${k}`)}</li>)}
         </ol>

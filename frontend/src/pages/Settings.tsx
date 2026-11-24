@@ -1,6 +1,8 @@
 import { Moon, Sun } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useWorkspaceSession } from '@/auth/AuthProvider'
+import { CustomFieldsCard } from '@/features/fields/CustomFieldsCard'
+import { LostReasonsCard } from '@/features/fields/LostReasonsCard'
 import { PersonAvatar } from '@/components/common/avatars'
 import { Flag } from '@/components/common/flags'
 import { Page } from '@/components/common/page'
@@ -77,7 +79,7 @@ function AppearanceCard() {
   )
 }
 
-const TABS = ['account', 'team', 'workspace'] as const
+const TABS = ['account', 'team', 'sales', 'workspace'] as const
 type Tab = (typeof TABS)[number]
 
 /** Team & access: everyone sees the team; owners and admins also manage roles and sales teams. */
@@ -103,21 +105,25 @@ export default function SettingsPage() {
   return (
     <Page title={t('settings.title')} description={t('settings.description')}>
       <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)} className="max-w-4xl">
-        <TabsList className="mb-5">
-          {TABS.filter((v) => v !== 'workspace' || isAdmin || session.workspace.is_demo).map((v) => (
+        <TabsList className="mb-3">
+          {TABS.filter((v) => (v !== 'workspace' && v !== 'sales') || isAdmin || session.workspace.is_demo).map((v) => (
             <TabsTrigger key={v} value={v}>{t(`settingsTabs.${v}`)}</TabsTrigger>
           ))}
         </TabsList>
-        <TabsContent value="account" className="grid gap-5">
+        <TabsContent value="account" className="grid gap-3">
           <ProfileCard />
           <AccountCard />
           <AppearanceCard />
         </TabsContent>
-        <TabsContent value="team" className="grid gap-5"><TeamTab isAdmin={isAdmin} /></TabsContent>
-        <TabsContent value="workspace" className="grid gap-5">
+        <TabsContent value="team" className="grid gap-3"><TeamTab isAdmin={isAdmin} /></TabsContent>
+        <TabsContent value="sales" className="grid gap-3">
+          {isAdmin && <StageEditor />}
+          {isAdmin && <CustomFieldsCard />}
+          {isAdmin && <LostReasonsCard />}
+        </TabsContent>
+        <TabsContent value="workspace" className="grid gap-3">
           {isAdmin && <TelephonyCard />}
           {isAdmin && <InstagramCard />}
-          {isAdmin && <StageEditor />}
           <DataCard />
         </TabsContent>
       </Tabs>

@@ -1,8 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import {
-  Building2, CalendarCheck, Handshake, Instagram, LayoutDashboard, LogOut, Phone, Settings, ShieldCheck, Users, Wallet, type LucideIcon,
-} from 'lucide-react'
+import { BarChart3, Building2, CalendarCheck, Handshake, Instagram, LayoutDashboard, LogOut, Phone, Settings, ShieldCheck, Users, Wallet, type LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/auth/AuthProvider'
 import { PersonAvatar } from '@/components/common/avatars'
@@ -59,6 +57,7 @@ function WorkspaceNav({ onNavigate }: Navigate) {
     { to: '/contacts', label: t('nav.contacts'), icon: Users, module: 'contacts' },
     { to: '/calls', label: t('nav.calls'), icon: Phone, module: 'activities' },
     { to: '/activities', label: t('nav.activities'), icon: CalendarCheck, badge: overdue, module: 'activities' },
+    { to: '/reports', label: t('reports.nav'), icon: BarChart3, module: 'reports' },
     { to: '/instagram', label: t('instagram.nav'), icon: Instagram, module: 'reports' },
   ]
   return <NavSection title={t('nav.workspace')} items={items.filter((i) => can(i.module ?? null, 'view'))} onNavigate={onNavigate} />
@@ -113,7 +112,7 @@ export function Sidebar({ onNavigate }: Navigate) {
   const { session } = useAuth()
   const inWorkspace = !!session?.workspace
   return (
-    <div className="flex h-full flex-col gap-6 overflow-y-auto px-3 py-4">
+    <div className="flex h-full flex-col gap-4 overflow-y-auto px-3 py-3">
       <div className="px-2"><Logo /></div>
       {inWorkspace ? <WorkspaceSwitcher /> : <PlatformCard />}
       {inWorkspace && <WorkspaceNav onNavigate={onNavigate} />}

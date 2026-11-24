@@ -9,10 +9,12 @@ import { EmptyState, PageLoading } from '@/components/common/states'
 import { Card } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DealBoard } from '@/features/deals/DealBoard'
+import { useDealFilters } from '@/features/deals/DealFilters'
 import { DealsTable } from '@/features/deals/DealsTable'
 import { MovementReport } from '@/features/deals/MovementReport'
 import { PipelineSwitcher } from '@/features/deals/PipelineSwitcher'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
+import { ImportButton } from '@/features/import/ImportButton'
 import { useCrm } from '@/hooks/useData'
 import { usePersistentState } from '@/hooks/usePersistentState'
 import { useCurrentPipeline } from '@/hooks/usePipelines'
@@ -34,15 +36,17 @@ export default function DealsPage() {
   const [query, setQuery] = useState('')
   const [priority, setPriority] = useState('')
   const [status, setStatus] = useState('')
+  const filters = useDealFilters()
 
   const filtered = useMemo(
     () =>
       deals.filter((d) =>
         (!priority || d.priority === priority) &&
+        filters.apply(d) &&
         (view === 'board' || !status || dealStatus(d, stageById) === status) &&
         matches(query, d.title, d.company_id && companyById.get(d.company_id)?.name),
       ),
-    [deals, query, priority, status, view, stageById, companyById],
+    [deals, query, priority, status, view, stageById, companyById, filters],
   )
   const open = filtered.filter((d) => dealStatus(d, stageById) === 'open')
   const weighted = open.reduce((total, d) => total + weightedValue(d, stageById), 0)
@@ -54,12 +58,13 @@ export default function DealsPage() {
     <Page
       title={t('deals.title')}
       description={t('deals.summary', { open: money(sumAmount(open)), weighted: money(weighted), count: open.length })}
-      actions={<><MovementReport pipeline={pipeline} stages={stages} /><ExportButton table="deals" />{newDeal}</>}
+      actions={<><MovementReport pipeline={pipeline} stages={stages} /><ImportButton /><ExportButton table="deals" />{newDeal}</>}
     >
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="mb-3 flex flex-wrap items-center gap-2">
         <PipelineSwitcher pipelines={pipelines} current={pipeline} onChange={setPipeline} />
         <SearchInput value={query} onChange={setQuery} placeholder={t('deals.search')} />
         <SelectBox value={priority} onChange={setPriority} emptyLabel={t('deals.allPriorities')} options={PRIORITIES.map((p) => ({ value: p.value, label: t('enums.priorityFilter', { label: t(`enums.priority.${p.value}`) }) }))} className="w-40" />
+        {filters.controls}
         {view === 'list' && <SelectBox value={status} onChange={setStatus} emptyLabel={t('deals.allStatuses')} options={STATUSES.map((s) => ({ value: s, label: t(`enums.status.${s}`) }))} className="w-36" />}
         <Tabs value={view} onValueChange={(v) => setView(v as (typeof VIEWS)[number])} className="ml-auto">
           <TabsList>

@@ -66,7 +66,7 @@ export function AccountCard() {
   return (
     <Card>
       <CardHeader title={t('account.profile')} description={session.user.email} />
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
         <ProfileForm />
         <div className="space-y-2">
           <p className="text-sm font-medium">{t('account.security')}</p>

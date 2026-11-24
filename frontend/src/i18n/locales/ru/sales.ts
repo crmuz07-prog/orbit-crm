@@ -28,7 +28,7 @@ export const sales: Locale<typeof en> = {
   },
   deals: {
     title: 'Сделки', summary: '{{open}} в воронке · {{weighted}} взвешенно · открыто: {{count}}', newDeal: 'Новая сделка',
-    search: 'Поиск сделок или компаний', allPriorities: 'Все приоритеты', allStatuses: 'Все статусы', board: 'Доска', list: 'Список',
+    search: 'Поиск сделок или компаний', allPriorities: 'Все приоритеты', allStatuses: 'Все статусы', allValues: 'Все значения полей', colTask: 'Следующая задача', board: 'Доска', list: 'Список',
     empty: 'Сделок пока нет', emptyDesc: 'Создайте первую сделку или загрузите демо-данные в Настройках.',
     noMatch: 'Сделки не найдены', noMatchDesc: 'Попробуйте другой поиск или фильтр.', addDeal: 'Добавить сделку', idle: '{{days}} дн. без движения',
     colDeal: 'Сделка', colStage: 'Этап', colAmount: 'Сумма', colWeighted: 'Взвешенно', colClose: 'Дата закрытия',

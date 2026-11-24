@@ -1,11 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { PriorityFlag } from '@/features/deals/bits'
 import { useAssignableOwners, useMembers } from '@/features/team/useMembers'
-import { useCrm } from '@/hooks/useData'
+import { useCrm, useRows } from '@/hooks/useData'
 import { useLabels } from '@/hooks/useLabels'
 import { PRIORITIES } from '@/lib/constants'
 import type { Deal } from '@/lib/types'
 import { fullName, money, shortDate, timeAgo } from '@/lib/utils'
+import { CustomFieldRows } from '@/features/fields/CustomFieldRows'
 import { InfoSection } from './RecordCard'
 import { InlineField } from './InlineField'
 import { useSaveField } from './useSaveField'
@@ -20,6 +21,10 @@ export function DealInfo({ deal, lost }: { deal: Deal; lost: boolean }) {
   const labels = useLabels()
   const company = deal.company_id ? companyById.get(deal.company_id) : undefined
   const contact = deal.contact_id ? contactById.get(deal.contact_id) : undefined
+  const { data: lostReasons } = useRows('lost_reasons')
+  const reasons = (lostReasons ?? []).map((r) => r.name)
+  // A reason typed before the list existed stays selectable.
+  const reasonOptions = (current: string | null) => [...new Set([...reasons, ...(current ? [current] : [])])].map((r) => ({ value: r, label: r }))
   const people = deal.company_id ? contacts.filter((c) => c.company_id === deal.company_id) : contacts
 
   return (
@@ -38,7 +43,9 @@ export function DealInfo({ deal, lost }: { deal: Deal; lost: boolean }) {
         editor={{ kind: 'select', options: labels.sourceOptions, emptyLabel: '—' }} onSave={save('source')} />
       <InlineField label={t('feedFields.expected_close_date')} raw={deal.expected_close_date ?? ''} display={deal.expected_close_date && shortDate(deal.expected_close_date)}
         editor={{ kind: 'date' }} readOnly={readOnly} onSave={save('expected_close_date')} />
-      {lost && <InlineField label={t('feedFields.lost_reason')} raw={deal.lost_reason ?? ''} editor={{ kind: 'textarea' }} readOnly={readOnly} onSave={save('lost_reason')} />}
+      {lost && <InlineField label={t('feedFields.lost_reason')} raw={deal.lost_reason ?? ''} readOnly={readOnly} onSave={save('lost_reason')}
+        editor={reasons.length ? { kind: 'select', options: reasonOptions(deal.lost_reason), emptyLabel: '—' } : { kind: 'textarea' }} />}
+      <CustomFieldRows deal={deal} />
       <p className="mt-3 text-xs text-muted-foreground">{t('deals.created')}: {shortDate(deal.created_at)} · {t('deals.lastUpdate')}: {timeAgo(deal.updated_at)}</p>
     </InfoSection>
   )

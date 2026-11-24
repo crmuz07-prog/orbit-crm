@@ -30,16 +30,16 @@ function kpis(d: Dashboard, t: TFunction): Kpi[] {
 /** Row of KPI cards (dashboard, Instagram leads). */
 export function KpiCards({ items, className = 'xl:grid-cols-4' }: { items: Kpi[]; className?: string }) {
   return (
-    <motion.div initial="hidden" animate="show" variants={stagger(0.06)} className={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${className}`}>
+    <motion.div initial="hidden" animate="show" variants={stagger(0.06)} className={`grid grid-cols-1 gap-3 sm:grid-cols-2 ${className}`}>
       {items.map(({ label, value, format, sub, icon: Icon }) => (
         <motion.div key={label} variants={fadeUp}>
-          <Card className="p-5 transition-transform duration-300 hover:-translate-y-0.5">
+          <Card className="p-3.5 transition-transform duration-300 hover:-translate-y-0.5">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-muted-foreground">{label}</p>
-              <span className="glass-glow flex size-8 items-center justify-center rounded-lg text-white"><Icon className="size-4" /></span>
+              <p className="text-xs font-medium text-muted-foreground">{label}</p>
+              <span className="glass-glow flex size-7 items-center justify-center rounded-lg text-white"><Icon className="size-3.5" /></span>
             </div>
-            <p className="mt-3 text-2xl font-semibold tracking-tight"><AnimatedNumber value={value} format={format} /></p>
-            <p className="mt-1 text-xs text-muted-foreground">{sub}</p>
+            <p className="mt-2 text-xl font-semibold tracking-tight"><AnimatedNumber value={value} format={format} /></p>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">{sub}</p>
           </Card>
         </motion.div>
       ))}

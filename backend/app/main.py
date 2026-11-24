@@ -7,7 +7,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.routes import access, account, admin, auth, calls, entities, instagram, pipelines, team, telephony, workspace
+from app.api.routes import access, account, admin, auth, calls, entities, imports, instagram, pipelines, reports, team, telephony, workspace
 from app.core.config import get_settings
 from app.core.db import SessionLocal, engine
 from app.core.errors import DomainError
@@ -54,7 +54,7 @@ def create_app() -> FastAPI:
         return {"status": "ok"}
 
     # pipelines before entities: /deals/{id}/stage-times must not be read as a deal id.
-    for module in (auth, account, team, access, admin, calls, pipelines, entities, telephony, instagram, workspace):
+    for module in (auth, account, team, access, admin, calls, pipelines, entities, imports, reports, telephony, instagram, workspace):
         app.include_router(module.router, prefix="/api")
     return app
 

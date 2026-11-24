@@ -50,9 +50,9 @@ function NoLeads() {
 
 function StatsView({ stats }: { stats: InstagramStats }) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <KpiCards items={useKpis(stats)} />
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 xl:grid-cols-3">
         <LeadsPerDayChart data={stats.per_day} className="xl:col-span-2" />
         <TopAdsCard ads={stats.top_ads} />
       </div>

@@ -1,5 +1,5 @@
 import type {
-  AccessOverview, Activity, AdminUser, AuthConfig, CallDirection, CallLog, CallStats, CompanyPatch, Dashboard, LoginAttempt, MemberPatch, NewLogin,
+  AccessOverview, Activity, Attribution, ColumnMap, ImportPreview, ImportResult, LeadReport, AdminUser, AuthConfig, CallDirection, CallLog, CallStats, CompanyPatch, Dashboard, LoginAttempt, MemberPatch, NewLogin,
   Payment, PaymentDraft, Permissions, InstagramPatch, InstagramSettings, InstagramStats, Pipeline, PlatformCompany, SimulateKind, RecordEvent, RecordLink, StageMovement, StageTime, ProviderStatus, Role, Session, TableMap, TableName, Team, TeamMember, TelephonySettings, Token, User, WorkspaceChoice,
 } from './types'
 import { download, http } from './http'
@@ -12,11 +12,13 @@ const PATHS: Record<TableName, string> = {
   contacts: '/contacts',
   deals: '/deals',
   activities: '/activities',
+  custom_fields: '/custom-fields',
+  lost_reasons: '/lost-reasons',
 }
 
 /** Server-managed fields are never sent back to the API. */
 function writable<T extends object>(draft: T) {
-  const { id: _id, created_at: _c, updated_at: _u, closed_at: _closed, stage_entered_at: _entered, ...rest } = draft as Record<string, unknown>
+  const { id: _id, created_at: _c, updated_at: _u, closed_at: _closed, stage_entered_at: _entered, key: _key, entity: _entity, ...rest } = draft as Record<string, unknown>
   return rest
 }
 
@@ -88,6 +90,18 @@ export const instagramApi = {
   simulate: (kind: SimulateKind, extra: { name?: string; text?: string; phone?: string; ad_id?: string } = {}) => http<{ received: number }>('POST', '/instagram/simulate', { kind, ...extra }),
   reply: (contact_id: string, text: string) => http<Activity>('POST', '/instagram/reply', { contact_id, text }),
   stats: (days: number) => http<InstagramStats>('GET', `/instagram/stats?days=${days}`),
+}
+
+export const importApi = {
+  preview: (filename: string, content: string) => http<ImportPreview>('POST', '/import/deals/preview', { filename, content }),
+  run: (filename: string, content: string, pipeline_id: string, columns: ColumnMap[]) =>
+    http<ImportResult>('POST', '/import/deals', { filename, content, pipeline_id, columns }),
+}
+
+export const reportsApi = {
+  attribution: (dealId: string) => http<Attribution | null>('GET', `/reports/attribution/${dealId}`),
+  leads: (pipelineId: string, from: string, to: string) =>
+    http<LeadReport>('GET', `/reports/leads?pipeline_id=${encodeURIComponent(pipelineId)}&date_from=${from}&date_to=${to}`),
 }
 
 export const accessApi = {

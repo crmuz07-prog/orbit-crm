@@ -4,6 +4,7 @@ from typing import Literal
 from pydantic import Field
 
 from app.schemas.base import RowRead, Schema, partial
+from app.schemas.fields import CustomValue
 
 StageColor = Literal["slate", "blue", "violet", "amber", "orange", "emerald", "rose"]
 Lifecycle = Literal["lead", "prospect", "customer", "churned"]
@@ -63,6 +64,7 @@ class DealIn(Schema):
     priority: Priority = "medium"
     source: str | None = None
     lost_reason: str | None = None
+    custom: dict[str, CustomValue] = Field(default_factory=dict)
 
 
 class ActivityIn(Schema):

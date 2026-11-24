@@ -48,5 +48,11 @@ class InboundLead(IdMixin, Base):
     deal_id: Mapped[str | None] = mapped_column(ForeignKey("deals.id", ondelete="SET NULL"), index=True, nullable=True)
     ad_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
     form_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    # Ad attribution (Meta lead exports and lead ads): where the lead came from, for the source reports.
+    platform: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    campaign: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    adset: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    ad_name: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    form_name: Mapped[str | None] = mapped_column(String(200), nullable=True)
     created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow, index=True)
     first_response_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)

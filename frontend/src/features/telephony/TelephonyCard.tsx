@@ -54,7 +54,7 @@ export function TelephonyCard() {
   return (
     <Card>
       <CardHeader title={t('telephony.title')} description={t('telephony.description')} action={<Button size="sm" variant="outline" onClick={() => setConfirm(true)}><RefreshCw /> {t('telephony.rotate')}</Button>} />
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
         <ol className="glass-subtle space-y-2 rounded-xl p-4 text-sm">
           <p className="font-medium">{t('telephony.howTitle')}</p>
           {(['how1', 'how2', 'how3'] as const).map((key, i) => (

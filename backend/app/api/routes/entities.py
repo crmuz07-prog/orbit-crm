@@ -1,14 +1,24 @@
 from fastapi import APIRouter
 
 from app.api.crud_router import EntitySpec, build_crud_router
-from app.models import Activity, Company, Contact, Deal, Pipeline, Stage
+from app.models import Activity, Company, Contact, CustomField, Deal, LostReason, Pipeline, Stage
 from app.schemas import crm as s
-from app.services.rules import apply_deal_stage_rules, guard_stage_delete
+from app.schemas import fields as f
+from app.services.custom_fields import assign_key
+from app.services.rules import before_deal_save, guard_stage_delete
 
 SPECS = [
     EntitySpec(
         path="stages", model=Stage, create=s.StageIn, patch=s.StagePatch, read=s.StageOut,
         order_by=Stage.position, before_delete=guard_stage_delete, write_role="admin", references={"pipeline_id": Pipeline},
+    ),
+    EntitySpec(
+        path="custom-fields", model=CustomField, create=f.CustomFieldIn, patch=f.CustomFieldPatch, read=f.CustomFieldOut,
+        order_by=CustomField.position, before_save=assign_key, write_role="admin",
+    ),
+    EntitySpec(
+        path="lost-reasons", model=LostReason, create=f.LostReasonIn, patch=f.LostReasonPatch, read=f.LostReasonOut,
+        order_by=LostReason.position, write_role="admin",
     ),
     EntitySpec(
         path="companies", module="companies", model=Company, create=s.CompanyIn, patch=s.CompanyPatch, read=s.CompanyOut,
@@ -20,7 +30,7 @@ SPECS = [
     ),
     EntitySpec(
         path="deals", module="deals", model=Deal, create=s.DealIn, patch=s.DealPatch, read=s.DealOut,
-        order_by=Deal.created_at.desc(), before_save=apply_deal_stage_rules,
+        order_by=Deal.created_at.desc(), before_save=before_deal_save,
         references={"company_id": Company, "contact_id": Contact, "stage_id": Stage},
     ),
     EntitySpec(

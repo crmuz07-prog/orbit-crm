@@ -3,7 +3,7 @@ import type { Action, Module, Scope, TableName } from '@/lib/types'
 
 /** Which permission module guards a table (pipeline stages are workspace configuration, not a module). */
 export const TABLE_MODULE: Record<TableName, Module | null> = {
-  pipeline_stages: null, companies: 'companies', contacts: 'contacts', deals: 'deals', activities: 'activities',
+  pipeline_stages: null, companies: 'companies', contacts: 'contacts', deals: 'deals', activities: 'activities', custom_fields: null, lost_reasons: null,
 }
 
 /** The caller's permissions, mirrored from the session; the API is the real boundary. */

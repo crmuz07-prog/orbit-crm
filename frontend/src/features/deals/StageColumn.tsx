@@ -36,7 +36,7 @@ export function StageColumn({ stage, deals, first }: { stage: Stage; deals: Deal
   const { can } = useAccess()
 
   return (
-    <div className="flex w-[272px] shrink-0 flex-col">
+    <div className="flex w-[248px] shrink-0 flex-col">
       <ColumnHeader stage={stage} deals={deals} />
       <div
         ref={setNodeRef}

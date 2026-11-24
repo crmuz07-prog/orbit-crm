@@ -53,7 +53,7 @@ export function DataTable<T extends { id: string }>({ rows, columns, onRowClick,
         <thead>
           <tr className="border-b border-foreground/[0.06]">
             {columns.map((c) => (
-              <th key={c.key} className={cn('whitespace-nowrap px-4 py-2.5 text-xs font-medium text-muted-foreground', c.align === 'right' ? 'text-right' : 'text-left')}>
+              <th key={c.key} className={cn('whitespace-nowrap px-3 py-2 text-[11px] font-medium text-muted-foreground', c.align === 'right' ? 'text-right' : 'text-left')}>
                 {c.sortValue ? (
                   <button type="button" onClick={() => setSort(nextSort(sort, c.key))} className={cn('inline-flex items-center gap-1 hover:text-foreground', c.align === 'right' && 'flex-row-reverse')}>
                     {c.header}
@@ -75,7 +75,7 @@ export function DataTable<T extends { id: string }>({ rows, columns, onRowClick,
               className={cn('transition-colors', onRowClick && 'cursor-pointer hover:bg-foreground/[0.03]')}
             >
               {columns.map((c) => (
-                <td key={c.key} className={cn('whitespace-nowrap px-4 py-3', c.align === 'right' && 'text-right tabular-nums')}>{c.cell(row)}</td>
+                <td key={c.key} className={cn('whitespace-nowrap px-3 py-2', c.align === 'right' && 'text-right tabular-nums')}>{c.cell(row)}</td>
               ))}
             </motion.tr>
           ))}

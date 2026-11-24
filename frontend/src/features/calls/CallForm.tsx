@@ -43,7 +43,7 @@ export function CallForm({ initial, onDone }: Props) {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-5">
+    <form onSubmit={submit} className="space-y-4">
       <CallHeader contact={contact} companyName={companyId ? companyById.get(companyId)?.name : undefined} timer={timer} />
       {!initial?.contact_id && (
         <SelectField label={t('calls.contact')} emptyLabel="—" value={contactId} onChange={setContactId} options={contacts.map((c) => ({ value: c.id, label: fullName(c) }))} />

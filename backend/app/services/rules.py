@@ -6,6 +6,7 @@ from app.core.db import utcnow
 from app.core.errors import Conflict
 from app.models import Deal, Stage
 from app.services.crud import count_rows
+from app.services.custom_fields import clean_custom
 
 
 def apply_deal_stage_rules(db: Session, deal: Deal, changed: set[str]) -> None:
@@ -23,6 +24,12 @@ def apply_deal_stage_rules(db: Session, deal: Deal, changed: set[str]) -> None:
     deal.closed_at = utcnow()
     if stage.is_won:
         deal.lost_reason = None
+
+
+def before_deal_save(db: Session, deal: Deal, changed: set[str]) -> None:
+    apply_deal_stage_rules(db, deal, changed)
+    if "custom" in changed:
+        clean_custom(db, deal)
 
 
 def guard_stage_delete(db: Session, stage: Stage) -> None:

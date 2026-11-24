@@ -57,6 +57,15 @@ stages, a rule text (`description`) and a day limit (`max_days`, cards are flagg
 actor) for companies, contacts and deals; `/events` serves them for a visible record, `/deals/{id}/stage-times` and
 `/reports/deal-movement` are computed from them. The record card (deal, company, contact) shows info | feed | widgets.
 
+### Custom fields, import and lead report
+`custom_fields` defines a workspace's deal fields (text, number, list, multi-list, date; `warn_options` are shown in red)
+and `deals.custom` holds the values by key (cleaned by `services/custom_fields.py` on save; history logs `custom.<key>`).
+`lost_reasons` is the fixed list the lost dialog offers. `/api/import/deals/preview` suggests a meaning for each column of an
+uploaded .xlsx/.csv (Meta lead exports recognised); `/api/import/deals` applies the mapping (`services/importer/`): one deal
+per row with contact, attribution in `inbound_leads`, note and next-contact task; re-imports update by lead id / phone.
+`/api/reports/leads` computes the period report (funnel, platform, campaign, ad set, ad, source, list fields, loss reasons,
+managers, overdue / today / missing tasks).
+
 ### Instagram channel
 `instagram_integrations` holds one Meta connection per workspace (webhook token, verify token, write-only app secret and
 page token). `/api/instagram/webhook/{token}` answers Meta's handshake and, after the `X-Hub-Signature-256` check,
@@ -123,6 +132,6 @@ tailwindcss-animate handles Radix enter/exit states. `MotionConfig reducedMotion
 
 ## Quality gates
 - `scripts/check-lines.sh` enforces a maximum of 250 lines per file.
-- `pytest`: 77 tests covering auth, isolation, CRUD, rules, dashboard, calls, reminders, telephony, teams, superadmin, closed access, access roles and scope, sessions, accounts, migrations and error codes.
+- `pytest`: 82 tests covering auth, isolation, CRUD, rules, dashboard, calls, reminders, telephony, teams, superadmin, closed access, access roles and scope, sessions, accounts, migrations and error codes.
 - Alembic migrations (`backend/migrations`) run on boot; legacy databases are stamped at the baseline first.
 - `tsc` strict, with no `any`.

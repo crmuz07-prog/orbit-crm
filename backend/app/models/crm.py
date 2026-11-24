@@ -1,6 +1,7 @@
 from datetime import date, datetime
+from typing import Any
 
-from sqlalchemy import Date, ForeignKey, String, Text
+from sqlalchemy import JSON, Date, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.db import Base, UTCDateTime
@@ -85,6 +86,8 @@ class Deal(OwnedMixin, Base):
     lost_reason: Mapped[str | None] = mapped_column(Text)
     closed_at: Mapped[datetime | None] = mapped_column(UTCDateTime)
     stage_entered_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
+    # Values of the workspace's custom fields, by field key.
+    custom: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
 
 
 class Activity(OwnedMixin, Base):

@@ -26,7 +26,7 @@ export default function ContactsPage() {
 
   return (
     <Page title={t('contacts.title')} description={t('contacts.summary', { people: contacts.length, companies: companies.length })} actions={<><ExportButton table="contacts" />{newContact}</>}>
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="mb-3 flex flex-wrap gap-2">
         <SearchInput value={query} onChange={setQuery} placeholder={t('contacts.search')} />
         <SelectBox value={companyId} onChange={setCompanyId} emptyLabel={t('contacts.allCompanies')} options={companies.map((c) => ({ value: c.id, label: c.name }))} className="w-48" />
       </div>

@@ -1,0 +1,44 @@
+export const process = {
+  tasks: {
+    none: 'Нет задачи', overdueSince: 'Просрочено · {{when}}', filter: 'Все задачи', overdue: 'Просроченные', today: 'Сегодня', planned: 'Запланированные',
+    noTask: 'Без задачи', buckets: { overdue: 'Просрочено', today: 'Сегодня', tomorrow: 'Завтра', week: 'На этой неделе', later: 'Позже', undated: 'Без даты', done: 'Выполнено' },
+  },
+  leadSource: {
+    title: 'Источник лида', platform: 'Платформа', campaign: 'Кампания', adset: 'Группа объявлений', ad_name: 'Объявление', form_name: 'Форма', received: 'Получен {{date}}',
+    platforms: { instagram: 'Instagram', facebook: 'Facebook', messenger: 'Messenger', whatsapp: 'WhatsApp', audience_network: 'Audience Network', import: 'Импорт' },
+  },
+  customFields: {
+    title: 'Поля сделки', description: 'Свои поля в каждой сделке (как в amoCRM): тип бизнеса, объём, тип пакета…',
+    add: 'Добавить поле', label: 'Название поля', type: 'Тип', options: 'Варианты', optionsHint: 'По одному в строке', warn: 'Выделять красным',
+    warnHint: 'Значения, требующие внимания (например, меньше минимального заказа)', empty: 'Своих полей пока нет', saved: 'Поле сохранено',
+    deleted: 'Поле удалено', deleteTitle: 'Удалить «{{name}}»?', deleteDesc: 'Его значения будут удалены из всех сделок.',
+    types: { text: 'Текст', number: 'Число', select: 'Список', multiselect: 'Мультисписок', date: 'Дата' },
+  },
+  lostReasons: {
+    title: 'Причины отказа', description: 'Фиксированный список делает отчёт по выигрышам и проигрышам точным.', add: 'Добавить причину', placeholder: 'например, Дорого',
+    empty: 'Пока вы не добавите свои, используются стандартные причины', saved: 'Причина добавлена', deleted: 'Причина удалена',
+  },
+  importer: {
+    button: 'Импорт', title: 'Импорт сделок из Excel / CSV', pick: 'Выберите файл .xlsx или .csv', pickHint: 'Выгрузки лидов Meta и ваши таблицы. До 5 МБ.',
+    reading: 'Читаем файл…', rows_one: '{{count}} строка', rows_few: '{{count}} строки', rows_many: '{{count}} строк', rows_other: '{{count}} строки',
+    pipeline: 'Воронка', column: 'Столбец', sample: 'Пример', target: 'Куда', newField: 'Новое поле', newFieldType: 'Тип', existingField: 'Поле',
+    run: 'Импортировать ({{count}})', running: 'Импортируем…',
+    doneTitle: 'Импорт завершён', created: 'Новые сделки', updated: 'Обновлено', skipped: 'Пропущено (пустые или тестовые)', tasks: 'Создано задач',
+    stagesCreated: 'Новые этапы', fieldsCreated: 'Новые поля', unmatched: 'Менеджеры не найдены — добавьте их в Настройки → Команда и импортируйте снова (сделки обновятся, а не задвоятся):',
+    again: 'Другой файл', close: 'Закрыть', reimportHint: 'Повторный импорт того же файла обновляет сделки, а не создаёт дубли.',
+    targets: {
+      ignore: 'Пропустить', external_id: 'ID лида', title: 'Название сделки', contact_name: 'Имя контакта', phone: 'Телефон', email: 'E-mail', created_at: 'Дата создания',
+      stage: 'Этап', owner: 'Менеджер', amount: 'Сумма', source: 'Источник', lost_reason: 'Причина отказа', note: 'Примечание', next_contact: 'Следующий контакт (задача)',
+      platform: 'Платформа', campaign: 'Кампания', adset: 'Группа объявлений', ad_name: 'Объявление', form_name: 'Форма', custom: 'Существующее поле', new_custom: 'Новое поле',
+    },
+  },
+  reports: {
+    nav: 'Отчёты', title: 'Отчёт по лидам', description: 'Воронка, источники и менеджеры за выбранный период — как отчёт в таблице, только живой.',
+    from: 'С', to: 'По', presets: { today: 'Сегодня', week: '7 дней', month: '30 дней', quarter: '90 дней' },
+    total: 'Лиды', won: 'Продажи', lost: 'Отказы', open: 'В работе', conversion: 'Конверсия', warnings: 'Требуют внимания', overdue: 'Просроченные контакты',
+    today: 'Контакты сегодня', noTask: 'Без задачи', funnel: 'Воронка продаж', funnelDesc: 'Лиды по текущему этапу', stage: 'Этап', count: 'Лиды',
+    share: '% от всех', warnCol: 'Требуют внимания', label: 'Значение', empty: 'За этот период лидов нет', emptyDesc: 'Выберите другой период или воронку.',
+    unset: 'Не указано', totalRow: 'Итого',
+    groups: { owner: 'Менеджеры', platform: 'Платформы', campaign: 'Рекламные кампании', adset: 'Группы объявлений', ad_name: 'Объявления', source: 'Источники', lost_reason: 'Причины отказа' },
+  },
+}

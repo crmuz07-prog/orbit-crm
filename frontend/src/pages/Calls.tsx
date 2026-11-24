@@ -45,7 +45,7 @@ export default function CallsPage() {
   return (
     <Page title={t('calls.title')} description={t('calls.description')} actions={logCall}>
       <CallStatsStrip />
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="mb-3 flex flex-wrap gap-2">
         <SearchInput value={query} onChange={setQuery} placeholder={t('nav.search')} />
         <SelectBox value={outcome} onChange={setOutcome} emptyLabel={t('calls.allOutcomes')} options={CALL_OUTCOMES.map((o) => ({ value: o.value, label: t(`enums.outcome.${o.value}`) }))} className="w-44" />
         <SelectBox value={direction} onChange={setDirection} emptyLabel={t('calls.allDirections')} options={CALL_DIRECTIONS.map((d) => ({ value: d, label: t(`enums.direction.${d}`) }))} className="w-44" />

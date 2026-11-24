@@ -41,7 +41,7 @@ function BillingBody({ company, actions }: { company: PlatformCompany; actions: 
   const seats = company.seat_limit ? t('billing.seatsUsed', { used: company.seats_used, limit: company.seat_limit }) : `${company.seats_used} · ${t('billing.unlimited')}`
 
   return (
-    <div className="max-h-[70vh] space-y-6 overflow-y-auto pr-1">
+    <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-1">
       <div className="glass-subtle grid grid-cols-2 gap-4 rounded-xl p-4 sm:grid-cols-4">
         <Fact label={t('admin.status')}><CompanyStatusBadge company={company} /></Fact>
         <Fact label={t('billing.paidUntil')}><PaidUntil company={company} /></Fact>

@@ -96,7 +96,7 @@ export function InfoHeader({ back, title, shortId, actions, children }: { back: 
 
 export function InfoSection({ title, children }: { title?: string; children: ReactNode }) {
   return (
-    <section className="px-5 py-3">
+    <section className="px-4 py-2.5">
       {title && <h3 className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{title}</h3>}
       {children}
     </section>

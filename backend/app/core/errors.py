@@ -27,3 +27,7 @@ class Forbidden(DomainError):
 
 class TooManyRequests(DomainError):
     status_code = 429
+
+
+class BadRequest(DomainError):
+    status_code = 400

@@ -69,6 +69,8 @@ export interface Deal extends Row, Owned {
   lost_reason: string | null
   closed_at: string | null
   stage_entered_at: string | null
+  /** Values of the workspace's custom fields, by field key. */
+  custom: Record<string, CustomValue>
 }
 
 export interface Activity extends Row, Owned {
@@ -100,6 +102,8 @@ export interface TableMap {
   contacts: Contact
   deals: Deal
   activities: Activity
+  custom_fields: CustomField
+  lost_reasons: LostReason
 }
 export type TableName = keyof TableMap
 
@@ -206,7 +210,9 @@ export * from './platform-types'
 export * from './pipeline-types'
 export * from './instagram-types'
 export * from './telephony-types'
+export * from './fields-types'
 import type { CompanyStatus } from './platform-types'
+import type { CustomField, CustomValue, LostReason } from './fields-types'
 import type { Permissions } from './access-types'
 
 export type MemberPatch = Partial<Pick<TeamMember, 'role' | 'access_role_id' | 'team_id'>>

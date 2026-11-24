@@ -36,7 +36,7 @@ export default function CompaniesPage() {
       description={t('companies.summary', { count: companies.length, customers: companies.filter((c) => c.lifecycle === 'customer').length })}
       actions={<><ExportButton table="companies" />{newCompany}</>}
     >
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="mb-3 flex flex-wrap gap-2">
         <SearchInput value={query} onChange={setQuery} placeholder={t('companies.search')} />
         <SelectBox value={lifecycle} onChange={setLifecycle} emptyLabel={t('companies.allLifecycle')} options={LIFECYCLES.map((l) => ({ value: l.value, label: t(`enums.lifecycle.${l.value}`) }))} className="w-48" />
         <SelectBox value={industry} onChange={setIndustry} emptyLabel={t('companies.allIndustries')} options={industries.map((i) => ({ value: i, label: labels.industry(i) }))} className="w-44" />

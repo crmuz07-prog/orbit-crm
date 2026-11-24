@@ -28,9 +28,9 @@ export type DueBucket = 'overdue' | 'today' | 'upcoming' | 'none'
 
 export function dueBucket(activity: Activity): DueBucket {
   if (!activity.due_at || activity.done) return 'none'
-  const diff = -daysSince(activity.due_at)
-  if (diff < 0) return 'overdue'
-  return diff === 0 ? 'today' : 'upcoming'
+  // Late as soon as the time has passed (amoCRM), not only from the next day; the API's reports count the same way.
+  if (toDate(activity.due_at).getTime() < Date.now()) return 'overdue'
+  return -daysSince(activity.due_at) === 0 ? 'today' : 'upcoming'
 }
 
 /** Days the deal has spent in its current stage (falls back to the last update for older data). */

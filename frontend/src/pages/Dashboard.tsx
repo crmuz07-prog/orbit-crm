@@ -23,11 +23,11 @@ export default function DashboardPage() {
   return (
     <Page title={title} description={t('dashboard.subtitle')}>
       <KpiGrid data={data} />
-      <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-5">
+      <div className="mt-3 grid grid-cols-1 gap-3 xl:grid-cols-5">
         <PipelineChart data={data.by_stage} className="xl:col-span-3" />
         <RevenueChart data={data.monthly} className="xl:col-span-2" />
       </div>
-      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-3">
         <TasksCard />
         <TopDealsCard deals={data.top_open} />
         <AtRiskCard deals={data.stale} />

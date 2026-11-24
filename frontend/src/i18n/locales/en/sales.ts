@@ -23,7 +23,7 @@ export const sales = {
   },
   deals: {
     title: 'Deals', summary: '{{open}} open pipeline · {{weighted}} weighted · {{count}} open', newDeal: 'New deal',
-    search: 'Search deals or companies', allPriorities: 'All priorities', allStatuses: 'All statuses', board: 'Board', list: 'List',
+    search: 'Search deals or companies', allPriorities: 'All priorities', allStatuses: 'All statuses', allValues: 'All field values', colTask: 'Next task', board: 'Board', list: 'List',
     empty: 'No deals yet', emptyDesc: 'Create your first opportunity or load sample data from Settings.',
     noMatch: 'No matching deals', noMatchDesc: 'Try a different search or filter.', addDeal: 'Add deal', idle: '{{days}}d idle',
     colDeal: 'Deal', colStage: 'Stage', colAmount: 'Amount', colWeighted: 'Weighted', colClose: 'Close date',

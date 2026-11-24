@@ -22,7 +22,8 @@ def plain(value: Any) -> Any:
 
 
 def snapshot(row: OwnedMixin, fields: set[str]) -> dict[str, Any]:
-    return {f: plain(getattr(row, f)) for f in fields}
+    # A copy of the custom dict: the stored one may be replaced or mutated by the update.
+    return {f: dict(getattr(row, f) or {}) if f == "custom" else plain(getattr(row, f)) for f in fields}
 
 
 def record(db: Session, row: OwnedMixin, actor_id: str | None, kind: str, changes: Any) -> None:
@@ -42,11 +43,20 @@ def updated(db: Session, row: OwnedMixin, actor_id: str | None, before: dict[str
     """One event for the stage move (if any) and one with the other field changes."""
     after = snapshot(row, set(before))
     diff = {f: (before[f], after[f]) for f in before if before[f] != after[f] and f not in SILENT}
+    custom = diff.pop("custom", None)
+    if custom:
+        diff.update(custom_diff(*custom))
     stage = diff.pop("stage_id", None)
     if stage:
         record(db, row, actor_id, "stage_changed", {"from": stage[0], "to": stage[1]})
     if diff:
         record(db, row, actor_id, "updated", [{"field": f, "old": old, "new": new} for f, (old, new) in diff.items()])
+
+
+def custom_diff(old: dict[str, Any] | None, new: dict[str, Any] | None) -> dict[str, tuple[Any, Any]]:
+    """One change line per custom field ("custom.<key>"), not one blob for the whole dict."""
+    old, new = old or {}, new or {}
+    return {f"custom.{k}": (old.get(k), new.get(k)) for k in sorted(set(old) | set(new)) if old.get(k) != new.get(k)}
 
 
 def events_for(db: Session, workspace_id: str, link: str, record_id: str) -> list[RecordEvent]:

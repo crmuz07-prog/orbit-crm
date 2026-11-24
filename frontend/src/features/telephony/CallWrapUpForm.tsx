@@ -36,7 +36,7 @@ export function CallWrapUpForm({ initial: call, onDone }: Props) {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-5">
+    <form onSubmit={submit} className="space-y-4">
       <div className="glass-subtle rounded-2xl p-4">
         <p className="font-medium">{subject(call)}</p>
         <CallDetails activity={call} showWrapUp={false} />

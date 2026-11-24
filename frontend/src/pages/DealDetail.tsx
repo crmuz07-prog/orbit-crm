@@ -12,6 +12,7 @@ import { LostReasonDialog } from '@/features/deals/LostReasonDialog'
 import { useMoveDeal } from '@/features/deals/useMoveDeal'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { DealInfo } from '@/features/record/DealInfo'
+import { LeadSource } from '@/features/record/LeadSource'
 import { InfoHeader, RecordCard } from '@/features/record/RecordCard'
 import { StageSelector } from '@/features/record/StageSelector'
 import { StageTimesWidget } from '@/features/record/StageTimesWidget'
@@ -79,6 +80,7 @@ export default function DealDetailPage() {
               <StageSelector deal={deal} onPick={pick} readOnly={!can('deals', 'edit')} />
             </InfoHeader>
             <DealInfo deal={deal} lost={!!stage?.is_lost} />
+            <LeadSource dealId={deal.id} />
           </>
         }
         widgets={<><StageTimesWidget deal={deal} /><AssociationCards deal={deal} /></>}

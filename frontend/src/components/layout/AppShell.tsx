@@ -75,7 +75,7 @@ export function AppShell() {
         <SubscriptionBanner />
         <VerifyBanner />
         <Topbar onOpenNav={() => setMobileNav(true)} onOpenPalette={() => setPalette(true)} inWorkspace={inWorkspace} />
-        <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
+        <main className="mx-auto max-w-[1680px] px-3 py-4 sm:px-5 lg:px-6">
           {/* Enter-only page transition. An exit animation (AnimatePresence mode="wait") could be interrupted by fast
               back-and-forth navigation and leave the new page stuck at opacity 0 — a blank screen. */}
           {/* Inside the shell, so a page whose code is still loading never hides the sidebar and top bar; outside the

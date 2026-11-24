@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/input'
+import { useRows } from '@/hooks/useData'
 import { LOST_REASONS } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
@@ -18,6 +19,9 @@ export function LostReasonDialog({ open, onOpenChange, onConfirm }: Props) {
   const { t } = useTranslation()
   const [reason, setReason] = useState('')
   const [notes, setNotes] = useState('')
+  const { data: custom } = useRows('lost_reasons')
+  // The workspace's own list (Settings) replaces the built-in reasons, so reports group by the same names.
+  const reasons = custom?.length ? custom.map((r) => r.name) : LOST_REASONS.map((key) => t(`enums.lostReason.${key}`))
 
   const confirm = () => {
     onConfirm([reason, notes.trim()].filter(Boolean).join(' — ') || t('deals.notSpecified'))
@@ -33,11 +37,10 @@ export function LostReasonDialog({ open, onOpenChange, onConfirm }: Props) {
           <DialogDescription>{t('deals.lostDesc')}</DialogDescription>
         </DialogHeader>
         <div className="flex flex-wrap gap-1.5">
-          {LOST_REASONS.map((key) => {
-            const label = t(`enums.lostReason.${key}`)
+          {reasons.map((label) => {
             return (
               <motion.button
-                key={key}
+                key={label}
                 type="button"
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setReason(label)}

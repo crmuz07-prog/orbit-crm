@@ -79,8 +79,12 @@
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
   }
+  /* Dense like amoCRM / Linear: every rem (type and spacing) scales from this root size. */
+  html {
+    font-size: 15px;
+  }
   body {
-    @apply min-h-screen bg-background text-[14px] text-foreground antialiased;
+    @apply min-h-screen bg-background text-[13px] text-foreground antialiased;
     font-feature-settings: 'cv11', 'ss01';
   }
   /* Ambient gradient mesh behind every glass surface. */
