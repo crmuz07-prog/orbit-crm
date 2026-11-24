@@ -16,7 +16,8 @@ import { ACTIVITY_META } from './ActivityIcon'
 import { ReminderSelect } from './ReminderSelect'
 
 type Links = Partial<Pick<Activity, 'deal_id' | 'company_id' | 'contact_id'>>
-type ComposerType = Exclude<ActivityType, 'call'>
+// Calls have their own logging form and channel messages their own reply box.
+type ComposerType = Exclude<ActivityType, 'call' | 'message'>
 
 const TYPES: ComposerType[] = ['note', 'email', 'meeting', 'task']
 const tomorrowAt10 = () => format(startOfHour(setHours(addDays(new Date(), 1), 10)), "yyyy-MM-dd'T'HH:mm")

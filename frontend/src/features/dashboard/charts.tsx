@@ -7,7 +7,7 @@ import { STAGE_COLORS } from '@/lib/constants'
 import type { Dashboard } from '@/lib/types'
 import { money, monthLabel } from '@/lib/utils'
 
-const axis = { fontSize: 11, fill: 'hsl(var(--muted-foreground))' }
+export const axis = { fontSize: 11, fill: 'hsl(var(--muted-foreground))' }
 const compact = (v: number) => money(v, 'USD', true)
 
 function ChartTooltip({ active, payload, label }: TooltipProps<number, string>) {
@@ -27,7 +27,7 @@ function ChartTooltip({ active, payload, label }: TooltipProps<number, string>) 
 }
 
 /** Card + responsive chart frame with shared grid/axes, so each chart only declares its series. */
-function ChartCard({ title, description, className, children }: { title: string; description: string; className?: string; children: ReactElement }) {
+export function ChartCard({ title, description, className, children }: { title: string; description: string; className?: string; children: ReactElement }) {
   return (
     <Card className={className}>
       <CardHeader title={title} description={description} />
@@ -38,7 +38,7 @@ function ChartCard({ title, description, className, children }: { title: string;
   )
 }
 
-const grid = <CartesianGrid vertical={false} stroke="currentColor" />
+export const grid = <CartesianGrid vertical={false} stroke="currentColor" />
 const yAxis = <YAxis tick={axis} tickLine={false} axisLine={false} tickFormatter={compact} width={56} />
 
 export function PipelineChart({ data, className }: { data: Dashboard['by_stage']; className?: string }) {

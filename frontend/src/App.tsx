@@ -41,6 +41,7 @@ const APP_ROUTES: [path: string, Component: React.ComponentType, module: Module 
   ['contacts/:id', page(() => import('@/pages/ContactDetail')), 'contacts'],
   ['calls', page(() => import('@/pages/Calls')), 'activities'],
   ['activities', page(() => import('@/pages/Activities')), 'activities'],
+  ['instagram', page(() => import('@/pages/Instagram')), 'reports'],
   ['settings', page(() => import('@/pages/Settings')), null],
 ]
 const Admin = page(() => import('@/pages/Admin'))

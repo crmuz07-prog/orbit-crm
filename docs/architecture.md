@@ -57,6 +57,13 @@ stages, a rule text (`description`) and a day limit (`max_days`, cards are flagg
 actor) for companies, contacts and deals; `/events` serves them for a visible record, `/deals/{id}/stage-times` and
 `/reports/deal-movement` are computed from them. The record card (deal, company, contact) shows info | feed | widgets.
 
+### Instagram channel
+`instagram_integrations` holds one Meta connection per workspace (webhook token, verify token, write-only app secret and
+page token). `/api/instagram/webhook/{token}` answers Meta's handshake and, after the `X-Hub-Signature-256` check,
+turns Direct messages and lead-ad submissions into contacts, deals (source "Instagram") and `message` activities, and
+records each lead in `inbound_leads` (first response time, ad, form) for `/api/instagram/stats`. Replies go through the
+Graph API inside Meta's 24-hour window. `services/instagram_graph.py` is the only code that talks to Meta.
+
 ### Sessions & sign-in protection
 Tokens carry the user's `session_version` (`sv`); bumping it (admin password reset, deactivation, own password change)
 signs the user out everywhere. Sign-in is limited to 5 failures per account in 15 minutes; attempts are logged in
@@ -116,6 +123,6 @@ tailwindcss-animate handles Radix enter/exit states. `MotionConfig reducedMotion
 
 ## Quality gates
 - `scripts/check-lines.sh` enforces a maximum of 250 lines per file.
-- `pytest`: 70 tests covering auth, isolation, CRUD, rules, dashboard, calls, reminders, telephony, teams, superadmin, closed access, access roles and scope, sessions, accounts, migrations and error codes.
+- `pytest`: 77 tests covering auth, isolation, CRUD, rules, dashboard, calls, reminders, telephony, teams, superadmin, closed access, access roles and scope, sessions, accounts, migrations and error codes.
 - Alembic migrations (`backend/migrations`) run on boot; legacy databases are stamped at the baseline first.
 - `tsc` strict, with no `any`.

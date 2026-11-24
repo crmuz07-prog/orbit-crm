@@ -14,6 +14,7 @@ import { useAccessConfig } from '@/features/access/useAccessConfig'
 import { AccountCard } from '@/features/settings/AccountCard'
 import { DataCard } from '@/features/settings/DataCard'
 import { StageEditor } from '@/features/settings/StageEditor'
+import { InstagramCard } from '@/features/instagram/InstagramCard'
 import { TeamCard } from '@/features/team/TeamCard'
 import { TelephonyCard } from '@/features/telephony/TelephonyCard'
 import { useCrm } from '@/hooks/useData'
@@ -115,6 +116,7 @@ export default function SettingsPage() {
         <TabsContent value="team" className="grid gap-5"><TeamTab isAdmin={isAdmin} /></TabsContent>
         <TabsContent value="workspace" className="grid gap-5">
           {isAdmin && <TelephonyCard />}
+          {isAdmin && <InstagramCard />}
           {isAdmin && <StageEditor />}
           <DataCard />
         </TabsContent>

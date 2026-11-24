@@ -26,7 +26,8 @@ def client() -> Iterator[TestClient]:
     engine = create_engine("sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool)
     event.listen(engine, "connect", lambda conn, _: conn.execute("PRAGMA foreign_keys=ON"))
     Base.metadata.create_all(engine)
-    make_session = sessionmaker(bind=engine, expire_on_commit=False)
+    # Same session settings as the app (app/core/db.py), so tests catch what production would do.
+    make_session = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
 
     def override() -> Iterator[Session]:
         with make_session() as session:

@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/020-no-skeleton-on-first-open.md](docs/prompts/020-no-skeleton-on-first-open.md)
+Latest: [docs/prompts/021-instagram-leads.md](docs/prompts/021-instagram-leads.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -25,3 +25,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [018 — Fast first paint: keep-warm ping, cached session and data](docs/prompts/018-fast-first-paint.md)
 - [019 — Blank page after quick navigation (route transition)](docs/prompts/019-blank-page-after-navigation.md)
 - [020 — No full-screen skeleton on first open](docs/prompts/020-no-skeleton-on-first-open.md)
+- [021 — Instagram leads (Direct + lead ads) with analytics](docs/prompts/021-instagram-leads.md)

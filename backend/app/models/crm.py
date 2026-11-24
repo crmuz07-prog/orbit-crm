@@ -65,6 +65,9 @@ class Contact(OwnedMixin, Base):
     phone: Mapped[str | None] = mapped_column(String(60))
     title: Mapped[str | None] = mapped_column(String(120))
     linkedin_url: Mapped[str | None] = mapped_column(String(300))
+    # Instagram-scoped user id of a person who wrote to the company's account (Meta IGSID), and their handle.
+    instagram_id: Mapped[str | None] = mapped_column(String(64), index=True, nullable=True)
+    instagram_username: Mapped[str | None] = mapped_column(String(100), nullable=True)
 
 
 class Deal(OwnedMixin, Base):
@@ -94,7 +97,8 @@ class Activity(OwnedMixin, Base):
     done: Mapped[bool] = mapped_column(default=False)
     pinned: Mapped[bool] = mapped_column(default=False)
     remind_at: Mapped[datetime | None] = mapped_column(UTCDateTime, index=True)
-    # Call log fields (type == "call"), modelled on Close / Aircall call records.
+    # Call log fields (type == "call"), modelled on Close / Aircall call records. `call_direction` is also the direction
+    # of a channel message (type == "message").
     call_direction: Mapped[str | None] = mapped_column(String(10))
     call_outcome: Mapped[str | None] = mapped_column(String(20))
     duration_seconds: Mapped[int | None]
@@ -104,6 +108,8 @@ class Activity(OwnedMixin, Base):
     external_id: Mapped[str | None] = mapped_column(String(120), index=True)
     recording_url: Mapped[str | None] = mapped_column(String(500))
     auto_logged: Mapped[bool] = mapped_column(default=False)
+    # Messaging channel of a "message" activity (instagram).
+    channel: Mapped[str | None] = mapped_column(String(20), nullable=True)
     deal_id: Mapped[str | None] = optional_fk("deals")
     company_id: Mapped[str | None] = optional_fk("companies")
     contact_id: Mapped[str | None] = optional_fk("contacts")

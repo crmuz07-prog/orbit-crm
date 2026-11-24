@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
-  Building2, CalendarCheck, Handshake, LayoutDashboard, LogOut, Phone, Settings, ShieldCheck, Users, Wallet, type LucideIcon,
+  Building2, CalendarCheck, Handshake, Instagram, LayoutDashboard, LogOut, Phone, Settings, ShieldCheck, Users, Wallet, type LucideIcon,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/auth/AuthProvider'
@@ -59,6 +59,7 @@ function WorkspaceNav({ onNavigate }: Navigate) {
     { to: '/contacts', label: t('nav.contacts'), icon: Users, module: 'contacts' },
     { to: '/calls', label: t('nav.calls'), icon: Phone, module: 'activities' },
     { to: '/activities', label: t('nav.activities'), icon: CalendarCheck, badge: overdue, module: 'activities' },
+    { to: '/instagram', label: t('instagram.nav'), icon: Instagram, module: 'reports' },
   ]
   return <NavSection title={t('nav.workspace')} items={items.filter((i) => can(i.module ?? null, 'view'))} onNavigate={onNavigate} />
 }

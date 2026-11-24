@@ -8,7 +8,7 @@ import { fadeUp, stagger } from '@/lib/motion'
 import type { Dashboard } from '@/lib/types'
 import { money, percent } from '@/lib/utils'
 
-interface Kpi {
+export interface Kpi {
   label: string
   value: number
   format: (n: number) => string
@@ -27,11 +27,11 @@ function kpis(d: Dashboard, t: TFunction): Kpi[] {
   ]
 }
 
-export function KpiGrid({ data }: { data: Dashboard }) {
-  const { t } = useTranslation()
+/** Row of KPI cards (dashboard, Instagram leads). */
+export function KpiCards({ items, className = 'xl:grid-cols-4' }: { items: Kpi[]; className?: string }) {
   return (
-    <motion.div initial="hidden" animate="show" variants={stagger(0.06)} className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {kpis(data, t).map(({ label, value, format, sub, icon: Icon }) => (
+    <motion.div initial="hidden" animate="show" variants={stagger(0.06)} className={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${className}`}>
+      {items.map(({ label, value, format, sub, icon: Icon }) => (
         <motion.div key={label} variants={fadeUp}>
           <Card className="p-5 transition-transform duration-300 hover:-translate-y-0.5">
             <div className="flex items-center justify-between">
@@ -45,4 +45,9 @@ export function KpiGrid({ data }: { data: Dashboard }) {
       ))}
     </motion.div>
   )
+}
+
+export function KpiGrid({ data }: { data: Dashboard }) {
+  const { t } = useTranslation()
+  return <KpiCards items={kpis(data, t)} />
 }

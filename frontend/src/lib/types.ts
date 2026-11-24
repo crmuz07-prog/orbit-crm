@@ -1,6 +1,6 @@
 export type Lifecycle = 'lead' | 'prospect' | 'customer' | 'churned'
 export type Priority = 'low' | 'medium' | 'high'
-export type ActivityType = 'note' | 'call' | 'email' | 'meeting' | 'task'
+export type ActivityType = 'note' | 'call' | 'email' | 'meeting' | 'task' | 'message'
 export type StageColor = 'slate' | 'blue' | 'violet' | 'amber' | 'orange' | 'emerald' | 'rose'
 export type DealStatus = 'open' | 'won' | 'lost'
 export type CallDirection = 'outbound' | 'inbound'
@@ -51,6 +51,9 @@ export interface Contact extends Row, Owned {
   phone: string | null
   title: string | null
   linkedin_url: string | null
+  /** Set when the person wrote to the company's Instagram (read-only). */
+  instagram_id?: string | null
+  instagram_username?: string | null
 }
 
 export interface Deal extends Row, Owned {
@@ -84,6 +87,8 @@ export interface Activity extends Row, Owned {
   external_id: string | null
   recording_url: string | null
   auto_logged: boolean
+  /** Messaging channel of a `message` activity. */
+  channel?: string | null
   deal_id: string | null
   company_id: string | null
   contact_id: string | null
@@ -178,47 +183,6 @@ export interface Dashboard {
   top_open: Deal[]
 }
 
-export interface CallLog {
-  subject: string
-  direction: CallDirection
-  outcome: CallOutcome
-  duration_seconds: number
-  phone: string | null
-  summary: string | null
-  next_steps: string | null
-  deal_id: string | null
-  company_id: string | null
-  contact_id: string | null
-  follow_up: { subject: string; due_at: string; remind_at: string | null } | null
-}
-
-export interface CallStats {
-  today: number
-  this_week: number
-  connect_rate: number
-  avg_duration_seconds: number
-  talk_time_seconds: number
-  by_outcome: { outcome: CallOutcome; count: number }[]
-}
-
-export interface TelephonySettings {
-  webhook_path: string
-  signing_secret: string
-  create_unknown_contacts: boolean
-  callback_task_on_missed: boolean
-}
-
-/** Real-time call event pushed by the API over SSE. */
-export interface CallEvent {
-  type: 'ringing' | 'answered' | 'ended'
-  call: Activity
-  contact_name: string | null
-  company_name: string | null
-  deal_title: string | null
-}
-
-export type ProviderStatus = 'answered' | 'no_answer' | 'busy' | 'voicemail' | 'failed'
-
 export interface AdminUser {
   id: string
   full_name: string
@@ -240,6 +204,8 @@ export interface NewLogin {
 export * from './access-types'
 export * from './platform-types'
 export * from './pipeline-types'
+export * from './instagram-types'
+export * from './telephony-types'
 import type { CompanyStatus } from './platform-types'
 import type { Permissions } from './access-types'
 

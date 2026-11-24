@@ -29,7 +29,7 @@ export const core: Locale<typeof en> = {
     lifecycle: { lead: 'Лид', prospect: 'Потенциальный клиент', customer: 'Клиент', churned: 'Ушёл' },
     priority: { low: 'Низкий', medium: 'Средний', high: 'Высокий' },
     priorityFilter: 'Приоритет: {{label}}',
-    activity: { note: 'Заметка', call: 'Звонок', email: 'Email', meeting: 'Встреча', task: 'Задача' },
+    activity: { note: 'Заметка', call: 'Звонок', email: 'Email', meeting: 'Встреча', task: 'Задача', message: 'Сообщение' },
     status: { open: 'Открыта', won: 'Выиграна', lost: 'Проиграна' },
     outcome: { connected: 'Дозвонились', no_answer: 'Нет ответа', voicemail: 'Голосовая почта', busy: 'Занято', wrong_number: 'Неверный номер' },
     direction: { outbound: 'Исходящий', inbound: 'Входящий' },
@@ -43,6 +43,7 @@ export const core: Locale<typeof en> = {
     firstName: 'Укажите имя', email: 'Похоже, email указан неверно', subject: 'Укажите тему', writeSomething: 'Сначала напишите что-нибудь',
   },
   errors: {
+    messaging_window_closed: 'Instagram разрешает отвечать только в течение 24 часов после последнего сообщения клиента', instagram_not_connected: 'Сначала подключите Instagram в настройках', not_instagram_contact: 'Этот контакт пришёл не из Instagram', instagram_send_failed: 'Instagram не принял сообщение', invalid_verify_token: 'Verify token не совпадает',
     pipeline_has_deals: 'Сначала перенесите сделки из этой воронки', default_pipeline: 'Основную воронку удалить нельзя',
     subscription_expired: 'Подписка компании закончилась', company_blocked: 'Компания заблокирована администратором платформы', seat_limit_reached: 'Все оплаченные места заняты — запросите больше у администратора платформы',
     permission_denied: 'Недостаточно прав для этого действия', owner_out_of_scope: 'Нельзя назначить записи этому сотруднику', session_revoked: 'Сеанс завершён — войдите снова', too_many_attempts: 'Слишком много неудачных попыток. Повторите через 15 минут', default_role: 'Роль по умолчанию нельзя удалить', name_taken: 'Это название уже занято',

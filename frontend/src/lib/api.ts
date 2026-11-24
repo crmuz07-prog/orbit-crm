@@ -1,6 +1,6 @@
 import type {
   AccessOverview, Activity, AdminUser, AuthConfig, CallDirection, CallLog, CallStats, CompanyPatch, Dashboard, LoginAttempt, MemberPatch, NewLogin,
-  Payment, PaymentDraft, Permissions, Pipeline, PlatformCompany, RecordEvent, RecordLink, StageMovement, StageTime, ProviderStatus, Role, Session, TableMap, TableName, Team, TeamMember, TelephonySettings, Token, User, WorkspaceChoice,
+  Payment, PaymentDraft, Permissions, InstagramPatch, InstagramSettings, InstagramStats, Pipeline, PlatformCompany, SimulateKind, RecordEvent, RecordLink, StageMovement, StageTime, ProviderStatus, Role, Session, TableMap, TableName, Team, TeamMember, TelephonySettings, Token, User, WorkspaceChoice,
 } from './types'
 import { download, http } from './http'
 
@@ -79,6 +79,15 @@ export const historyApi = {
   events: (link: RecordLink, id: string) => http<RecordEvent[]>('GET', `/events?${link}=${encodeURIComponent(id)}`),
   stageTimes: (dealId: string) => http<StageTime[]>('GET', `/deals/${dealId}/stage-times`),
   movement: (pipelineId: string, days: number) => http<StageMovement[]>('GET', `/reports/deal-movement?pipeline_id=${encodeURIComponent(pipelineId)}&days=${days}`),
+}
+
+export const instagramApi = {
+  settings: () => http<InstagramSettings>('GET', '/instagram'),
+  update: (patch: InstagramPatch) => http<InstagramSettings>('PATCH', '/instagram', patch),
+  rotate: () => http<InstagramSettings>('POST', '/instagram/rotate'),
+  simulate: (kind: SimulateKind, extra: { name?: string; text?: string; phone?: string; ad_id?: string } = {}) => http<{ received: number }>('POST', '/instagram/simulate', { kind, ...extra }),
+  reply: (contact_id: string, text: string) => http<Activity>('POST', '/instagram/reply', { contact_id, text }),
+  stats: (days: number) => http<InstagramStats>('GET', `/instagram/stats?days=${days}`),
 }
 
 export const accessApi = {

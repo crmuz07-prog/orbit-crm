@@ -8,6 +8,7 @@ import { ActivityRow } from '@/features/activities/ActivityRow'
 import { historyApi } from '@/lib/api'
 import type { Activity, RecordEvent, RecordLink } from '@/lib/types'
 import { shortDate, toDate } from '@/lib/utils'
+import { MessageBubble } from '@/features/instagram/MessageBubble'
 import { EventLine } from './EventLine'
 
 type Item = { at: number; event?: RecordEvent; activity?: Activity }
@@ -56,7 +57,8 @@ export function Feed({ link, recordId, activities, onItemsChange }: { link: Reco
         <Fragment key={item.event?.id ?? item.activity?.id}>
           {(i === 0 || dayOf(items[i - 1].at) !== dayOf(item.at)) && <DaySeparator at={item.at} />}
           {item.event && <EventLine event={item.event} link={link} />}
-          {item.activity && (
+          {item.activity?.type === 'message' && <MessageBubble message={item.activity} />}
+          {item.activity && item.activity.type !== 'message' && (
             <div className="glass-subtle my-1.5 rounded-xl">
               <ActivityRow activity={item.activity} meta={<ActivityMeta activity={item.activity} showType showDeal={link !== 'deal_id'} />} />
             </div>

@@ -3,7 +3,9 @@ import { CalendarPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Composer } from '@/features/activities/Composer'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
+import { InstagramReply } from '@/features/instagram/InstagramReply'
 import { useAccess } from '@/hooks/useAccess'
+import { useCrm } from '@/hooks/useData'
 import type { Activity, RecordLink } from '@/lib/types'
 import { Feed } from './Feed'
 
@@ -27,6 +29,10 @@ function TasksHint({ activities, links }: { activities: Activity[]; links: Links
 /** Centre column: the feed scrolls (newest at the bottom, next to the composer, as in amoCRM). */
 function FeedPanel({ link, recordId, activities, links }: { link: RecordLink; recordId: string; activities: Activity[]; links: Links }) {
   const { can } = useAccess()
+  const { contactById } = useCrm()
+  // People who wrote on Instagram can be answered from the card (amoCRM / Kommo chat in the lead card).
+  const contact = links.contact_id ? contactById.get(links.contact_id) : undefined
+  const instagramContact = contact?.instagram_id ? contact.id : undefined
   const scroller = useRef<HTMLDivElement>(null)
   // Called whenever the number of feed items changes (activities and history load separately). The braces matter:
   // scrollTo returns a promise in current browsers, and an effect must not return anything but a cleanup function.
@@ -38,6 +44,7 @@ function FeedPanel({ link, recordId, activities, links }: { link: RecordLink; re
       <div ref={scroller} className="flex-1 overflow-y-auto px-4 py-3"><Feed link={link} recordId={recordId} activities={activities} onItemsChange={toBottom} /></div>
       {can('activities', 'create') && (
         <div className="border-t border-foreground/[0.06] p-3">
+          {instagramContact && <InstagramReply contactId={instagramContact} />}
           <TasksHint activities={activities} links={links} />
           <Composer links={links} />
         </div>

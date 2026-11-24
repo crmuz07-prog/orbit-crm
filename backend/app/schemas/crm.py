@@ -8,7 +8,7 @@ from app.schemas.base import RowRead, Schema, partial
 StageColor = Literal["slate", "blue", "violet", "amber", "orange", "emerald", "rose"]
 Lifecycle = Literal["lead", "prospect", "customer", "churned"]
 Priority = Literal["low", "medium", "high"]
-ActivityType = Literal["note", "call", "email", "meeting", "task"]
+ActivityType = Literal["note", "call", "email", "meeting", "task", "message"]
 CallDirection = Literal["outbound", "inbound"]
 CallOutcome = Literal["connected", "no_answer", "voicemail", "busy", "wrong_number"]
 
@@ -101,7 +101,9 @@ class CompanyOut(CompanyIn, RowRead):
 
 
 class ContactOut(ContactIn, RowRead):
-    pass
+    # Set by the Instagram integration; read-only here.
+    instagram_id: str | None = None
+    instagram_username: str | None = None
 
 
 class DealOut(DealIn, RowRead):
@@ -112,3 +114,4 @@ class DealOut(DealIn, RowRead):
 class ActivityOut(ActivityIn, RowRead):
     external_id: str | None = None
     auto_logged: bool = False
+    channel: str | None = None

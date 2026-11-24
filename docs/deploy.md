@@ -52,6 +52,14 @@ ORBIT_API=https://orbit-crm-api-bs1i.onrender.com python3 scripts/pbx-env.py
 docker compose -f infra/asterisk/docker-compose.yml up -d
 ```
 
+## Instagram lidlari (Meta Graph API)
+Sozlamalar → Ish maydoni → Instagram kartasida callback URL va verify token bor. Meta ilovasida (developers.facebook.com):
+1. Instagram Business akkauntini Facebook sahifasiga ulang; ilovaga Webhooks va Instagram / Messenger mahsulotlarini qo'shing.
+2. Webhook'ga callback URL va verify tokenni kiriting, `messages` va (lid-formalar uchun) `leadgen` hodisalariga obuna bo'ling.
+3. App secret va sahifa access tokenini kartaga kiriting (faqat yoziladi, qayta ko'rsatilmaydi).
+O'z akkauntingiz uchun Development rejimi App Review'siz ishlaydi; boshqa kompaniyalarning akkauntlarini ulash uchun
+App Review va Business Verification kerak. Meta'siz sinash: kartadagi "Sinov xabari" / "Sinov lid-formasi".
+
 ## Serverni uyg'oq saqlash
 `.github/workflows/keep-warm.yml` har 10 daqiqada (24/7) `/api/health`ni chaqiradi, shuning uchun Render bepul serveri
 uxlamaydi. Repo public — Actions daqiqalari bepul. Brauzer oxirgi sessiya va ma'lumotlarni saqlaydi (24 soat, chiqishda

@@ -1,4 +1,4 @@
-import { CheckSquare, Mail, Phone, StickyNote, Video, type LucideIcon } from 'lucide-react'
+import { CheckSquare, Instagram, Mail, Phone, StickyNote, Video, type LucideIcon } from 'lucide-react'
 import type { ActivityType } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
@@ -8,6 +8,7 @@ export const ACTIVITY_META: Record<ActivityType, { icon: LucideIcon; className: 
   email: { icon: Mail, className: 'bg-sky-50 text-sky-600 ring-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:ring-sky-500/20' },
   meeting: { icon: Video, className: 'bg-violet-50 text-violet-600 ring-violet-200 dark:bg-violet-500/10 dark:text-violet-400 dark:ring-violet-500/20' },
   task: { icon: CheckSquare, className: 'bg-indigo-50 text-indigo-600 ring-indigo-200 dark:bg-indigo-500/10 dark:text-indigo-400 dark:ring-indigo-500/20' },
+  message: { icon: Instagram, className: 'bg-pink-50 text-pink-600 ring-pink-200 dark:bg-pink-500/10 dark:text-pink-400 dark:ring-pink-500/20' },
 }
 
 export function ActivityIcon({ type, className }: { type: ActivityType; className?: string }) {

@@ -26,7 +26,7 @@ export const core = {
     lifecycle: { lead: 'Lead', prospect: 'Prospect', customer: 'Customer', churned: 'Churned' },
     priority: { low: 'Low', medium: 'Medium', high: 'High' },
     priorityFilter: '{{label}} priority',
-    activity: { note: 'Note', call: 'Call', email: 'Email', meeting: 'Meeting', task: 'Task' },
+    activity: { note: 'Note', call: 'Call', email: 'Email', meeting: 'Meeting', task: 'Task', message: 'Message' },
     status: { open: 'Open', won: 'Won', lost: 'Lost' },
     outcome: { connected: 'Connected', no_answer: 'No answer', voicemail: 'Voicemail', busy: 'Busy', wrong_number: 'Wrong number' },
     direction: { outbound: 'Outbound', inbound: 'Inbound' },
@@ -40,6 +40,7 @@ export const core = {
     firstName: 'First name is required', email: 'Email looks invalid', subject: 'Subject is required', writeSomething: 'Write something first',
   },
   errors: {
+    messaging_window_closed: 'Instagram allows replies only within 24 hours of the customer’s last message', instagram_not_connected: 'Connect Instagram in Settings first', not_instagram_contact: 'This contact did not come from Instagram', instagram_send_failed: 'Instagram did not accept the message', invalid_verify_token: 'The verify token does not match',
     pipeline_has_deals: 'Move the deals out of this pipeline first', default_pipeline: 'The default pipeline can’t be deleted',
     subscription_expired: 'The subscription of this company has ended', company_blocked: 'This company has been blocked by the platform administrator', seat_limit_reached: 'All paid seats are in use — ask the platform administrator for more',
     permission_denied: 'You don’t have permission for this action', owner_out_of_scope: 'You can’t assign records to this person', session_revoked: 'You were signed out — please sign in again', too_many_attempts: 'Too many failed attempts. Try again in 15 minutes', default_role: 'The default role can’t be deleted', name_taken: 'This name is already used',
