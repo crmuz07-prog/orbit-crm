@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextField } from '@/components/common/form-fields'
+import { useFormErrors } from '@/hooks/useFormErrors'
+import { rules } from '@/lib/validation'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useLabels } from '@/hooks/useLabels'
@@ -21,8 +23,10 @@ function RoleForm({ role, actions, onDone }: { role: AccessRole | null; actions:
   const [permissions, setPermissions] = useState<Permissions>(role?.permissions ?? START)
   const busy = actions.createRole.isPending || actions.updateRole.isPending
 
+  const errors = useFormErrors<'name'>('role-form')
   const submit = (e: FormEvent) => {
     e.preventDefault()
+    if (!errors.validate({ name }, { name: [rules.required()] })) return
     // An untouched built-in name keeps its stored (English) value, so it stays translatable.
     const values = { name: role && name.trim() === shown ? role.name : name.trim(), permissions }
     if (role) actions.updateRole.mutate({ id: role.id, ...values }, { onSuccess: onDone })
@@ -30,8 +34,8 @@ function RoleForm({ role, actions, onDone }: { role: AccessRole | null; actions:
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4">
-      <TextField label={t('access.roleName')} required autoFocus value={name} onChange={setName} />
+    <form id="role-form" onSubmit={submit} noValidate className="space-y-4">
+      <TextField name="name" label={t('access.roleName')} autoFocus value={name} onChange={(v) => { setName(v); errors.clear('name') }} error={errors.message('name')} />
       <PermissionMatrix value={permissions} onChange={setPermissions} />
       <div className="flex justify-end gap-2">
         <Button variant="outline" onClick={onDone}>{t('common.cancel')}</Button>

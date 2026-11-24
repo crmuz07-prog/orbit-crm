@@ -4,6 +4,7 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -12,6 +13,7 @@ from app.core.config import get_settings
 from app.core.db import SessionLocal, engine
 from app.core.errors import DomainError
 from app.core.migrate import migrate
+from app.core.validation import validation_error
 from app.services.admin import ensure_superadmin
 from app.services.events import broker
 
@@ -48,6 +50,8 @@ def create_app() -> FastAPI:
     @app.exception_handler(DomainError)
     async def domain_error(_: Request, exc: DomainError) -> JSONResponse:
         return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail, "code": exc.code})
+
+    app.add_exception_handler(RequestValidationError, validation_error)  # type: ignore[arg-type]
 
     @app.get("/api/health", tags=["meta"])
     def health() -> dict[str, str]:

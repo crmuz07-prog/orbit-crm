@@ -1,5 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import i18n from '@/i18n'
 import { authApi } from '@/lib/api'
 import { ApiError, setUnauthorizedHandler, tokenStore, withRetry } from '@/lib/http'
 import { clearOfflineCache, persistQueries, restoreQueries, sessionCache } from '@/lib/offline-cache'
@@ -51,7 +53,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const updateUser = useCallback((user: User) => setSession((s) => (s ? { ...s, user } : s)), [])
 
   useEffect(() => {
-    setUnauthorizedHandler(signOut)
+    // The server ended the session (signed out elsewhere, deactivated, expired): say why instead of a silent jump.
+    setUnauthorizedHandler((code) => {
+      if (tokenStore.get()) toast.error(i18n.exists(`errors.${code}`) ? i18n.t(`errors.${code}` as 'errors.session_revoked') : i18n.t('errors.signedOut'))
+      signOut()
+    })
     if (!tokenStore.get()) return
     // Only an explicit 401 ends the session; network errors / 5xx mean the server is still waking up.
     withRetry(authApi.me, () => setWaking(true))

@@ -1,3 +1,5 @@
+import type { RuleCode } from './validation'
+
 const TOKEN_KEY = 'orbit:token'
 
 /** API origin; empty in local dev (Vite proxies /api), the Render URL in production builds. */
@@ -21,8 +23,15 @@ function safe<T>(fn: () => T): T | null {
   }
 }
 
+export interface FieldIssue {
+  field: string
+  code: RuleCode
+  min?: number
+  max?: number
+}
+
 export class ApiError extends Error {
-  constructor(public status: number, message: string, public code?: string) {
+  constructor(public status: number, message: string, public code?: string, public fields?: FieldIssue[]) {
     super(message)
   }
 }
@@ -35,8 +44,8 @@ function readDetail(body: unknown): string {
   return 'Request failed'
 }
 
-let onUnauthorized: () => void = () => {}
-export const setUnauthorizedHandler = (fn: () => void) => (onUnauthorized = fn)
+let onUnauthorized: (code?: string) => void = () => {}
+export const setUnauthorizedHandler = (fn: (code?: string) => void) => (onUnauthorized = fn)
 
 async function send(method: string, path: string, body?: unknown): Promise<Response> {
   const token = tokenStore.get()
@@ -45,13 +54,18 @@ async function send(method: string, path: string, body?: unknown): Promise<Respo
     headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
     body: body === undefined ? undefined : JSON.stringify(body),
   })
-  if (response.status === 401) onUnauthorized()
+  // A failed sign-in is a 401 too, but it says nothing about the current session.
+  if (response.status === 401 && !path.startsWith('/auth/login')) {
+    const code = await response.clone().json().then((b: { code?: string }) => b.code, () => undefined)
+    onUnauthorized(code)
+  }
   return response
 }
 
 async function fail(response: Response): Promise<never> {
   const data: unknown = await response.json().catch(() => null)
-  throw new ApiError(response.status, readDetail(data), (data as { code?: string } | null)?.code)
+  const body = data as { code?: string; fields?: FieldIssue[] } | null
+  throw new ApiError(response.status, readDetail(data), body?.code, body?.fields)
 }
 
 export async function http<T>(method: string, path: string, body?: unknown): Promise<T> {

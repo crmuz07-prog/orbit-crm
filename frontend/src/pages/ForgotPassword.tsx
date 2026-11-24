@@ -7,16 +7,21 @@ import { Button } from '@/components/ui/button'
 import { AuthLayout } from '@/features/auth/AuthLayout'
 import { useAsyncAction } from '@/features/auth/useAsyncAction'
 import { authApi } from '@/lib/api'
+import { useFormErrors } from '@/hooks/useFormErrors'
 import { withRetry } from '@/lib/http'
+import { rules } from '@/lib/validation'
 
 export default function ForgotPasswordPage() {
   const { t } = useTranslation()
-  const { busy, attempt } = useAsyncAction()
-  const [email, setEmail] = useState('')
+  const errors = useFormErrors<'email'>('forgot-form')
+  const { busy, attempt } = useAsyncAction(errors.fromApi)
+  const [email, setEmailValue] = useState('')
+  const setEmail = (v: string) => { setEmailValue(v); errors.clear('email') }
   const [sent, setSent] = useState(false)
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
+    if (!errors.validate({ email }, { email: [rules.required(), rules.email()] })) return
     // The API answers the same way for unknown emails, so this never reveals whether an account exists.
     if (await attempt(() => withRetry(() => authApi.forgot(email)))) setSent(true)
   }
@@ -36,8 +41,8 @@ export default function ForgotPasswordPage() {
 
   return (
     <AuthLayout title={t('account.forgotTitle')} subtitle={t('account.forgotSub')}>
-      <form onSubmit={submit} className="grid gap-4">
-        <TextField label={t('auth.email')} type="email" required autoFocus value={email} onChange={setEmail} placeholder={t('examples.email')} />
+      <form id="forgot-form" onSubmit={submit} noValidate className="grid gap-4">
+        <TextField name="email" label={t('auth.email')} type="email" autoFocus value={email} onChange={setEmail} error={errors.message('email')} placeholder={t('examples.email')} />
         <Button type="submit" disabled={busy}>{busy ? t('common.pleaseWait') : t('account.sendLink')}</Button>
       </form>
       {back}

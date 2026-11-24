@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes, ReactNode } from 'react'
+import { useId, type InputHTMLAttributes, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { DatePicker, DateTimePicker } from '@/components/ui/date-picker'
@@ -14,26 +14,39 @@ export type Option = { value: string; label: ReactNode }
 
 export const toOptions = (values: readonly string[]): Option[] => values.map((v) => ({ value: v, label: v }))
 
-function Field({ label, wide, children }: { label?: string; wide?: boolean; children: ReactNode }) {
+export function Field({ label, wide, error, errorId, children }: { label?: string; wide?: boolean; error?: string; errorId?: string; children: ReactNode }) {
   return (
     <div className={cn('space-y-1.5', wide && 'sm:col-span-2')}>
       {label && <Label>{label}</Label>}
       {children}
+      {error && <FieldError id={errorId}>{error}</FieldError>}
     </div>
   )
 }
+
+export function FieldError({ id, children }: { id?: string; children: ReactNode }) {
+  return <p id={id} role="alert" className="text-[11px] font-medium text-rose-600 dark:text-rose-400">{children}</p>
+}
+
+/** Props that tie an input to its error message for assistive tech and the red outline. */
+export const errorProps = (id: string, error?: string) =>
+  error ? { 'aria-invalid': true as const, 'aria-describedby': `${id}-error`, className: 'border-rose-500/70 focus-visible:ring-rose-500/30' } : {}
 
 type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> & {
   label: string
   value: string
   onChange: (value: string) => void
   wide?: boolean
+  /** Inline error under the input (translated). */
+  error?: string
 }
 
-export function TextField({ label, value, onChange, wide, ...props }: TextFieldProps) {
+export function TextField({ label, value, onChange, wide, error, className, ...props }: TextFieldProps) {
+  const id = useId()
+  const invalid = errorProps(id, error)
   return (
-    <Field label={label} wide={wide}>
-      <Input value={value} onChange={(e) => onChange(e.target.value)} {...props} />
+    <Field label={label} wide={wide} error={error} errorId={`${id}-error`}>
+      <Input value={value} onChange={(e) => onChange(e.target.value)} {...props} {...invalid} className={cn(className, invalid.className)} />
     </Field>
   )
 }
@@ -99,7 +112,7 @@ export function SelectField({ label, wide, ...props }: SelectBoxProps & { label:
 export function FormLayout({ onSubmit, onCancel, submitLabel, busy, children }: { onSubmit: () => void; onCancel: () => void; submitLabel: string; busy: boolean; children: ReactNode }) {
   const { t } = useTranslation()
   return (
-    <form onSubmit={(e) => { e.preventDefault(); onSubmit() }} className="space-y-4">
+    <form onSubmit={(e) => { e.preventDefault(); onSubmit() }} noValidate className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">{children}</div>
       <div className="flex justify-end gap-2 border-t border-foreground/[0.06] pt-4">
         <Button variant="outline" onClick={onCancel}>{t('common.cancel')}</Button>

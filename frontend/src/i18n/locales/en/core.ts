@@ -36,11 +36,12 @@ export const core = {
     },
   },
   validation: {
+    rules: { required: 'Fill in this field', email: 'Enter a valid email, e.g. name@company.uz', too_short: 'At least {{min}} characters', too_long: 'At most {{max}} characters', mismatch: 'Passwords do not match', invalid: 'Check this value', wrong_password: 'The current password is incorrect', range: 'Enter a whole number from {{min}} to {{max}}', min_value: 'Enter a whole number, at least {{min}}' },
     dealName: 'Deal name is required', stage: 'Pick a pipeline stage', companyName: 'Company name is required',
     firstName: 'First name is required', email: 'Email looks invalid', subject: 'Subject is required', writeSomething: 'Write something first',
   },
   errors: {
-    messaging_window_closed: 'Instagram allows replies only within 24 hours of the customer’s last message', instagram_not_connected: 'Connect Instagram in Settings first', not_instagram_contact: 'This contact did not come from Instagram', instagram_send_failed: 'Instagram did not accept the message', invalid_verify_token: 'The verify token does not match',
+    validation_error: 'Check the highlighted fields', signedOut: 'You were signed out', messaging_window_closed: 'Instagram allows replies only within 24 hours of the customer’s last message', instagram_not_connected: 'Connect Instagram in Settings first', not_instagram_contact: 'This contact did not come from Instagram', instagram_send_failed: 'Instagram did not accept the message', invalid_verify_token: 'The verify token does not match',
     pipeline_has_deals: 'Move the deals out of this pipeline first', default_pipeline: 'The default pipeline can’t be deleted',
     subscription_expired: 'The subscription of this company has ended', company_blocked: 'This company has been blocked by the platform administrator', seat_limit_reached: 'All paid seats are in use — ask the platform administrator for more',
     permission_denied: 'You don’t have permission for this action', owner_out_of_scope: 'You can’t assign records to this person', session_revoked: 'You were signed out — please sign in again', too_many_attempts: 'Too many failed attempts. Try again in 15 minutes', default_role: 'The default role can’t be deleted', name_taken: 'This name is already used',

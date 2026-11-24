@@ -5,6 +5,8 @@ import { PersonAvatar } from '@/components/common/avatars'
 import { ConfirmDialog } from '@/components/common/confirm-dialog'
 import { CredentialsCard } from '@/components/common/credentials-card'
 import { PasswordField, generatePassword } from '@/components/common/password-field'
+import { useFormErrors } from '@/hooks/useFormErrors'
+import { newPassword } from '@/lib/validation'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -30,6 +32,7 @@ function SetPasswordButton({ member, setPassword }: { member: TeamMember; setPas
   const [open, setOpen] = useState(false)
   const [password, setValue] = useState('')
   const [issued, setIssued] = useState<string | null>(null)
+  const errors = useFormErrors<'password'>('member-password-form')
 
   const show = () => {
     setValue(generatePassword())
@@ -38,7 +41,8 @@ function SetPasswordButton({ member, setPassword }: { member: TeamMember; setPas
   }
   const submit = (e: FormEvent) => {
     e.preventDefault()
-    setPassword.mutate({ userId: member.user_id, password }, { onSuccess: () => setIssued(password) })
+    if (!errors.validate({ password }, { password: newPassword() })) return
+    setPassword.mutate({ userId: member.user_id, password }, { onSuccess: () => setIssued(password), onError: (err) => errors.fromApi(err) })
   }
 
   return (
@@ -53,8 +57,8 @@ function SetPasswordButton({ member, setPassword }: { member: TeamMember; setPas
             <DialogDescription>{t('team.setPasswordHint', { name: member.full_name })}</DialogDescription>
           </DialogHeader>
           {issued ? <CredentialsCard email={member.email} password={issued} /> : (
-            <form onSubmit={submit} className="space-y-4">
-              <PasswordField label={t('team.tempPassword')} value={password} onChange={setValue} />
+            <form id="member-password-form" onSubmit={submit} noValidate className="space-y-4">
+              <PasswordField label={t('team.tempPassword')} value={password} onChange={(v) => { setValue(v); errors.clear('password') }} error={errors.message('password')} />
               <div className="flex justify-end"><Button type="submit" disabled={setPassword.isPending}>{t('team.setPassword')}</Button></div>
             </form>
           )}

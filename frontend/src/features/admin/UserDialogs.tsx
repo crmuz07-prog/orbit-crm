@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SelectField } from '@/components/common/form-fields'
-import { emptyLogin, LoginFields } from '@/components/common/login-fields'
+import { emptyLogin, LOGIN_RULES, LoginFields } from '@/components/common/login-fields'
+import { useFormErrors } from '@/hooks/useFormErrors'
+import { newPassword } from '@/lib/validation'
 import { generatePassword, PasswordField } from '@/components/common/password-field'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -30,6 +32,7 @@ export function CreateUserDialog({ open, onOpenChange, companies, create }: { op
   const [companyId, setCompanyId] = useState('')
   const [role, setRole] = useState<Role>('member')
   const [issued, setIssued] = useState<NewLogin | null>(null)
+  const errors = useFormErrors<keyof NewLogin>('new-user-form')
 
   const reset = (o: boolean) => {
     onOpenChange(o)
@@ -40,13 +43,15 @@ export function CreateUserDialog({ open, onOpenChange, companies, create }: { op
   }
   const submit = (e: FormEvent) => {
     e.preventDefault()
-    create.mutate({ ...login, workspace_id: companyId || null, role }, { onSuccess: () => setIssued(login) })
+    if (!errors.validate(login, LOGIN_RULES)) return
+    create.mutate({ ...login, workspace_id: companyId || null, role }, { onSuccess: () => setIssued(login), onError: (err) => errors.fromApi(err) })
   }
 
   return (
     <IssueDialog open={open} onOpenChange={reset} title={t('admin.newUser')} issued={issued}>
-      <form onSubmit={submit} className="grid gap-4 sm:grid-cols-2">
-        <LoginFields value={login} onChange={setLogin} />
+      <form id="new-user-form" onSubmit={submit} noValidate className="grid gap-4 sm:grid-cols-2">
+        <LoginFields value={login} onChange={setLogin} onEdit={errors.clear}
+          errors={{ full_name: errors.message('full_name'), email: errors.message('email'), password: errors.message('password') }} />
         <CompanyRolePicker companies={companies} companyId={companyId} onCompany={setCompanyId} role={role} onRole={setRole} optional />
         <div className="flex justify-end sm:col-span-2"><Button type="submit" disabled={create.isPending}>{t('admin.newUser')}</Button></div>
       </form>
@@ -58,6 +63,7 @@ export function SetPasswordDialog({ user, onClose, setPassword }: { user: AdminU
   const { t } = useTranslation()
   const [password, setValue] = useState(generatePassword)
   const [issued, setIssued] = useState<string | null>(null)
+  const passwordErrors = useFormErrors<'password'>('admin-password-form')
   const close = () => {
     setIssued(null)
     setValue(generatePassword())
@@ -65,13 +71,14 @@ export function SetPasswordDialog({ user, onClose, setPassword }: { user: AdminU
   }
   const submit = (e: FormEvent) => {
     e.preventDefault()
-    if (user) setPassword.mutate({ id: user.id, password }, { onSuccess: () => setIssued(password) })
+    if (!passwordErrors.validate({ password }, { password: newPassword() })) return
+    if (user) setPassword.mutate({ id: user.id, password }, { onSuccess: () => setIssued(password), onError: (err) => passwordErrors.fromApi(err) })
   }
   return (
     <IssueDialog open={!!user} onOpenChange={(o) => !o && close()} title={t('team.setPassword')} description={user ? t('team.setPasswordHint', { name: user.full_name }) : undefined}
       issued={user && issued ? { email: user.email, password: issued } : null}>
-      <form onSubmit={submit} className="space-y-4">
-        <PasswordField label={t('team.tempPassword')} value={password} onChange={setValue} />
+      <form id="admin-password-form" onSubmit={submit} noValidate className="space-y-4">
+        <PasswordField label={t('team.tempPassword')} value={password} onChange={(v) => { setValue(v); passwordErrors.clear('password') }} error={passwordErrors.message('password')} />
         <div className="flex justify-end"><Button type="submit" disabled={setPassword.isPending}>{t('team.setPassword')}</Button></div>
       </form>
     </IssueDialog>

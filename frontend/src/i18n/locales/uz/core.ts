@@ -39,11 +39,12 @@ export const core: Locale<typeof en> = {
     },
   },
   validation: {
+    rules: { required: 'Bu maydonni toʻldiring', email: 'Toʻgʻri email kiriting, masalan name@kompaniya.uz', too_short: 'Kamida {{min}} ta belgi', too_long: 'Koʻpi bilan {{max}} ta belgi', mismatch: 'Parollar mos kelmadi', invalid: 'Qiymatni tekshiring', wrong_password: 'Joriy parol notoʻgʻri', range: '{{min}} dan {{max}} gacha butun son kiriting', min_value: 'Kamida {{min}} boʻlgan butun son kiriting' },
     dealName: 'Bitim nomi majburiy', stage: 'Pipeline bosqichini tanlang', companyName: 'Kompaniya nomi majburiy',
     firstName: 'Ism majburiy', email: 'Email notoʻgʻri koʻrinadi', subject: 'Mavzu majburiy', writeSomething: 'Avval biror narsa yozing',
   },
   errors: {
-    messaging_window_closed: 'Instagram mijozning oxirgi xabaridan keyin faqat 24 soat ichida javob berishga ruxsat beradi', instagram_not_connected: 'Avval Sozlamalarda Instagramʼni ulang', not_instagram_contact: 'Bu kontakt Instagramʼdan kelmagan', instagram_send_failed: 'Instagram xabarni qabul qilmadi', invalid_verify_token: 'Verify token mos kelmadi',
+    validation_error: 'Belgilangan maydonlarni tekshiring', signedOut: 'Tizimdan chiqildi', messaging_window_closed: 'Instagram mijozning oxirgi xabaridan keyin faqat 24 soat ichida javob berishga ruxsat beradi', instagram_not_connected: 'Avval Sozlamalarda Instagramʼni ulang', not_instagram_contact: 'Bu kontakt Instagramʼdan kelmagan', instagram_send_failed: 'Instagram xabarni qabul qilmadi', invalid_verify_token: 'Verify token mos kelmadi',
     pipeline_has_deals: 'Avval bitimlarni bu voronkadan koʻchiring', default_pipeline: 'Asosiy voronkani oʻchirib boʻlmaydi',
     subscription_expired: 'Kompaniya obunasi muddati tugagan', company_blocked: 'Kompaniya platforma administratori tomonidan bloklangan', seat_limit_reached: 'Barcha toʻlangan oʻrinlar band — qoʻshimcha oʻrin uchun platforma administratoriga murojaat qiling',
     permission_denied: 'Bu amal uchun huquqingiz yoʻq', owner_out_of_scope: 'Yozuvni bu xodimga biriktira olmaysiz', session_revoked: 'Sessiya yakunlandi — qaytadan kiring', too_many_attempts: 'Juda koʻp xato urinish. 15 daqiqadan soʻng qayta urining', default_role: 'Standart rolni oʻchirib boʻlmaydi', name_taken: 'Bu nom allaqachon band',

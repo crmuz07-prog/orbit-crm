@@ -29,3 +29,13 @@ def test_demo_login_returns_seeded_workspace(client: TestClient) -> None:
     headers = {"Authorization": f"Bearer {token}"}
     assert len(client.get("/api/companies", headers=headers).json()) == 15
     assert client.post("/api/workspace/reset", headers=headers).status_code == 204
+
+
+def test_validation_errors_name_the_field_with_a_stable_code(client: TestClient) -> None:
+    response = client.post("/api/auth/login", json={"email": "abc@x", "password": ""})
+    assert response.status_code == 422
+    body = response.json()
+    assert body["code"] == "validation_error"
+    assert {"field": "email", "code": "email"} in body["fields"]
+    missing = client.post("/api/auth/forgot", json={}).json()
+    assert missing["fields"] == [{"field": "email", "code": "required"}]

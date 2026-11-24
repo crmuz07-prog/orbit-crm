@@ -2,8 +2,11 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { errorMessage } from '@/lib/utils'
 
-/** Busy flag + error toast around async actions — shared by every auth form. */
-export function useAsyncAction() {
+/**
+ * Busy flag + error toast around async actions — shared by every auth form.
+ * `onFieldError` may claim an error for inline display (API field errors); otherwise it is a toast.
+ */
+export function useAsyncAction(onFieldError?: (error: unknown) => boolean) {
   const [busy, setBusy] = useState(false)
 
   /** Resolves to true on success; failures are shown as a toast. */
@@ -13,7 +16,7 @@ export function useAsyncAction() {
       await action()
       return true
     } catch (e) {
-      toast.error(errorMessage(e))
+      if (!onFieldError?.(e)) toast.error(errorMessage(e))
       return false
     } finally {
       setBusy(false)

@@ -39,11 +39,12 @@ export const core: Locale<typeof en> = {
     },
   },
   validation: {
+    rules: { required: 'Заполните это поле', email: 'Введите корректный email, например name@company.uz', too_short: 'Минимум {{min}} символов', too_long: 'Максимум {{max}} символов', mismatch: 'Пароли не совпадают', invalid: 'Проверьте значение', wrong_password: 'Неверный текущий пароль', range: 'Введите целое число от {{min}} до {{max}}', min_value: 'Введите целое число не меньше {{min}}' },
     dealName: 'Укажите название сделки', stage: 'Выберите этап воронки', companyName: 'Укажите название компании',
     firstName: 'Укажите имя', email: 'Похоже, email указан неверно', subject: 'Укажите тему', writeSomething: 'Сначала напишите что-нибудь',
   },
   errors: {
-    messaging_window_closed: 'Instagram разрешает отвечать только в течение 24 часов после последнего сообщения клиента', instagram_not_connected: 'Сначала подключите Instagram в настройках', not_instagram_contact: 'Этот контакт пришёл не из Instagram', instagram_send_failed: 'Instagram не принял сообщение', invalid_verify_token: 'Verify token не совпадает',
+    validation_error: 'Проверьте выделенные поля', signedOut: 'Вы вышли из системы', messaging_window_closed: 'Instagram разрешает отвечать только в течение 24 часов после последнего сообщения клиента', instagram_not_connected: 'Сначала подключите Instagram в настройках', not_instagram_contact: 'Этот контакт пришёл не из Instagram', instagram_send_failed: 'Instagram не принял сообщение', invalid_verify_token: 'Verify token не совпадает',
     pipeline_has_deals: 'Сначала перенесите сделки из этой воронки', default_pipeline: 'Основную воронку удалить нельзя',
     subscription_expired: 'Подписка компании закончилась', company_blocked: 'Компания заблокирована администратором платформы', seat_limit_reached: 'Все оплаченные места заняты — запросите больше у администратора платформы',
     permission_denied: 'Недостаточно прав для этого действия', owner_out_of_scope: 'Нельзя назначить записи этому сотруднику', session_revoked: 'Сеанс завершён — войдите снова', too_many_attempts: 'Слишком много неудачных попыток. Повторите через 15 минут', default_role: 'Роль по умолчанию нельзя удалить', name_taken: 'Это название уже занято',

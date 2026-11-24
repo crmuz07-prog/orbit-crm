@@ -3,7 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { UserPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { CredentialsCard } from '@/components/common/credentials-card'
-import { emptyLogin, LoginFields } from '@/components/common/login-fields'
+import { emptyLogin, LOGIN_RULES, LoginFields } from '@/components/common/login-fields'
+import { useFormErrors } from '@/hooks/useFormErrors'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import type { NewLogin, Role } from '@/lib/types'
@@ -16,10 +17,13 @@ export function AddMemberForm({ add, actorRole }: { add: TeamActions['add']; act
   const [login, setLogin] = useState<NewLogin>(emptyLogin)
   const [role, setRole] = useState<Role>('member')
   const [issued, setIssued] = useState<NewLogin | null>(null)
+  const errors = useFormErrors<keyof NewLogin>('add-member-form')
 
   const submit = (e: FormEvent) => {
     e.preventDefault()
+    if (!errors.validate(login, LOGIN_RULES)) return
     add.mutate({ ...login, role }, {
+      onError: (err) => errors.fromApi(err),
       // An existing account keeps its own password, so there are no credentials to hand over.
       onSuccess: (result) => {
         setIssued(result.account_created ? login : null)
@@ -30,8 +34,9 @@ export function AddMemberForm({ add, actorRole }: { add: TeamActions['add']; act
 
   return (
     <div className="space-y-4">
-      <form onSubmit={submit} className="grid gap-4 sm:grid-cols-2">
-        <LoginFields value={login} onChange={setLogin} />
+      <form id="add-member-form" onSubmit={submit} noValidate className="grid gap-4 sm:grid-cols-2">
+        <LoginFields value={login} onChange={setLogin} onEdit={errors.clear}
+          errors={{ full_name: errors.message('full_name'), email: errors.message('email'), password: errors.message('password') }} />
         <div className="space-y-1.5">
           <Label>{t('team.role')}</Label>
           <RoleSelect value={role} onChange={setRole} actorRole={actorRole} />

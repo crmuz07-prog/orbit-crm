@@ -4,7 +4,10 @@ import { toast } from 'sonner'
 import { useAuth } from '@/auth/AuthProvider'
 import { TextField } from '@/components/common/form-fields'
 import { Button } from '@/components/ui/button'
+import { useFormErrors } from '@/hooks/useFormErrors'
 import { authApi } from '@/lib/api'
+import { ApiError } from '@/lib/http'
+import { newPassword, rules } from '@/lib/validation'
 import { AuthLayout } from './AuthLayout'
 import { useAsyncAction } from './useAsyncAction'
 
@@ -12,16 +15,19 @@ import { useAsyncAction } from './useAsyncAction'
 export function PasswordGate() {
   const { t } = useTranslation()
   const { session, signIn, signOut } = useAuth()
-  const { busy, run } = useAsyncAction()
-  const [current, setCurrent] = useState('')
-  const [next, setNext] = useState('')
-  const [confirm, setConfirm] = useState('')
+  const errors = useFormErrors<'current' | 'next' | 'confirm'>('gate-form')
+  // A wrong current password belongs under that field, not in a toast.
+  const { busy, run } = useAsyncAction((e) => errors.fromApi(e, { new_password: 'next', current_password: 'current' }) || wrongCurrent(e))
+  const [form, setForm] = useState({ current: '', next: '', confirm: '' })
+  const set = (key: keyof typeof form) => (value: string) => { setForm((f) => ({ ...f, [key]: value })); errors.clear(key) }
+  const wrongCurrent = (e: unknown) => e instanceof ApiError && e.code === 'wrong_password' && errors.fromApi(new ApiError(400, '', 'wrong_password', [{ field: 'current', code: 'wrong_password' }]))
   if (!session) return null
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
-    if (next !== confirm) return toast.error(t('account.mismatch'))
-    const token = await run(() => authApi.changePassword(current, next))
+    const valid = errors.validate(form, { current: [rules.required()], next: newPassword(), confirm: [rules.required(), rules.same(() => form.next)] })
+    if (!valid) return
+    const token = await run(() => authApi.changePassword(form.current, form.next))
     if (!token) return
     signIn(token)
     toast.success(t('gate.done'))
@@ -29,10 +35,10 @@ export function PasswordGate() {
 
   return (
     <AuthLayout title={t('gate.title')} subtitle={t('gate.subtitle')}>
-      <form onSubmit={submit} className="grid gap-4">
-        <TextField label={t('account.currentPassword')} type="password" required autoFocus autoComplete="current-password" value={current} onChange={setCurrent} />
-        <TextField label={t('account.newPassword')} type="password" required minLength={8} autoComplete="new-password" value={next} onChange={setNext} />
-        <TextField label={t('account.confirmPassword')} type="password" required minLength={8} autoComplete="new-password" value={confirm} onChange={setConfirm} />
+      <form id="gate-form" onSubmit={submit} noValidate className="grid gap-4">
+        <TextField name="current" label={t('account.currentPassword')} type="password" autoFocus autoComplete="current-password" value={form.current} onChange={set('current')} error={errors.message('current')} />
+        <TextField name="next" label={t('account.newPassword')} type="password" autoComplete="new-password" value={form.next} onChange={set('next')} error={errors.message('next')} />
+        <TextField name="confirm" label={t('account.confirmPassword')} type="password" autoComplete="new-password" value={form.confirm} onChange={set('confirm')} error={errors.message('confirm')} />
         <Button type="submit" disabled={busy}>{busy ? t('common.pleaseWait') : t('gate.save')}</Button>
         <Button variant="ghost" onClick={signOut}>{t('nav.signOut')}</Button>
       </form>

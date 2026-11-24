@@ -73,6 +73,8 @@ export const blankToNull = (value: string | null | undefined) => (value && value
 
 /** Translates API error codes; falls back to the server message. */
 export function errorMessage(error: unknown) {
+  const issue = error instanceof ApiError ? error.fields?.[0] : undefined
+  if (issue) return i18n.t(`validation.rules.${issue.code}` as 'validation.rules.required', { min: issue.min, max: issue.max })
   if (error instanceof ApiError && error.code && i18n.exists(`errors.${error.code}`)) return i18n.t(`errors.${error.code}` as 'errors.generic')
   if (error instanceof TypeError) return i18n.t('errors.network')
   if (error instanceof Error && error.message) return error.message
