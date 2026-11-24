@@ -12,6 +12,10 @@ import { CallScreenPop } from '@/features/telephony/CallScreenPop'
 import { CommandPalette } from './CommandPalette'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
+import { usePersistentState } from '@/hooks/usePersistentState'
+import { cn } from '@/lib/utils'
+
+const SIDEBAR = ['open', 'collapsed'] as const
 
 function useHotkey(key: string, handler: () => void) {
   useEffect(() => {
@@ -51,6 +55,11 @@ function WorkspaceExtras({ palette, setPalette, children }: { palette: boolean; 
 /** The only app layout: CRM users and platform superadmins share the same sidebar, top bar and page frame. */
 export function AppShell() {
   const [mobileNav, setMobileNav] = useState(false)
+  // Desktop sidebar: full or an icon rail, remembered per browser (⌘B / Ctrl+B like VS Code and Linear).
+  const [rail, setRail] = usePersistentState('orbit:sidebar', 'open', SIDEBAR)
+  const collapsed = rail === 'collapsed'
+  const toggleRail = useCallback(() => setRail((r) => (r === 'open' ? 'collapsed' : 'open')), [setRail])
+  useHotkey('b', toggleRail)
   const [palette, setPalette] = useState(false)
   const location = useLocation()
   const { t } = useTranslation()
@@ -60,8 +69,8 @@ export function AppShell() {
 
   const frame = (
     <div className="min-h-screen">
-      <aside className="glass fixed inset-y-0 left-0 z-20 hidden w-60 rounded-none border-y-0 border-l-0 lg:block">
-        <Sidebar />
+      <aside className={cn('glass fixed inset-y-0 left-0 z-20 hidden rounded-none border-y-0 border-l-0 transition-[width] duration-200 lg:block', collapsed ? 'w-14' : 'w-52')}>
+        <Sidebar collapsed={collapsed} onToggle={toggleRail} />
       </aside>
       <Sheet open={mobileNav} onOpenChange={setMobileNav}>
         <SheetContent>
@@ -70,7 +79,7 @@ export function AppShell() {
         </SheetContent>
       </Sheet>
 
-      <div className="lg:pl-60">
+      <div className={cn('transition-[padding] duration-200', collapsed ? 'lg:pl-14' : 'lg:pl-52')}>
         <DemoBanner />
         <SubscriptionBanner />
         <VerifyBanner />

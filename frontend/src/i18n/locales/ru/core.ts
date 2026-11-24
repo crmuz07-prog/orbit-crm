@@ -15,7 +15,7 @@ export const core: Locale<typeof en> = {
     edit: { deal: 'Изменить сделку', company: 'Изменить компанию', contact: 'Изменить контакт', activity: 'Изменить активность', call: 'Изменить звонок', wrapUp: 'Итоги звонка' },
   },
   nav: {
-    workspace: 'Рабочее пространство', dashboard: 'Дашборд', deals: 'Сделки', companies: 'Компании', contacts: 'Контакты',
+    collapse: 'Свернуть панель (⌘B)', expand: 'Развернуть панель (⌘B)', workspace: 'Рабочее пространство', dashboard: 'Дашборд', deals: 'Сделки', companies: 'Компании', contacts: 'Контакты',
     activities: 'Активности', calls: 'Звонки', settings: 'Настройки', signOut: 'Выйти', openMenu: 'Открыть меню',
     search: 'Поиск или переход…', lightMode: 'Светлая тема', darkMode: 'Тёмная тема', language: 'Язык',
     create: 'Создать', new: 'Создать', demoBanner: 'Вы в демо-пространстве — изменения общие, их можно сбросить в Настройках.',

@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/026-explicit-save-password-reveal.md](docs/prompts/026-explicit-save-password-reveal.md)
+Latest: [docs/prompts/027-compact-collapsible-sidebar.md](docs/prompts/027-compact-collapsible-sidebar.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -31,3 +31,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [024 — Form validation and auth: inline, translated, consistent with the API](docs/prompts/024-auth-validation.md)
 - [025 — So'm by default, icons with tooltips, no decorative clutter, DRY UI](docs/prompts/025-som-icons-dry.md)
 - [026 — Explicit save, no silent loss, confirmed deletes, password reveal](docs/prompts/026-explicit-save-password-reveal.md)
+- [027 — Compact, collapsible sidebar](docs/prompts/027-compact-collapsible-sidebar.md)
