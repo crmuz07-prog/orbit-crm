@@ -86,6 +86,8 @@ export interface Activity extends Row, Owned {
   duration_seconds: number | null
   phone: string | null
   next_steps: string | null
+  /** What came of a completed task. */
+  result?: string | null
   external_id: string | null
   recording_url: string | null
   auto_logged: boolean

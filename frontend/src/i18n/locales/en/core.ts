@@ -13,7 +13,7 @@ export const core = {
   },
   nav: {
     collapse: 'Collapse sidebar (⌘B)', expand: 'Expand sidebar (⌘B)', workspace: 'Workspace', dashboard: 'Dashboard', deals: 'Deals', companies: 'Companies', contacts: 'Contacts',
-    activities: 'Activities', calls: 'Calls', settings: 'Settings', signOut: 'Sign out', openMenu: 'Open menu',
+    activities: 'Tasks', calls: 'Calls', settings: 'Settings', signOut: 'Sign out', openMenu: 'Open menu',
     search: 'Search or jump to…', lightMode: 'Light mode', darkMode: 'Dark mode', language: 'Language',
     create: 'Create', new: 'New', demoBanner: 'You are exploring the demo workspace — changes are shared and can be reset in Settings.',
   },

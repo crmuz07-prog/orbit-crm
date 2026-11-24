@@ -7,6 +7,7 @@ import { Toaster } from 'sonner'
 import { AuthProvider } from '@/auth/AuthProvider'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { ConfirmProvider } from '@/components/common/confirm-provider'
+import { TaskResultProvider } from '@/features/tasks/TaskResultProvider'
 import { ErrorBoundary } from '@/components/common/error-boundary'
 import { reloadOnStaleBuild } from '@/lib/stale-build'
 import App from './App'
@@ -28,9 +29,11 @@ createRoot(document.getElementById('root')!).render(
           <TooltipProvider delayDuration={300}>
             <AuthProvider>
               <ConfirmProvider>
-                <ErrorBoundary>
-                  <App />
-                </ErrorBoundary>
+                <TaskResultProvider>
+                  <ErrorBoundary>
+                    <App />
+                  </ErrorBoundary>
+                </TaskResultProvider>
               </ConfirmProvider>
               <Toaster position="bottom-right" richColors closeButton />
             </AuthProvider>

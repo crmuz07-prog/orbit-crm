@@ -16,7 +16,7 @@ export const core: Locale<typeof en> = {
   },
   nav: {
     collapse: 'Свернуть панель (⌘B)', expand: 'Развернуть панель (⌘B)', workspace: 'Рабочее пространство', dashboard: 'Дашборд', deals: 'Сделки', companies: 'Компании', contacts: 'Контакты',
-    activities: 'Активности', calls: 'Звонки', settings: 'Настройки', signOut: 'Выйти', openMenu: 'Открыть меню',
+    activities: 'Задачи', calls: 'Звонки', settings: 'Настройки', signOut: 'Выйти', openMenu: 'Открыть меню',
     search: 'Поиск или переход…', lightMode: 'Светлая тема', darkMode: 'Тёмная тема', language: 'Язык',
     create: 'Создать', new: 'Создать', demoBanner: 'Вы в демо-пространстве — изменения общие, их можно сбросить в Настройках.',
   },

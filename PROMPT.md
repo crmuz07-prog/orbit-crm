@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/032-import-everything-useful.md](docs/prompts/032-import-everything-useful.md)
+Latest: [docs/prompts/033-amocrm-tasks.md](docs/prompts/033-amocrm-tasks.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -37,3 +37,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [030 — Contacts and companies like amoCRM](docs/prompts/030-amocrm-contacts-companies.md)
 - [031 — Deals like amoCRM](docs/prompts/031-amocrm-deals.md)
 - [032 — Import uses everything useful in the sheet](docs/prompts/032-import-everything-useful.md)
+- [033 — Tasks like amoCRM](docs/prompts/033-amocrm-tasks.md)

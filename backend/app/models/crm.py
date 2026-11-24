@@ -107,6 +107,8 @@ class Activity(OwnedMixin, Base):
     duration_seconds: Mapped[int | None]
     phone: Mapped[str | None] = mapped_column(String(60))
     next_steps: Mapped[str | None] = mapped_column(Text)
+    # What came of a completed task (amoCRM asks for it when a task is closed).
+    result: Mapped[str | None] = mapped_column(Text, nullable=True)
     # Set when the call was captured by the telephony integration (provider call id is unique per workspace).
     external_id: Mapped[str | None] = mapped_column(String(120), index=True)
     recording_url: Mapped[str | None] = mapped_column(String(500))

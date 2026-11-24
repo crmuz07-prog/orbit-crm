@@ -25,7 +25,7 @@ export function TasksCard() {
     <ListCard
       title={t('dashboard.tasks')}
       description={t('dashboard.tasksDesc')}
-      action={viewAll('/activities', t('common.viewAll'))}
+      action={viewAll('/tasks', t('common.viewAll'))}
       items={tasks}
       empty={<EmptyState icon={CalendarCheck} title={t('dashboard.tasksEmpty')} description={t('dashboard.tasksEmptyDesc')} />}
       render={(a) => <ActivityRow activity={a} compact meta={<DueLabel activity={a} />} />}

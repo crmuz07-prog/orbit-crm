@@ -1,6 +1,6 @@
 export const engage = {
   activities: {
-    deleteTitle: 'Delete this activity?', title: 'Activities', description: 'Calls, meetings, emails and tasks across your pipeline', newActivity: 'New activity',
+    deleteTitle: 'Delete this activity?', title: 'Tasks', description: 'Calls to make, meetings and to-dos by deadline', newActivity: 'New task',
     overdue: 'Overdue', today: 'Today', upcoming: 'Upcoming', done: 'Completed', all: 'All', allTypes: 'All types',
     emptyOverdue: 'Nothing overdue 🎉', empty: 'Nothing here', emptyDesc: 'Schedule follow-ups so no deal goes cold.',
     type: 'Type', due: 'Due', when: 'When', subject: 'Subject', subjectRequired: 'Subject *', details: 'Details',

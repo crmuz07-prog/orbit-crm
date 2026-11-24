@@ -25,7 +25,7 @@ function WorkspaceNav({ titled, ...nav }: NavProps & { titled: boolean }) {
     { to: '/companies', label: t('nav.companies'), icon: Building2, module: 'companies' },
     { to: '/contacts', label: t('nav.contacts'), icon: Users, module: 'contacts' },
     { to: '/calls', label: t('nav.calls'), icon: Phone, module: 'activities' },
-    { to: '/activities', label: t('nav.activities'), icon: CalendarCheck, badge: overdue, module: 'activities' },
+    { to: '/tasks', label: t('nav.activities'), icon: CalendarCheck, badge: overdue, module: 'activities' },
     { to: '/reports', label: t('reports.nav'), icon: BarChart3, module: 'reports' },
     { to: '/instagram', label: t('instagram.nav'), icon: Instagram, module: 'reports' },
   ]

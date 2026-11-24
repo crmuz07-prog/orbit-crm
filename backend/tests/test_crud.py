@@ -59,3 +59,9 @@ def test_deleting_company_unlinks_deals(client: TestClient, auth: Headers) -> No
     deal = create_deal(client, auth, company_id=company["id"])
     client.delete(f"/api/companies/{company['id']}", headers=auth)
     assert client.get(f"/api/deals/{deal['id']}", headers=auth).json()["company_id"] is None
+
+
+def test_a_completed_task_keeps_its_result(client: TestClient, auth: Headers) -> None:
+    task = client.post("/api/activities", headers=auth, json={"type": "task", "subject": "Call back", "due_at": "2026-12-01T05:00:00Z"}).json()
+    done = client.patch(f"/api/activities/{task['id']}", headers=auth, json={"done": True, "result": "Agreed on a demo"}).json()
+    assert done["done"] is True and done["result"] == "Agreed on a demo"

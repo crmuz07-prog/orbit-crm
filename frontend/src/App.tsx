@@ -40,7 +40,7 @@ const APP_ROUTES: [path: string, Component: React.ComponentType, module: Module 
   ['contacts', page(() => import('@/pages/Contacts')), 'contacts'],
   ['contacts/:id', page(() => import('@/pages/ContactDetail')), 'contacts'],
   ['calls', page(() => import('@/pages/Calls')), 'activities'],
-  ['activities', page(() => import('@/pages/Activities')), 'activities'],
+  ['tasks', page(() => import('@/pages/Tasks')), 'activities'],
   ['reports', page(() => import('@/pages/Reports')), 'reports'],
   ['instagram', page(() => import('@/pages/Instagram')), 'reports'],
   ['settings', page(() => import('@/pages/Settings')), null],
@@ -96,6 +96,8 @@ export default function App() {
         <Routes key={i18n.language}>
           {linkRoutes}
           <Route path="/login" element={<Navigate to="/" replace />} />
+          {/* The section was "Activities"; old links and bookmarks still land on it. */}
+          <Route path="/activities" element={<Navigate to="/tasks" replace />} />
           <Route element={<AppShell />}>
             {inWorkspace && <Route index element={<RequireView module="reports"><Dashboard /></RequireView>} />}
             {inWorkspace && APP_ROUTES.map(([path, Component, module]) => (

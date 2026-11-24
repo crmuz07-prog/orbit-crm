@@ -3,7 +3,7 @@ import type { engage as en } from '../en/engage'
 
 export const engage: Locale<typeof en> = {
   activities: {
-    deleteTitle: 'Удалить это действие?', title: 'Активности', description: 'Звонки, встречи, письма и задачи по всей воронке', newActivity: 'Новая активность',
+    deleteTitle: 'Удалить это действие?', title: 'Задачи', description: 'Звонки, встречи и дела по срокам', newActivity: 'Новая задача',
     overdue: 'Просрочено', today: 'Сегодня', upcoming: 'Предстоящие', done: 'Выполнено', all: 'Все', allTypes: 'Все типы',
     emptyOverdue: 'Просроченных нет 🎉', empty: 'Здесь пусто', emptyDesc: 'Планируйте следующие шаги, чтобы сделки не остывали.',
     type: 'Тип', due: 'Срок', when: 'Когда', subject: 'Тема', subjectRequired: 'Тема *', details: 'Подробности',

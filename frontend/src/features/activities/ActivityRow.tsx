@@ -52,6 +52,7 @@ export function ActivityRow({ activity: a, meta, compact }: Props) {
         <p className={cn('text-sm font-medium transition-colors', a.done && schedulable && 'text-muted-foreground line-through')}>{subject(a)}</p>
         {a.type === 'call' && <CallDetails activity={a} />}
         {!compact && a.body && <p className="mt-0.5 line-clamp-3 whitespace-pre-wrap text-sm text-muted-foreground">{a.body}</p>}
+        {a.done && a.result && <p className="mt-1 rounded-md bg-emerald-500/10 px-2 py-1 text-[12px] text-emerald-800 dark:text-emerald-300"><b className="font-medium">{t('tasks.complete.result')}:</b> {a.result}</p>}
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           {meta}
           {a.remind_at && !a.done && (

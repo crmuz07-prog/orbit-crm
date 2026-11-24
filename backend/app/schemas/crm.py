@@ -81,6 +81,7 @@ class ActivityIn(Schema):
     duration_seconds: int | None = Field(default=None, ge=0)
     phone: str | None = None
     next_steps: str | None = None
+    result: str | None = Field(default=None, max_length=2000)
     recording_url: str | None = None
     deal_id: str | None = None
     company_id: str | None = None

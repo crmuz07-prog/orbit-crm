@@ -15,7 +15,7 @@ const PAGES: ['dashboard' | 'deals' | 'companies' | 'contacts' | 'calls' | 'acti
   ['companies', '/companies', Building2],
   ['contacts', '/contacts', Users],
   ['calls', '/calls', Phone],
-  ['activities', '/activities', CalendarCheck],
+  ['activities', '/tasks', CalendarCheck],
   ['settings', '/settings', Settings],
 ]
 
