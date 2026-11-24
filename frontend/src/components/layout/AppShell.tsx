@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/auth/AuthProvider'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
@@ -75,11 +75,11 @@ export function AppShell() {
         <VerifyBanner />
         <Topbar onOpenNav={() => setMobileNav(true)} onOpenPalette={() => setPalette(true)} inWorkspace={inWorkspace} />
         <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
-          <AnimatePresence mode="wait">
-            <motion.div key={location.pathname} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }}>
-              <Outlet />
-            </motion.div>
-          </AnimatePresence>
+          {/* Enter-only page transition. An exit animation (AnimatePresence mode="wait") could be interrupted by fast
+              back-and-forth navigation and leave the new page stuck at opacity 0 — a blank screen. */}
+          <motion.div key={location.pathname} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
+            <Outlet />
+          </motion.div>
         </main>
       </div>
     </div>
