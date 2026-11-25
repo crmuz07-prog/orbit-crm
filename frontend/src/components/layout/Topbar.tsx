@@ -41,7 +41,7 @@ export function Topbar({ onOpenNav, onOpenPalette, inWorkspace }: { onOpenNav: (
   const { theme, toggle } = useTheme()
   const { t } = useTranslation()
   return (
-    <header className="glass sticky top-0 z-10 flex h-14 items-center gap-3 rounded-none border-x-0 border-t-0 px-4 sm:px-6">
+    <header className="glass sticky top-0 z-10 flex h-14 items-center gap-3 rounded-none border-x-0 border-t-0 px-[var(--gutter)]">
       <IconButton label={t('nav.openMenu')} className="lg:hidden" onClick={onOpenNav}><Menu /></IconButton>
       {inWorkspace && <button
         onClick={onOpenPalette}
