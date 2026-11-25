@@ -1,0 +1,14 @@
+# Files that keep roomier spacing on purpose (sign-in screens, full-page states, primitives, the page header).
+frontend/src/components/ui/
+frontend/src/components/common/states.tsx
+frontend/src/components/common/error-boundary.tsx
+frontend/src/components/common/page.tsx
+frontend/src/features/auth/AuthLayout.tsx
+frontend/src/features/auth/LoginShowcase.tsx
+frontend/src/features/auth/PasswordGate.tsx
+frontend/src/features/billing/SubscriptionClosed.tsx
+frontend/src/pages/Login.tsx
+frontend/src/pages/ForgotPassword.tsx
+frontend/src/pages/ResetPassword.tsx
+frontend/src/pages/VerifyEmail.tsx
+frontend/src/App.tsx

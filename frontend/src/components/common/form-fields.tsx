@@ -127,9 +127,9 @@ export function SelectField({ label, wide, ...props }: SelectBoxProps & { label:
 export function FormLayout({ onSubmit, onCancel, submitLabel, busy, children }: { onSubmit: () => void; onCancel: () => void; submitLabel: string; busy: boolean; children: ReactNode }) {
   const { t } = useTranslation()
   return (
-    <form onSubmit={(e) => { e.preventDefault(); onSubmit() }} noValidate className="space-y-4">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">{children}</div>
-      <div className="flex justify-end gap-2 border-t border-foreground/[0.06] pt-4">
+    <form onSubmit={(e) => { e.preventDefault(); onSubmit() }} noValidate className="space-y-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">{children}</div>
+      <div className="flex justify-end gap-2 border-t border-foreground/[0.06] pt-3">
         <Button variant="outline" onClick={onCancel}>{t('common.cancel')}</Button>
         <Button type="submit" disabled={busy}>{submitLabel}</Button>
       </div>

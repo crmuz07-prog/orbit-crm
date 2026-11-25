@@ -67,12 +67,12 @@ interface Props {
 /** The record card shared by deals, companies and contacts: info | feed | widgets. */
 export function RecordCard({ info, widgets, link, recordId, activities, links }: Props) {
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[340px_minmax(0,1fr)] 2xl:grid-cols-[360px_minmax(0,1fr)_300px]">
+    <div className="grid grid-cols-1 gap-3 lg:grid-cols-[340px_minmax(0,1fr)] 2xl:grid-cols-[360px_minmax(0,1fr)_300px]">
       <aside className="glass flex flex-col overflow-hidden rounded-2xl lg:h-[calc(100vh-7rem)]">
         <div className="flex-1 overflow-y-auto">{info}</div>
       </aside>
       <FeedPanel link={link} recordId={recordId} activities={activities} links={links} />
-      {widgets && <aside className="space-y-4 lg:col-span-2 2xl:col-span-1">{widgets}</aside>}
+      {widgets && <aside className="space-y-3 lg:col-span-2 2xl:col-span-1">{widgets}</aside>}
     </div>
   )
 }
@@ -80,7 +80,7 @@ export function RecordCard({ info, widgets, link, recordId, activities, links }:
 /** Header block of the info panel: back link, title, short id, actions; children go under it (stage selector). */
 export function InfoHeader({ back, title, shortId, actions, children }: { back: ReactNode; title: string; shortId: string; actions?: ReactNode; children?: ReactNode }) {
   return (
-    <div className="space-y-3 border-b border-foreground/[0.06] px-5 pb-4 pt-4">
+    <div className="space-y-3 border-b border-foreground/[0.06] px-4 pb-3 pt-3">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           {back}

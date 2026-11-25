@@ -32,8 +32,8 @@ export function TopAdsCard({ ads, className }: { ads: InstagramStats['top_ads'];
   return (
     <Card className={className}>
       <CardHeader title={t('instagram.topAds')} description={t('instagram.topAdsDesc')} />
-      {ads.length === 0 ? <EmptyState icon={Megaphone} title={t('instagram.noAds')} className="py-10" /> : (
-        <ul className="space-y-3 px-5 py-4">
+      {ads.length === 0 ? <EmptyState icon={Megaphone} title={t('instagram.noAds')} compact /> : (
+        <ul className="space-y-3 px-4 py-3">
           {ads.map((ad) => (
             <li key={ad.ad_id}>
               <div className="flex items-baseline justify-between gap-2 text-sm">

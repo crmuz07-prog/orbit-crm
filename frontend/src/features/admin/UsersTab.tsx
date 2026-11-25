@@ -62,7 +62,7 @@ export function UsersTab({ actions }: { actions: AdminActions }) {
 
   return (
     <>
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="mb-3 flex flex-wrap items-center gap-2">
         <SearchInput value={query} onChange={setQuery} placeholder={t('admin.search')} />
         <Button className="ml-auto" onClick={() => setCreating(true)}><Plus /> {t('admin.newUser')}</Button>
       </div>

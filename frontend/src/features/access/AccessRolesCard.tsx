@@ -38,7 +38,7 @@ function RoleRow({ role, onEdit, onDelete, actions }: { role: AccessRole; onEdit
     if (await confirm(options)) actions.updateRole.mutate({ id: role.id, is_default: true })
   }
   return (
-    <li className="flex items-center gap-3 px-5 py-3">
+    <li className="flex items-center gap-3 px-4 py-3">
       <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary"><ShieldCheck className="size-4" /></span>
       <div className="min-w-0 flex-1">
         <p className="flex items-center gap-2 text-sm font-medium">

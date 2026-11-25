@@ -6,15 +6,16 @@ import { Page } from './page'
 import { fadeUp } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
-export function EmptyState({ icon: Icon, title, description, action, className }: { icon: LucideIcon; title: string; description?: string; action?: ReactNode; className?: string }) {
+/** "Nothing here" for a page (default) or inside a card / popover (`compact`): the one place empty spacing is decided. */
+export function EmptyState({ icon: Icon, title, description, action, compact, className }: { icon: LucideIcon; title: string; description?: string; action?: ReactNode; compact?: boolean; className?: string }) {
   return (
-    <motion.div initial="hidden" animate="show" variants={fadeUp} className={cn('flex flex-col items-center justify-center px-6 py-14 text-center', className)}>
-      <div className="mb-3 flex size-11 items-center justify-center glass rounded-xl">
-        <Icon className="size-5 text-muted-foreground" />
+    <motion.div initial="hidden" animate="show" variants={fadeUp} className={cn('flex flex-col items-center justify-center px-4 text-center', compact ? 'py-6' : 'py-12', className)}>
+      <div className={cn('mb-2.5 flex items-center justify-center glass rounded-xl', compact ? 'size-9' : 'size-11')}>
+        <Icon className={cn('text-muted-foreground', compact ? 'size-4' : 'size-5')} />
       </div>
       <p className="text-sm font-semibold">{title}</p>
       {description && <p className="mt-1 max-w-sm text-sm text-muted-foreground">{description}</p>}
-      {action && <div className="mt-4">{action}</div>}
+      {action && <div className="mt-3">{action}</div>}
     </motion.div>
   )
 }

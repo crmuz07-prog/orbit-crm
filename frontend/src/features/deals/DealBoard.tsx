@@ -63,7 +63,7 @@ export function DealBoard({ deals, stages }: { deals: Deal[]; stages: Stage[] })
     <>
       <DndContext sensors={sensors} collisionDetection={underPointer} onDragStart={(e) => setActiveId(String(e.active.id))} onDragEnd={onDragEnd} onDragCancel={() => setActiveId(null)}>
         <LayoutGroup>
-          <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+          <div className="-mx-[var(--gutter)] flex gap-3 overflow-x-auto px-[var(--gutter)] pb-3">
             {stages.map((stage, i) => <StageColumn key={stage.id} stage={stage} first={i === 0} deals={deals.filter((d) => d.stage_id === stage.id)} />)}
           </div>
         </LayoutGroup>

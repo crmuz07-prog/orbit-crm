@@ -16,7 +16,7 @@ export function CallStatsStrip() {
   const allowed = can('reports', 'view')
   const { data } = useQuery({ queryKey: CALL_QUERIES.stats, queryFn: api.callStats, enabled: allowed })
   if (!allowed) return null
-  if (!data) return <Skeleton className="mb-5 h-[76px] rounded-2xl" />
+  if (!data) return <Skeleton className="mb-3 h-[76px] rounded-2xl" />
 
   const stats: [string, number, (n: number) => string][] = [
     [t('calls.today'), data.today, count],
@@ -27,9 +27,9 @@ export function CallStatsStrip() {
   ]
 
   return (
-    <Card className="mb-5 grid grid-cols-2 sm:grid-cols-5 sm:divide-x sm:divide-foreground/[0.06]">
+    <Card className="mb-3 grid grid-cols-2 sm:grid-cols-5 sm:divide-x sm:divide-foreground/[0.06]">
       {stats.map(([label, value, format]) => (
-        <div key={label} className="px-5 py-4">
+        <div key={label} className="px-4 py-3">
           <p className="text-xs text-muted-foreground">{label}</p>
           <p className="mt-1 text-lg font-semibold"><AnimatedNumber value={value} format={format} /></p>
         </div>

@@ -71,7 +71,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
               </CommandGroup>
             ))}
           </CommandList>
-          <div className="flex gap-4 border-t border-foreground/[0.06] px-4 py-2 text-[11px] text-muted-foreground">
+          <div className="flex gap-3 border-t border-foreground/[0.06] px-4 py-2 text-[11px] text-muted-foreground">
             <span>{t('palette.navigate')}</span><span>{t('palette.open')}</span><span>{t('palette.close')}</span>
           </div>
         </Command>

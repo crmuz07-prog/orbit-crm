@@ -33,8 +33,8 @@ export function AddMemberForm({ add, actorRole }: { add: TeamActions['add']; act
   }
 
   return (
-    <div className="space-y-4">
-      <form id="add-member-form" onSubmit={submit} noValidate className="grid gap-4 sm:grid-cols-2">
+    <div className="space-y-3">
+      <form id="add-member-form" onSubmit={submit} noValidate className="grid gap-3 sm:grid-cols-2">
         <LoginFields value={login} onChange={setLogin} onEdit={errors.clear}
           errors={{ full_name: errors.message('full_name'), email: errors.message('email'), password: errors.message('password') }} />
         <div className="space-y-1.5">

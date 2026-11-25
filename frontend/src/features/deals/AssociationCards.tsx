@@ -15,7 +15,7 @@ function AssociationCard({ title, to, media, name, detail, extra }: { title: str
   return (
     <Card>
       <CardHeader title={title} />
-      <div className="flex items-center gap-3 px-5 py-4">
+      <div className="flex items-center gap-3 px-4 py-3">
         <Link to={to} className="flex min-w-0 flex-1 items-center gap-3 transition-opacity hover:opacity-80">
           {media}
           <div className="min-w-0">

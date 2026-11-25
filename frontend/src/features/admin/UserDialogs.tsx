@@ -49,7 +49,7 @@ export function CreateUserDialog({ open, onOpenChange, companies, create }: { op
 
   return (
     <IssueDialog open={open} onOpenChange={reset} title={t('admin.newUser')} issued={issued} dirty={!!(login.full_name.trim() || login.email.trim())}>
-      <form id="new-user-form" onSubmit={submit} noValidate className="grid gap-4 sm:grid-cols-2">
+      <form id="new-user-form" onSubmit={submit} noValidate className="grid gap-3 sm:grid-cols-2">
         <LoginFields value={login} onChange={setLogin} onEdit={errors.clear}
           errors={{ full_name: errors.message('full_name'), email: errors.message('email'), password: errors.message('password') }} />
         <CompanyRolePicker companies={companies} companyId={companyId} onCompany={setCompanyId} role={role} onRole={setRole} optional />
@@ -77,7 +77,7 @@ export function SetPasswordDialog({ user, onClose, setPassword }: { user: AdminU
   return (
     <IssueDialog open={!!user} onOpenChange={(o) => !o && close()} title={t('team.setPassword')} description={user ? t('team.setPasswordHint', { name: user.full_name }) : undefined}
       issued={user && issued ? { email: user.email, password: issued } : null}>
-      <form id="admin-password-form" onSubmit={submit} noValidate className="space-y-4">
+      <form id="admin-password-form" onSubmit={submit} noValidate className="space-y-3">
         <PasswordField label={t('team.tempPassword')} value={password} onChange={passwordErrors.bind('password', setValue)} error={passwordErrors.message('password')} />
         <div className="flex justify-end"><Button type="submit" disabled={setPassword.isPending}>{t('team.setPassword')}</Button></div>
       </form>
@@ -98,7 +98,7 @@ export function AddToCompanyDialog({ user, onClose, companies, add }: { user: Ad
     <Dialog open={!!user} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-md">
         <DialogHeader><DialogTitle>{t('admin.addToCompany')}</DialogTitle></DialogHeader>
-        <form onSubmit={submit} className="grid gap-4">
+        <form onSubmit={submit} className="grid gap-3">
           <CompanyRolePicker companies={available} companyId={companyId} onCompany={setCompanyId} role={role} onRole={setRole} />
           <div className="flex justify-end"><Button type="submit" disabled={!companyId || add.isPending}>{t('admin.addToCompany')}</Button></div>
         </form>

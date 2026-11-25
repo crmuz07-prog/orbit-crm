@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { isToday, isYesterday } from 'date-fns'
 import { MessageSquareText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { EmptyState } from '@/components/common/states'
 import { ActivityMeta } from '@/features/activities/ActivityLinks'
 import { ActivityRow } from '@/features/activities/ActivityRow'
 import { historyApi } from '@/lib/api'
@@ -45,11 +46,7 @@ export function Feed({ link, recordId, activities, onItemsChange }: { link: Reco
   }, [items.length, onItemsChange])
 
   if (items.length === 0) {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-2 py-16 text-center text-sm text-muted-foreground">
-        <MessageSquareText className="size-6 opacity-60" /> {t('feed.empty')}
-      </div>
-    )
+    return <EmptyState icon={MessageSquareText} title={t('feed.empty')} compact className="flex-1" />
   }
   return (
     <div className="space-y-1">

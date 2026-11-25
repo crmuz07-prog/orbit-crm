@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/034-search-companies-by-person.md](docs/prompts/034-search-companies-by-person.md)
+Latest: [docs/prompts/035-spacing-scale-and-layout-guard.md](docs/prompts/035-spacing-scale-and-layout-guard.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -39,3 +39,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [032 — Import uses everything useful in the sheet](docs/prompts/032-import-everything-useful.md)
 - [033 — Tasks like amoCRM](docs/prompts/033-amocrm-tasks.md)
 - [034 — Find companies by the people in them](docs/prompts/034-search-companies-by-person.md)
+- [035 — One spacing scale, one page gutter, layout guards](docs/prompts/035-spacing-scale-and-layout-guard.md)

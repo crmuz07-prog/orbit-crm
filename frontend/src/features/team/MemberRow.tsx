@@ -56,7 +56,7 @@ function SetPasswordButton({ member, setPassword }: { member: TeamMember; setPas
             <DialogDescription>{t('team.setPasswordHint', { name: member.full_name })}</DialogDescription>
           </DialogHeader>
           {issued ? <CredentialsCard email={member.email} password={issued} /> : (
-            <form id="member-password-form" onSubmit={submit} noValidate className="space-y-4">
+            <form id="member-password-form" onSubmit={submit} noValidate className="space-y-3">
               <PasswordField label={t('team.tempPassword')} value={password} onChange={errors.bind('password', setValue)} error={errors.message('password')} />
               <div className="flex justify-end"><Button type="submit" disabled={setPassword.isPending}>{t('team.setPassword')}</Button></div>
             </form>
@@ -75,7 +75,7 @@ export function MemberRow({ member, isSelf, canManage, actorRole, actions, acces
   const change = useMemberChange(member, actions.update)
 
   return (
-    <li className="flex flex-wrap items-center gap-3 px-5 py-3">
+    <li className="flex flex-wrap items-center gap-3 px-4 py-3">
       <PersonAvatar name={member.full_name} />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">

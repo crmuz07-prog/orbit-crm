@@ -24,7 +24,7 @@ export function CallHeader({ contact, companyName, timer }: { contact?: Contact;
   const phone = contact?.phone
 
   return (
-    <div className="glass-subtle flex flex-wrap items-center gap-4 rounded-2xl p-4">
+    <div className="glass-subtle flex flex-wrap items-center gap-3 rounded-2xl p-4">
       {contact && <PersonAvatar name={fullName(contact)} size="md" />}
       <div className="min-w-0 flex-1">
         <p className="truncate font-medium">{contact ? fullName(contact) : t('calls.dialogTitleBlank')}</p>

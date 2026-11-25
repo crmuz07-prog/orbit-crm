@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 
 export function BackLink({ to, label }: { to: string; label: string }) {
   return (
-    <Link to={to} className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground transition hover:text-foreground">
+    <Link to={to} className="mb-3 inline-flex items-center gap-1 text-sm text-muted-foreground transition hover:text-foreground">
       <ChevronLeft className="size-4" /> {label}
     </Link>
   )
@@ -31,7 +31,7 @@ export function ListCard<T extends { id: string }>({ title, description, action,
 
 export function RowLink({ to, className, children }: { to: string; className?: string; children: ReactNode }) {
   return (
-    <Link to={to} className={cn('group flex items-center gap-3 px-5 py-3 transition-colors hover:bg-foreground/[0.03]', className)}>
+    <Link to={to} className={cn('group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-foreground/[0.03]', className)}>
       {children}
     </Link>
   )

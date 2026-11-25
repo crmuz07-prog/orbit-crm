@@ -48,6 +48,12 @@ HubSpot, Salesforce, Pipedrive, Attio, Close, plus Linear for interaction qualit
 - Keyboard first: ⌘K palette, Esc closes, Enter submits.
 - Motion is subtle (150–250 ms), respects `prefers-reduced-motion`.
 - Dark mode, responsive down to 375 px, accessible labels and focus rings.
+- **Spacing scale** (checked by `scripts/check-spacing.sh` in `make check`): card / section inset `px-4`, list rows `py-2`,
+  stacks and grids `gap-1…3` / `space-y-1…3`, page header `mb-4`, toolbar `mb-3`. The page gutter is the `--gutter` CSS
+  variable — full-bleed rows use `-mx-[var(--gutter)] px-[var(--gutter)]`, never hard-coded widths. Roomier spacing only in
+  the files listed in `scripts/spacing-allow.txt` (sign-in screens, full-page states, `components/ui`).
+- **Layouts never overflow**: rows that hold controls wrap (`flex-wrap`), text truncates (`min-w-0 truncate`), wide content
+  scrolls inside its own container (tables, boards); empty states use `EmptyState` (`compact` inside cards).
 
 ## Layout
 ```

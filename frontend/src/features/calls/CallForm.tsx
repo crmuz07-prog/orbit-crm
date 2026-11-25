@@ -43,17 +43,17 @@ export function CallForm({ initial, onDone }: Props) {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4">
+    <form onSubmit={submit} className="space-y-3">
       <CallHeader contact={contact} companyName={companyId ? companyById.get(companyId)?.name : undefined} timer={timer} />
       {!initial?.contact_id && (
         <SelectField label={t('calls.contact')} emptyLabel="—" value={contactId} onChange={setContactId} options={contacts.map((c) => ({ value: c.id, label: fullName(c) }))} />
       )}
-      <div className="flex flex-wrap items-end gap-4">
+      <div className="flex flex-wrap items-end gap-3">
         <Section label={t('calls.direction')}><DirectionPicker value={direction} onChange={setDirection} /></Section>
         <Section label={t('calls.outcome')}><OutcomePicker value={outcome} onChange={setOutcome} /></Section>
       </div>
       <CallNotesFields notes={notes} patch={patch} />
-      <div className="flex justify-end gap-2 border-t border-foreground/[0.06] pt-4">
+      <div className="flex justify-end gap-2 border-t border-foreground/[0.06] pt-3">
         <Button variant="outline" onClick={onDone}>{t('common.cancel')}</Button>
         <Button type="submit" disabled={logCall.isPending}>{t('calls.save')}</Button>
       </div>

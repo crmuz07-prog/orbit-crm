@@ -34,7 +34,7 @@ export function CreateCompanyDialog({ open, onOpenChange, create }: { open: bool
 
   return (
     <IssueDialog open={open} onOpenChange={reset} title={t('admin.newCompany')} issued={issued} dirty={!!(name.trim() || owner.full_name.trim() || owner.email.trim())}>
-      <form id="new-company-form" onSubmit={submit} noValidate className="grid gap-4 sm:grid-cols-2">
+      <form id="new-company-form" onSubmit={submit} noValidate className="grid gap-3 sm:grid-cols-2">
         <TextField wide name="name" label={t('admin.companyName')} autoFocus value={name} onChange={errors.bind('name', setName)} error={errors.message('name')} />
         <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground sm:col-span-2">{t('admin.owner')}</p>
         <LoginFields value={owner} onChange={setOwner} onEdit={errors.clear}
@@ -55,7 +55,7 @@ function RenameForm({ company, onDone, rename }: { company: PlatformCompany; onD
     rename.mutate({ id: company.id, name: name.trim() }, { onSuccess: onDone })
   }
   return (
-    <form id="rename-company-form" onSubmit={submit} noValidate className="space-y-4">
+    <form id="rename-company-form" onSubmit={submit} noValidate className="space-y-3">
       <TextField name="name" label={t('admin.companyName')} autoFocus value={name} onChange={errors.bind('name', setName)} error={errors.message('name')} />
       <div className="flex justify-end"><Button type="submit" disabled={rename.isPending}>{t('common.save')}</Button></div>
     </form>

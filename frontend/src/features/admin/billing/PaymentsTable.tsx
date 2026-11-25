@@ -8,7 +8,7 @@ import { money, shortDate } from '@/lib/utils'
 /** Payment history; `withCompany` adds the company column for the platform-wide list. */
 export function PaymentsTable({ payments, withCompany = false }: { payments: Payment[]; withCompany?: boolean }) {
   const { t } = useTranslation()
-  if (payments.length === 0) return <EmptyState icon={Wallet} title={t('billing.noPayments')} className="py-8" />
+  if (payments.length === 0) return <EmptyState icon={Wallet} title={t('billing.noPayments')} compact />
   const columns: Column<Payment>[] = [
     { key: 'date', header: t('billing.date'), sortValue: (p) => p.created_at, cell: (p) => shortDate(p.created_at) },
     ...(withCompany ? [{ key: 'company', header: t('billing.company'), sortValue: (p: Payment) => p.workspace_name, cell: (p: Payment) => <span className="font-medium">{p.workspace_name}</span> }] : []),

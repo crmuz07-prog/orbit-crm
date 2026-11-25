@@ -36,14 +36,14 @@ export function CallWrapUpForm({ initial: call, onDone }: Props) {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4">
+    <form onSubmit={submit} className="space-y-3">
       <div className="glass-subtle rounded-2xl p-4">
         <p className="font-medium">{subject(call)}</p>
         <CallDetails activity={call} showWrapUp={false} />
       </div>
       <Section label={t('calls.outcome')}><OutcomePicker value={outcome} onChange={setOutcome} /></Section>
       <CallNotesFields notes={notes} patch={patch} />
-      <div className="flex justify-end gap-2 border-t border-foreground/[0.06] pt-4">
+      <div className="flex justify-end gap-2 border-t border-foreground/[0.06] pt-3">
         <Button variant="outline" onClick={onDone}>{t('common.cancel')}</Button>
         <Button type="submit" disabled={update.isPending || create.isPending}>{t('common.save')}</Button>
       </div>

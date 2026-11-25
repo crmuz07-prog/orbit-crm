@@ -29,7 +29,7 @@ function TeamRow({ team, actions, onDelete }: { team: SalesTeam; actions: Access
   const [editing, setEditing] = useState(false)
   const rename = (name: string) => actions.renameTeam.mutate({ id: team.id, name }, { onSuccess: () => setEditing(false) })
   return (
-    <li className="flex items-center gap-3 px-5 py-2.5">
+    <li className="flex items-center gap-3 px-4 py-2.5">
       <Users className="size-4 shrink-0 text-muted-foreground" />
       {editing ? <NameForm initial={team.name} placeholder={t('teams.name')} label={t('common.save')} onSubmit={rename} /> : (
         <p className="flex-1 truncate text-sm">
@@ -57,7 +57,7 @@ export function SalesTeamsCard({ actions }: { actions: AccessActions }) {
       <CardContent className="border-b border-foreground/[0.06]">
         <NameForm initial="" placeholder={t('teams.name')} label={t('teams.add')} onSubmit={(name) => actions.createTeam.mutate(name)} />
       </CardContent>
-      {teams.length === 0 ? <p className="px-5 py-4 text-sm text-muted-foreground">{t('teams.empty')}</p> : (
+      {teams.length === 0 ? <p className="px-4 py-3 text-sm text-muted-foreground">{t('teams.empty')}</p> : (
         <ul className="divide-y divide-foreground/[0.06]">
           {teams.map((team) => <TeamRow key={team.id} team={team} actions={actions} onDelete={() => setDeleting(team)} />)}
         </ul>

@@ -67,7 +67,7 @@ export function TaskBoard({ tasks }: { tasks: Activity[] }) {
 
   return (
     <DndContext sensors={sensors} collisionDetection={pointerWithin} onDragStart={(e) => setActive(open.find((a) => a.id === e.active.id) ?? null)} onDragEnd={onDragEnd} onDragCancel={() => setActive(null)}>
-      <div className="flex gap-3 overflow-x-auto pb-4">
+      <div className="-mx-[var(--gutter)] flex gap-3 overflow-x-auto px-[var(--gutter)] pb-3">
         {BUCKETS.map((b) => <Column key={b} bucket={b} tasks={open.filter((a) => bucketOf(a) === b)} />)}
       </div>
       <DragOverlay dropAnimation={null}>{active && <TaskCard task={active} overlay />}</DragOverlay>

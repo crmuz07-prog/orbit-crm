@@ -13,7 +13,7 @@ import { useConfirm } from '@/components/common/confirm-provider'
 
 function DataAction({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-foreground/[0.06] px-5 py-4 first-of-type:border-t-0">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-foreground/[0.06] px-4 py-3 first-of-type:border-t-0">
       <div>
         <p className="text-sm font-medium">{title}</p>
         <p className="text-sm text-muted-foreground">{description}</p>

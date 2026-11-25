@@ -68,7 +68,7 @@ export function ReminderBell() {
       </PopoverTrigger>
       <PopoverContent className="max-h-[70vh] w-96 overflow-y-auto p-0 pb-2">
         <div className="border-b border-foreground/[0.06] px-4 py-3 text-sm font-semibold">{t('reminder.title')}</div>
-        {reminders.length === 0 && <EmptyState icon={Bell} title={t('reminder.empty')} description={t('reminder.emptyDesc')} className="py-8" />}
+        {reminders.length === 0 && <EmptyState icon={Bell} title={t('reminder.empty')} description={t('reminder.emptyDesc')} compact />}
         <Group title={t('reminder.due')} items={due} due />
         <Group title={t('reminder.upcoming')} items={upcoming.slice(0, 10)} due={false} />
         {canAskPermission() && (

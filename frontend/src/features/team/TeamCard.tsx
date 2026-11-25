@@ -34,7 +34,7 @@ export function TeamCard({ access }: { access?: AccessOverview }) {
           <MemberRow key={m.user_id} member={m} isSelf={m.user_id === session.user.id} canManage={team.can_manage} actorRole={session.role!} actions={{ update, remove, setPassword }} access={access} />
         ))}
       </ul>
-      {hint && <p className="px-5 py-3 text-xs text-muted-foreground">{hint}</p>}
+      {hint && <p className="px-4 py-3 text-xs text-muted-foreground">{hint}</p>}
     </Card>
   )
 }

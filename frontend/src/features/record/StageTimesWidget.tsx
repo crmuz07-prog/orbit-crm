@@ -23,7 +23,7 @@ export function StageTimesWidget({ deal }: { deal: Deal }) {
   return (
     <Card>
       <CardHeader title={<span className="inline-flex items-center gap-2"><Timer className="size-4 text-primary" /> {t('card.stageTimes')}</span>} />
-      <ul className="space-y-3 px-5 py-4">
+      <ul className="space-y-3 px-4 py-3">
         {visited.map((s) => (
           <li key={s.id}>
             <div className="flex items-baseline justify-between gap-2 text-sm">

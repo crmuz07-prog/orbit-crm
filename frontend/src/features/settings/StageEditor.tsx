@@ -33,7 +33,7 @@ function PipelineToolbar({ pipeline, onDeleted }: { pipeline: Pipeline; onDelete
     if (await ask(options)) actions.update.mutate({ id: pipeline.id, patch: { is_default: true } })
   }
   return (
-    <div className="flex flex-wrap items-center gap-2 border-b border-foreground/[0.06] px-5 py-3">
+    <div className="flex flex-wrap items-center gap-2 border-b border-foreground/[0.06] px-4 py-3">
       <Input value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') rename(); if (e.key === 'Escape') setName(shown) }}
         aria-label={t('pipelines.name')} className="h-8 max-w-xs flex-1" />
       {dirty && <SaveBar dirty onSave={rename} onCancel={() => setName(shown)} />}
@@ -80,7 +80,7 @@ export function StageEditor() {
     <Card>
       <CardHeader title={t('pipelines.title')} description={t('pipelines.description')}
         action={<Button size="sm" variant="outline" onClick={addPipeline}><Plus /> {t('pipelines.add')}</Button>} />
-      <div className="flex flex-wrap items-center justify-between gap-2 px-5 pt-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 pt-3">
         <PipelineSwitcher pipelines={pipelines} current={pipeline} onChange={setPipeline} />
         <Button size="sm" variant="outline" onClick={addStage}><Plus /> {t('settings.addStage')}</Button>
       </div>

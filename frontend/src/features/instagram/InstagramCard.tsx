@@ -55,7 +55,7 @@ export function InstagramCard() {
       <CardHeader title={<span className="inline-flex items-center gap-2"><Instagram className="size-4 text-pink-500" /> {t('igSettings.title')}</span>}
         description={t('igSettings.description')}
         action={<Badge tone={connected ? 'green' : 'gray'}>{connected ? t('igSettings.connected') : t('igSettings.notConnected')}</Badge>} />
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3">
         <ol className="list-decimal space-y-1 pl-5 text-xs text-muted-foreground">
           {(['step1', 'step2', 'step3', 'step4'] as const).map((k) => <li key={k}>{t(`igSettings.${k}`)}</li>)}
         </ol>
@@ -69,7 +69,7 @@ export function InstagramCard() {
           <SelectField label={t('igSettings.owner')} value={settings.owner_id ?? ''} emptyLabel={t('owner.unassigned')}
             options={members.map((m) => ({ value: m.user_id, label: m.full_name }))} onChange={(v) => update.mutate({ owner_id: v || null })} />
         </div>
-        <div className="flex flex-wrap items-center gap-2 border-t border-foreground/[0.06] pt-4">
+        <div className="flex flex-wrap items-center gap-2 border-t border-foreground/[0.06] pt-3">
           <Button variant="outline" size="sm" disabled={simulate.isPending} onClick={() => simulate.mutate('message')}><FlaskConical /> {t('instagram.simulateMessage')}</Button>
           <Button variant="outline" size="sm" disabled={simulate.isPending} onClick={() => simulate.mutate('lead_form')}><FlaskConical /> {t('instagram.simulateLead')}</Button>
           <Button variant="ghost" size="sm" className="ml-auto" onClick={() => setConfirm(true)}><RefreshCw /> {t('igSettings.rotate')}</Button>

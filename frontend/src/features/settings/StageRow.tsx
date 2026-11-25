@@ -82,7 +82,7 @@ export function StageRow({ stage, dealCount, onMove, canUp, canDown }: Props) {
   }
 
   return (
-    <motion.li layout transition={spring} className="space-y-2 px-5 py-3">
+    <motion.li layout transition={spring} className="space-y-2 px-4 py-3">
       <div className="flex flex-wrap items-center gap-3">
       <ColorPicker stage={stage} />
       <Input value={name} onChange={(e) => setName(e.target.value)} onKeyDown={keys} className="h-8 min-w-[160px] flex-1" />

@@ -2,6 +2,7 @@ import { Instagram } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { PersonAvatar } from '@/components/common/avatars'
 import { ListCard, RowLink } from '@/components/common/record'
+import { EmptyState } from '@/components/common/states'
 import { StageBadge } from '@/features/deals/bits'
 import { useCrm } from '@/hooks/useData'
 import { fullName, timeAgo } from '@/lib/utils'
@@ -17,7 +18,7 @@ export function LatestLeads({ className }: { className?: string }) {
         title={t('instagram.latest')}
         description={t('instagram.latestDesc')}
         items={latest}
-        empty={<p className="px-5 py-6 text-sm text-muted-foreground">{t('instagram.empty')}</p>}
+        empty={<EmptyState icon={Instagram} title={t('instagram.empty')} compact />}
         render={(deal) => {
           const contact = deal.contact_id ? contactById.get(deal.contact_id) : undefined
           const name = contact ? fullName(contact) : deal.title

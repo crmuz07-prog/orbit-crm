@@ -70,7 +70,7 @@ export function ImportDialog({ open, onOpenChange }: { open: boolean; onOpenChan
         <input ref={input} type="file" accept=".xlsx,.xlsm,.csv" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) read.mutate(f); e.target.value = '' }} />
         {result ? <ImportSummary result={result} /> : !preview ? (
           <button type="button" onClick={() => input.current?.click()} disabled={read.isPending}
-            className="glass-subtle flex flex-col items-center gap-2 rounded-xl border border-dashed px-4 py-8 text-sm text-muted-foreground transition-colors hover:text-foreground">
+            className="glass-subtle flex flex-col items-center gap-2 rounded-xl border border-dashed h-28 justify-center px-4 text-sm text-muted-foreground transition-colors hover:text-foreground">
             <Upload className="size-6" /> {read.isPending ? t('importer.reading') : t('importer.pick')}
           </button>
         ) : (

@@ -49,8 +49,8 @@ export function CallSimulator() {
   })
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-4 sm:grid-cols-2">
+    <div className="space-y-3">
+      <div className="grid gap-3 sm:grid-cols-2">
         <SelectField label={t('telephony.pickContact')} emptyLabel="—" value="" onChange={(id) => setPhone(withPhone.find((c) => c.id === id)?.phone ?? phone)} options={withPhone.map((c) => ({ value: c.id, label: `${fullName(c)} · ${c.phone}` }))} />
         <TextField label={t('telephony.phone')} value={phone} onChange={setPhone} />
         <Section label={t('calls.direction')}><DirectionPicker value={direction} onChange={setDirection} /></Section>

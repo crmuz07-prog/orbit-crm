@@ -30,7 +30,7 @@ function ProfileCard() {
   return (
     <Card>
       <CardHeader title={t('settings.profile')} />
-      <div className="flex flex-wrap items-center gap-4 px-5 py-4">
+      <div className="flex flex-wrap items-center gap-3 px-4 py-3">
         <PersonAvatar name={session.user.full_name} size="lg" />
         <div>
           <p className="font-medium">{session.user.full_name}</p>
@@ -47,7 +47,7 @@ function ProfileCard() {
 
 function PreferenceRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-foreground/[0.06] px-5 py-4 first-of-type:border-t-0">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-foreground/[0.06] px-4 py-3 first-of-type:border-t-0">
       <p className="text-sm text-muted-foreground">{label}</p>
       {children}
     </div>

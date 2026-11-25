@@ -16,7 +16,7 @@ export function DealsListCard({ deals, onAdd }: { deals: Deal[]; onAdd: () => vo
       title={t('deals.count', { count: deals.length })}
       action={<Button size="sm" variant="ghost" onClick={onAdd}><Plus /> {t('common.add')}</Button>}
       items={deals}
-      empty={<p className="px-5 py-4 text-sm text-muted-foreground">{t('deals.none')}</p>}
+      empty={<p className="px-4 py-3 text-sm text-muted-foreground">{t('deals.none')}</p>}
       render={(d) => (
         <RowLink to={`/deals/${d.id}`}>
           <div className="min-w-0 flex-1">

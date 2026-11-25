@@ -29,7 +29,7 @@ function ProfileForm() {
   return (
     <form id="profile-form" onSubmit={submit} noValidate className="flex flex-wrap items-start gap-3">
       <div className="min-w-[220px] flex-1"><TextField name="name" label={t('account.name')} value={name} onChange={errors.bind('name', setName)} error={errors.message('name')} /></div>
-      <Button type="submit" variant="outline" className="mt-6" disabled={busy}>{t('account.saveProfile')}</Button>
+      <Button type="submit" variant="outline" className="mt-4" disabled={busy}>{t('account.saveProfile')}</Button>
     </form>
   )
 }
@@ -61,7 +61,7 @@ function PasswordForm() {
     <form id="password-form" onSubmit={submit} noValidate className="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
       {hasPassword && <TextField name="current" label={t('account.currentPassword')} type="password" autoComplete="current-password" value={current} onChange={setCurrent} error={errors.message('current')} />}
       <TextField name="next" label={t('account.newPassword')} type="password" autoComplete="new-password" value={next} onChange={setNext} error={errors.message('next')} />
-      <Button type="submit" variant="outline" className="sm:mt-6" disabled={busy}>{hasPassword ? t('account.changePassword') : t('account.setFirstPassword')}</Button>
+      <Button type="submit" variant="outline" className="sm:mt-4" disabled={busy}>{hasPassword ? t('account.changePassword') : t('account.setFirstPassword')}</Button>
     </form>
   )
 }
@@ -74,7 +74,7 @@ export function AccountCard() {
   return (
     <Card>
       <CardHeader title={t('account.profile')} description={session.user.email} />
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3">
         <ProfileForm />
         <div className="space-y-2">
           <p className="text-sm font-medium">{t('account.security')}</p>

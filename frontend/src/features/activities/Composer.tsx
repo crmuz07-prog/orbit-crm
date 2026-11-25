@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { DateTimePicker } from '@/components/ui/date-picker'
 import { Input, Textarea } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tooltip } from '@/components/ui/tooltip'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { useCreateRow } from '@/hooks/useData'
 import { remindAt, type ReminderKey } from '@/lib/reminders'
@@ -66,17 +67,22 @@ export function Composer({ links }: { links: Links }) {
 
   return (
     <form onSubmit={submit} className="glass rounded-2xl">
-      <div className="flex items-center justify-between gap-2 border-b border-foreground/[0.06] p-2">
+      {/* Wraps instead of overflowing; on phones the tabs and the call button are icons (names in tooltips). */}
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-foreground/[0.06] p-2">
         <Tabs value={type} onValueChange={(v) => setType(v as ComposerType)}>
           <TabsList className="h-8 border-0 bg-transparent p-0">
             {TYPES.map((value) => {
               const Icon = ACTIVITY_META[value].icon
-              return <TabsTrigger key={value} value={value}><Icon /> {t(`enums.activity.${value}`)}</TabsTrigger>
+              return (
+                <Tooltip key={value} content={t(`enums.activity.${value}`)}>
+                  <TabsTrigger value={value} aria-label={t(`enums.activity.${value}`)}><Icon /> <span className="hidden sm:inline">{t(`enums.activity.${value}`)}</span></TabsTrigger>
+                </Tooltip>
+              )
             })}
           </TabsList>
         </Tabs>
-        <Button type="button" size="sm" variant="outline" onClick={() => openModal({ kind: 'call', initial: links })}>
-          <Phone className="text-emerald-500" /> {t('calls.logCall')}
+        <Button type="button" size="sm" variant="outline" aria-label={t('calls.logCall')} onClick={() => openModal({ kind: 'call', initial: links })}>
+          <Phone className="text-emerald-500" /> <span className="hidden sm:inline">{t('calls.logCall')}</span>
         </Button>
       </div>
       <motion.div layout className="space-y-2.5 p-3">

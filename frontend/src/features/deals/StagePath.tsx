@@ -49,7 +49,7 @@ export function StagePath({ deal, stages, onSelect }: { deal: Deal; stages: Stag
             whileTap={selectable ? { scale: 0.97 } : undefined}
             onClick={() => selectable && onSelect(step)}
             style={{ clipPath: i === 0 ? CHEVRON_FIRST : CHEVRON }}
-            className={cn('flex h-9 min-w-[120px] flex-1 items-center justify-center gap-1.5 px-5 text-xs font-medium transition-colors duration-300', i === 0 && 'rounded-l-lg', STEP_CLASS[state])}
+            className={cn('flex h-9 min-w-[120px] flex-1 items-center justify-center gap-1.5 px-4 text-xs font-medium transition-colors duration-300', i === 0 && 'rounded-l-lg', STEP_CLASS[state])}
           >
             {(state === 'done' || state === 'won') && <Check className="size-3.5" />}
             <span className="truncate">{step.id === 'closed' && !closed ? step.name : labels.stage(step.name)}</span>

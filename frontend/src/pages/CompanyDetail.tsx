@@ -72,7 +72,7 @@ export default function CompanyDetailPage() {
             title={t('companies.people', { count: people.length })}
             action={<Button size="sm" variant="ghost" onClick={addContact}><Plus /> {t('common.add')}</Button>}
             items={people}
-            empty={<p className="px-5 py-4 text-sm text-muted-foreground">{t('companies.noPeople')}</p>}
+            empty={<p className="px-4 py-3 text-sm text-muted-foreground">{t('companies.noPeople')}</p>}
             render={(c) => (
               <RowLink to={`/contacts/${c.id}`}>
                 <PersonAvatar name={fullName(c)} />

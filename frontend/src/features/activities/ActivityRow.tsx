@@ -42,7 +42,7 @@ export function ActivityRow({ activity: a, meta, compact }: Props) {
   const schedulable = a.type !== 'note' && a.type !== 'call'
 
   return (
-    <div className={cn('group flex items-start gap-3 px-5', compact ? 'py-3' : 'py-3.5')}>
+    <div className={cn('group flex items-start gap-3 px-4', compact ? 'py-3' : 'py-2.5')}>
       <div className="w-[18px] pt-1.5">
         {schedulable && <Checkbox checked={a.done} onCheckedChange={() => actions.toggleDone(a)} aria-label={t('activities.markDone')} />}
         {a.pinned && <Pin className="mt-0.5 size-3.5 text-primary" />}
