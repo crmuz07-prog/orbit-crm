@@ -24,7 +24,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       {/* startTransition: while a page's code loads, the current page stays on screen instead of a fallback. */}
-      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <BrowserRouter>
         <MotionConfig reducedMotion="user">
           <TooltipProvider delayDuration={300}>
             <AuthProvider>

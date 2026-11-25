@@ -11,6 +11,7 @@ from starlette.concurrency import run_in_threadpool
 from app.api.deps import DB, Ctx, context_for_token
 from app.services.workspaces import require_role
 from app.core.errors import DomainError
+from app.core.security import create_stream_ticket
 from app.models import TelephonyIntegration
 from app.schemas.crm import ActivityOut
 from app.schemas.telephony import SimulateIn, TelephonyEventIn, TelephonySettingsOut, TelephonySettingsPatch
@@ -79,14 +80,20 @@ def simulate(payload: SimulateIn, ctx: Ctx) -> dict[str, Any]:
     return {"call_id": call_id, "activity": ActivityOut.model_validate(call)}
 
 
-def _workspace_for_token(db: DB, token: str) -> str:
-    return context_for_token(db, token).workspace_id
+def _workspace_for_ticket(db: DB, ticket: str) -> str:
+    return context_for_token(db, ticket, stream=True).workspace_id
+
+
+@router.post("/stream-ticket")
+def stream_ticket(ctx: Ctx) -> dict[str, str]:
+    """EventSource cannot send headers, so the stream URL carries a one-minute, stream-only ticket — never the session."""
+    return {"ticket": create_stream_ticket(ctx.user.id, ctx.workspace_id, ctx.user.session_version)}
 
 
 @router.get("/stream")
-async def stream(token: str, request: Request, db: DB) -> StreamingResponse:
-    """Server-Sent Events; EventSource cannot send headers, so the JWT comes in the query string."""
-    workspace_id = await run_in_threadpool(_workspace_for_token, db, token)
+async def stream(ticket: str, request: Request, db: DB) -> StreamingResponse:
+    """Server-Sent Events, opened with a ticket from POST /telephony/stream-ticket."""
+    workspace_id = await run_in_threadpool(_workspace_for_ticket, db, ticket)
 
     async def events() -> AsyncIterator[str]:
         yield ": connected\n\n"

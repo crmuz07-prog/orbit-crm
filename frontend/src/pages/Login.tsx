@@ -10,6 +10,7 @@ import { AuthLayout } from '@/features/auth/AuthLayout'
 import { useAsyncAction } from '@/features/auth/useAsyncAction'
 import { useAuthConfig } from '@/features/auth/useAuthConfig'
 import { useFormErrors } from '@/hooks/useFormErrors'
+import { safeInternalPath } from '@/lib/utils'
 import { authApi } from '@/lib/api'
 import { withRetry } from '@/lib/http'
 import type { Token } from '@/lib/types'
@@ -39,7 +40,7 @@ export default function LoginPage() {
     const token = await run(() => withRetry(request))
     if (!token) return
     signIn(token)
-    navigate(params.get('next') ?? '/', { replace: true })
+    navigate(safeInternalPath(params.get('next')), { replace: true })
   }
 
   const submit = (e: FormEvent) => {

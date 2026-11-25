@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, TypeVar
+from typing import Annotated, Any, TypeVar
 
 from pydantic import BaseModel, ConfigDict, create_model
 
@@ -18,7 +18,9 @@ class RowRead(Schema):
 
 def partial(model: type[Model], name: str) -> type[Model]:
     """Builds a PATCH schema: same fields as `model`, all optional, no defaults applied."""
+    # Annotated metadata (validators, length limits) is kept, so a PATCH is checked like a create.
     fields: dict[str, Any] = {
-        field_name: (info.annotation | None, None) for field_name, info in model.model_fields.items()
+        field_name: (Annotated[info.annotation | None, *info.metadata] if info.metadata else info.annotation | None, None)
+        for field_name, info in model.model_fields.items()
     }
     return create_model(name, __base__=Schema, **fields)  # type: ignore[return-value]

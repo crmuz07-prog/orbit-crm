@@ -5,7 +5,7 @@ from collections.abc import Callable, Iterator
 # Tests must not depend on a developer's local .env (environment variables win over it), and the app's start-up
 # migration must never touch the developer's database.
 os.environ.update(
-    REGISTRATION_ENABLED="true", DEMO_ENABLED="true", SUPERADMIN_EMAIL="", SUPERADMIN_PASSWORD="",
+    JWT_SECRET="test-secret-that-is-long-enough-for-hs256", REGISTRATION_ENABLED="true", DEMO_ENABLED="true", SUPERADMIN_EMAIL="", SUPERADMIN_PASSWORD="", RATE_LIMIT_ENABLED="false",
     DATABASE_URL=f"sqlite:///{tempfile.mkdtemp()}/startup.db",
 )
 

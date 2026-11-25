@@ -1,4 +1,4 @@
-.PHONY: install dev api web test build lines spacing check superadmin pbx-env pbx-up pbx-down pbx-logs
+.PHONY: install dev api web test build lines spacing csp check superadmin pbx-env pbx-up pbx-down pbx-logs
 
 PY := backend/.venv/bin/python
 
@@ -31,7 +31,10 @@ lines:
 spacing:
 	./scripts/check-spacing.sh
 
-check: lines spacing test build
+csp:
+	./scripts/check-csp.sh
+
+check: lines spacing test build csp
 
 # ───── Local Asterisk test PBX (docs/asterisk-test.md) ─────
 PBX := docker compose -f infra/asterisk/docker-compose.yml

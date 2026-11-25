@@ -88,3 +88,9 @@ export function errorMessage(error: unknown) {
   if (error instanceof Error && error.message) return error.message
   return i18n.t('errors.generic')
 }
+
+/** An in-app path from an untrusted source (`?next=`): `//evil.com` and `/\evil.com` would leave the site. */
+export function safeInternalPath(path: string | null | undefined, fallback = '/'): string {
+  if (!path || !path.startsWith('/') || path.startsWith('//') || path.includes('\\') || /[\u0000-\u001f]/.test(path)) return fallback
+  return path
+}

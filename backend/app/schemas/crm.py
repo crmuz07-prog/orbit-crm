@@ -1,7 +1,7 @@
 from datetime import date, datetime
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import Field
+from pydantic import AfterValidator, Field
 
 from app.schemas.base import RowRead, Schema, partial
 from app.schemas.fields import CustomValue
@@ -14,6 +14,16 @@ CallDirection = Literal["outbound", "inbound"]
 CallOutcome = Literal["connected", "no_answer", "voicemail", "busy", "wrong_number"]
 
 Name = Field(min_length=1, max_length=200)
+
+
+def web_url(value: str | None) -> str | None:
+    """Links people click or play (LinkedIn, call recordings) must be web addresses — never `javascript:` or `data:`."""
+    if value and not value.lower().startswith(("https://", "http://")):
+        raise ValueError("Must be an http(s) address")
+    return value
+
+
+WebUrl = Annotated[str | None, AfterValidator(web_url)]
 
 
 class StageIn(Schema):
@@ -49,7 +59,7 @@ class ContactIn(Schema):
     email: str | None = None
     phone: str | None = None
     title: str | None = None
-    linkedin_url: str | None = None
+    linkedin_url: WebUrl = None
 
 
 class DealIn(Schema):
@@ -82,7 +92,7 @@ class ActivityIn(Schema):
     phone: str | None = None
     next_steps: str | None = None
     result: str | None = Field(default=None, max_length=2000)
-    recording_url: str | None = None
+    recording_url: WebUrl = None
     deal_id: str | None = None
     company_id: str | None = None
     contact_id: str | None = None

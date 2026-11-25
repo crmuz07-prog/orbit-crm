@@ -29,7 +29,8 @@ services:
         sync: false
       - key: SUPERADMIN_PASSWORD
         sync: false
-      # Production frontend + its preview deployments on Vercel.
-      - key: CORS_ORIGIN_REGEX
-        value: https://orbit-crm[a-z0-9-]*\.vercel\.app
+      # Only the production web app (FRONTEND_URL) may call the API from a browser; a shared *.vercel.app pattern would
+      # admit anyone's project. Set CORS_ALLOW_PREVIEWS=true plus a CORS_ORIGIN_REGEX only for a preview you trust.
+      - key: CORS_ORIGINS
+        value: https://orbit-crm-ashy-phi.vercel.app
 

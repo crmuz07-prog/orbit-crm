@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { API_BASE, tokenStore } from '@/lib/http'
+import { API_BASE, http, tokenStore } from '@/lib/http'
 import type { CallEvent } from '@/lib/types'
 
 export type LiveCall = CallEvent & { answeredAt?: number }
@@ -30,12 +30,25 @@ export function CallEventsProvider({ children }: { children: ReactNode }) {
   }, [qc])
 
   useEffect(() => {
-    const token = tokenStore.get()
-    if (!token) return
-    // EventSource reconnects by itself after network errors.
-    const source = new EventSource(`${API_BASE}/telephony/stream?token=${encodeURIComponent(token)}`)
-    source.addEventListener('call', (e) => receive(JSON.parse((e as MessageEvent<string>).data) as CallEvent))
-    return () => source.close()
+    if (!tokenStore.get()) return
+    let source: EventSource | null = null
+    let retry: ReturnType<typeof setTimeout> | undefined
+    let stopped = false
+    // The URL carries a one-minute stream ticket, never the session token (URLs end up in logs). EventSource's own
+    // reconnect would reuse an expired ticket, so every reconnect asks for a fresh one.
+    const connect = async () => {
+      try {
+        const { ticket } = await http<{ ticket: string }>('POST', '/telephony/stream-ticket')
+        if (stopped) return
+        source = new EventSource(`${API_BASE}/telephony/stream?ticket=${encodeURIComponent(ticket)}`)
+        source.addEventListener('call', (e) => receive(JSON.parse((e as MessageEvent<string>).data) as CallEvent))
+        source.onerror = () => { source?.close(); if (!stopped) retry = setTimeout(connect, 5000) }
+      } catch {
+        if (!stopped) retry = setTimeout(connect, 15000)
+      }
+    }
+    void connect()
+    return () => { stopped = true; clearTimeout(retry); source?.close() }
   }, [receive])
 
   const dismiss = useCallback((callId: string) => setCalls(({ [callId]: _, ...rest }) => rest), [])

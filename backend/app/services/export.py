@@ -17,6 +17,16 @@ def member_names(db: Session, workspace_id: str) -> dict[str, str]:
     return {user_id: name for user_id, name in db.execute(query).all()}
 
 
+FORMULA_START = ("=", "+", "-", "@", "\t", "\r")
+
+
+def safe_cell(value: Any) -> Any:
+    """Text that a spreadsheet would run as a formula (=HYPERLINK(…), =cmd|…) is kept as text with a leading quote."""
+    if isinstance(value, str) and value.startswith(FORMULA_START):
+        return "'" + value
+    return value
+
+
 def to_csv(rows: Iterable[Any], schema: type[BaseModel], owners: Mapping[str, str]) -> str:
     """Owner ids become names, which is what a spreadsheet reader needs."""
     columns = list(schema.model_fields)
@@ -27,6 +37,6 @@ def to_csv(rows: Iterable[Any], schema: type[BaseModel], owners: Mapping[str, st
         data = schema.model_validate(row).model_dump(mode="json")
         if data.get("owner_id"):
             data["owner_id"] = owners.get(data["owner_id"], "")
-        writer.writerow(["" if data[c] is None else data[c] for c in columns])
+        writer.writerow(["" if data[c] is None else safe_cell(data[c]) for c in columns])
     # A BOM makes Excel open UTF-8 (Cyrillic and Uzbek names) correctly.
     return "﻿" + buffer.getvalue()

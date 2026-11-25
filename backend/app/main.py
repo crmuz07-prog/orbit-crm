@@ -13,6 +13,7 @@ from app.core.config import get_settings
 from app.core.db import SessionLocal, engine
 from app.core.errors import DomainError
 from app.core.migrate import migrate
+from app.core.headers import security_headers
 from app.core.validation import validation_error
 from app.services.admin import ensure_superadmin
 from app.services.events import broker
@@ -30,6 +31,7 @@ def bootstrap_superadmin() -> None:
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    get_settings().check_production()
     migrate(engine)
     bootstrap_superadmin()
     broker.bind(asyncio.get_running_loop())
@@ -37,14 +39,18 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Orbit CRM API", version="2.0.0", lifespan=lifespan)
     settings = get_settings()
+    # The interactive docs and the schema map the whole API: local development only.
+    docs = {} if not settings.is_production else {"docs_url": None, "redoc_url": None, "openapi_url": None}
+    app = FastAPI(title="Orbit CRM API", version="2.0.0", lifespan=lifespan, **docs)
+    app.middleware("http")(security_headers)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origin_list,
-        allow_origin_regex=settings.cors_origin_regex,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_origin_regex=settings.cors_regex,
+        # What the web app actually sends; nothing else is needed cross-origin.
+        allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Authorization", "Content-Type"],
     )
 
     @app.exception_handler(DomainError)

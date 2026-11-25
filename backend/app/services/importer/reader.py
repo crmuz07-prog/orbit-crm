@@ -2,6 +2,7 @@
 
 import csv
 import io
+import zipfile
 from datetime import date, datetime
 from typing import Any
 
@@ -13,7 +14,23 @@ MAX_ROWS = 5000
 Cell = str | float | datetime | date | None
 
 
+MAX_UNPACKED = 80 * 1024 * 1024
+MAX_RATIO = 100
+
+
+def ensure_reasonable_zip(content: bytes) -> None:
+    """An .xlsx is a zip: a few compressed megabytes can unpack to gigabytes (a zip bomb). Checked before parsing."""
+    try:
+        with zipfile.ZipFile(io.BytesIO(content)) as archive:
+            unpacked = sum(info.file_size for info in archive.infolist())
+    except zipfile.BadZipFile as exc:
+        raise BadRequest("The file is not a valid Excel workbook", "import_bad_file") from exc
+    if unpacked > MAX_UNPACKED or unpacked > MAX_RATIO * max(len(content), 1):
+        raise BadRequest("The workbook is too large once unpacked", "import_too_large")
+
+
 def _xlsx(content: bytes) -> list[list[Cell]]:
+    ensure_reasonable_zip(content)
     try:
         # data_only: formulas come back as the values Excel / Google Sheets last calculated.
         book = load_workbook(io.BytesIO(content), read_only=True, data_only=True)
