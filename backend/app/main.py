@@ -13,6 +13,7 @@ from app.core.config import get_settings
 from app.core.db import SessionLocal, engine
 from app.core.errors import DomainError
 from app.core.migrate import migrate
+from app.core.body_limit import BodyLimitMiddleware
 from app.core.headers import security_headers
 from app.core.validation import validation_error
 from app.services.admin import ensure_superadmin
@@ -44,6 +45,7 @@ def create_app() -> FastAPI:
     docs = {} if not settings.is_production else {"docs_url": None, "redoc_url": None, "openapi_url": None}
     app = FastAPI(title="Orbit CRM API", version="2.0.0", lifespan=lifespan, **docs)
     app.middleware("http")(security_headers)
+    app.add_middleware(BodyLimitMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origin_list,

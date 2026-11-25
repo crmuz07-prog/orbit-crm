@@ -1,10 +1,14 @@
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from typing import Literal
 
-from pydantic import ConfigDict, Field
+from pydantic import ConfigDict, Field, field_validator
 
+from app.core.db import utcnow
 from app.schemas.base import Schema
-from app.schemas.crm import ActivityOut, CallDirection
+from app.schemas.crm import ActivityOut, CallDirection, WebUrl
+
+REPLAY_WINDOW = timedelta(hours=24)
+CLOCK_SKEW = timedelta(minutes=10)
 
 CallEventType = Literal["call.ringing", "call.answered", "call.ended", "call.missed"]
 ProviderStatus = Literal["answered", "no_answer", "busy", "voicemail", "failed"]
@@ -22,8 +26,19 @@ class TelephonyEventIn(Schema):
     to: str = Field(min_length=3, max_length=40)
     duration: int = Field(default=0, ge=0, le=24 * 3600)
     status: ProviderStatus | None = None
-    recording_url: str | None = Field(default=None, max_length=500)
+    recording_url: WebUrl = Field(default=None, max_length=500)
     timestamp: datetime | None = None
+
+    @field_validator("timestamp")
+    @classmethod
+    def recent(cls, value: datetime | None) -> datetime | None:
+        """A signed body can be captured and re-sent; an old or future-dated one is refused (providers retry for hours)."""
+        if value is None:
+            return value
+        moment = value if value.tzinfo else value.replace(tzinfo=timezone.utc)
+        if not utcnow() - REPLAY_WINDOW <= moment <= utcnow() + CLOCK_SKEW:
+            raise ValueError("Event timestamp is outside the accepted window")
+        return value
 
     @property
     def customer_phone(self) -> str:
