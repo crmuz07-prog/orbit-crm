@@ -14,19 +14,28 @@ export function ActivityMeta({ activity: a, showType, current }: { activity: Act
   const company = a.company_id ? companyById.get(a.company_id) : undefined
   const contact = a.contact_id ? contactById.get(a.contact_id) : undefined
   const link = 'hover:text-foreground hover:underline'
-  const showDeal = current !== 'deal_id' && !!deal
-  const showCompany = !showDeal && current !== 'company_id' && !!company
-  const contactName = contact ? fullName(contact) : ''
-  // Imported leads are named after the person, so the deal title and the contact often read the same.
-  const showContact = current !== 'contact_id' && !!contact && contactName !== deal?.title && contactName !== company?.name
+  // Imported leads are named after the person, so deal, company and contact often read the same. The deal link is
+  // always kept (off its own page): it says which deal the activity belongs to. Company and contact are shown only
+  // when their name adds something — not the current record's, not one already shown.
+  const records = [
+    { key: 'deal_id', to: deal && `/deals/${deal.id}`, name: deal?.title, className: 'truncate text-primary hover:underline' },
+    { key: 'company_id', to: company && `/companies/${company.id}`, name: company?.name, className: link },
+    { key: 'contact_id', to: contact && `/contacts/${contact.id}`, name: contact && fullName(contact), className: link },
+  ] as const
+  const seen = new Set(records.filter((r) => r.key === current).map((r) => r.name))
+  const shown = records.filter((r) => {
+    if (!r.to || !r.name || r.key === current || (r.key !== 'deal_id' && seen.has(r.name))) return false
+    seen.add(r.name)
+    return true
+  })
+  // The company only stands in for a missing deal (as before): with a deal, its company is one click away.
+  const links = shown.filter((r) => r.key !== 'company_id' || !shown.some((o) => o.key === 'deal_id'))
 
   return (
     <>
       {showType && <span>{t(`enums.activity.${a.type}`)}</span>}
       {a.due_at && !a.done ? <DueLabel activity={a} /> : <span>{timeAgo(a.due_at ?? a.created_at)}</span>}
-      {showDeal && deal && <Link to={`/deals/${deal.id}`} className="truncate text-primary hover:underline">{deal.title}</Link>}
-      {showCompany && company && <Link to={`/companies/${company.id}`} className={link}>{company.name}</Link>}
-      {showContact && contact && <Link to={`/contacts/${contact.id}`} className={link}>{contactName}</Link>}
+      {links.map((r) => <Link key={r.key} to={r.to ?? ''} className={r.className}>{r.name}</Link>)}
     </>
   )
 }

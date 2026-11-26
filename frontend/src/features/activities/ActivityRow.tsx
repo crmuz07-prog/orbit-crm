@@ -34,11 +34,13 @@ function RowActions({ activity: a }: { activity: Activity }) {
   )
 }
 
-/** Notes are titled with their first line (imports, quick notes): that line is not shown a second time. */
+const letters = (text: string) => text.toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, '')
+
+/** Notes are titled with their first line (imports, quick notes; an imported sheet may repeat it): lines that only
+ *  restate the subject — ignoring case and punctuation — are not shown again. */
 function bodyAfterSubject(body: string | null, subject: string): string {
-  const text = (body ?? '').trim()
-  if (!text.startsWith(subject)) return text
-  return text.slice(subject.length).trim()
+  const key = letters(subject)
+  return (body ?? '').split('\n').filter((line) => letters(line) !== key).join('\n').trim()
 }
 
 /** One activity line: complete checkbox, type icon, subject, details, call info, hover actions. */

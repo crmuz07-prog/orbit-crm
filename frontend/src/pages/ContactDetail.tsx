@@ -46,7 +46,7 @@ export default function ContactDetailPage() {
                 <DeleteRecordButton table="contacts" id={id} title={t('contacts.deleteTitle', { name })} description={t('contacts.deleteDesc')} redirectTo="/contacts" />
               </>
             }>
-            {company && <p className="text-sm text-muted-foreground">{contact.title} {t('contacts.at')} <span className="font-medium text-foreground">{company.name}</span></p>}
+            {company && contact.title && <p className="truncate text-sm text-muted-foreground">{contact.title} {t('contacts.at')} <span className="font-medium text-foreground">{company.name}</span></p>}
           </InfoHeader>
           <ContactInfo contact={contact} />
         </>

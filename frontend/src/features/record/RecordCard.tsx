@@ -73,7 +73,7 @@ export function RecordCard({ info, widgets, link, recordId, activities, links }:
         <div className="flex-1 overflow-y-auto">{info}</div>
       </aside>
       <FeedPanel link={link} recordId={recordId} activities={activities} links={links} />
-      {widgets && <aside className="space-y-3 lg:col-span-2 2xl:col-span-1">{widgets}</aside>}
+      {widgets && <aside className="grid content-start items-start gap-3 sm:grid-cols-2 lg:col-span-2 2xl:col-span-1 2xl:grid-cols-1">{widgets}</aside>}
     </div>
   )
 }

@@ -83,7 +83,7 @@ export function InlineField({ label, name, raw, display, editor, toPatch, readOn
   const shown = staged ? stagedText(editor, staged.value) : raw || display ? (display ?? raw) : ''
   return (
     <div className={cn(FIELD_ROW, 'rounded-md py-0.5', staged && 'bg-amber-400/[0.07] shadow-[inset_2px_0_0] shadow-amber-400')}>
-      <span className="pt-1 text-muted-foreground">{label}</span>
+      <span className="line-clamp-2 break-words pt-1 text-muted-foreground" title={label}>{label}</span>
       {editing ? (
         <div ref={box} onKeyDown={keys} onBlur={leave}>{control}</div>
       ) : (

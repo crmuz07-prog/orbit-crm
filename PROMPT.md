@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/037-record-card-tightening.md](docs/prompts/037-record-card-tightening.md)
+Latest: [docs/prompts/038-deal-contact-cards-tightening.md](docs/prompts/038-deal-contact-cards-tightening.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -42,3 +42,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [035 — One spacing scale, one page gutter, layout guards](docs/prompts/035-spacing-scale-and-layout-guard.md)
 - [036 — Security review and hardening](docs/prompts/036-security-hardening.md)
 - [037 — Record card: remove leftover space](docs/prompts/037-record-card-tightening.md)
+- [038 — Deal and contact cards: same tightening](docs/prompts/038-deal-contact-cards-tightening.md)
