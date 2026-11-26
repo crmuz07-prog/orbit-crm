@@ -3,7 +3,7 @@ import type { core as en } from '../en/core'
 
 export const core: Locale<typeof en> = {
   common: {
-    select: 'Tanlash', selectAll: 'Hammasini tanlash', som: 'soʻm', save: 'Saqlash', cancel: 'Bekor qilish', delete: 'Oʻchirish', edit: 'Tahrirlash', add: 'Qoʻshish', back: 'Orqaga', reset: 'Tiklash',
+    select: 'Tanlash', selectAll: 'Hammasini tanlash', scale: { k: 'ming', m: 'mln', b: 'mlrd' }, som: 'soʻm', save: 'Saqlash', cancel: 'Bekor qilish', delete: 'Oʻchirish', edit: 'Tahrirlash', add: 'Qoʻshish', back: 'Orqaga', reset: 'Tiklash',
     saveChanges: 'Oʻzgarishlarni saqlash', pleaseWait: 'Kuting…', deleted: 'Oʻchirildi', viewAll: 'Barchasi', none: '—',
     noResults: 'Hech narsa topilmadi.', cannotUndo: 'Bu amalni qaytarib boʻlmaydi.', notFound: '{{label}} topilmadi',
     notFoundDesc: 'Ehtimol, u oʻchirilgan.', created: '{{entity}} yaratildi', updated: '{{entity}} yangilandi',

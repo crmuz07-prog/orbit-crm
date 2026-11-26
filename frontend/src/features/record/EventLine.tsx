@@ -3,7 +3,7 @@ import { useMembers } from '@/features/team/useMembers'
 import { useCrm } from '@/hooks/useData'
 import { useLabels } from '@/hooks/useLabels'
 import type { FieldChange, RecordEvent, RecordLink } from '@/lib/types'
-import { fullName, timeOf, toDate } from '@/lib/utils'
+import { fullName, groupDigits, timeOf, toDate } from '@/lib/utils'
 
 const MONEY_FIELDS = new Set(['amount', 'annual_revenue'])
 
@@ -21,7 +21,7 @@ function useReadable() {
     if (field === 'company_id') return companyById.get(String(value))?.name ?? '—'
     if (field === 'contact_id') { const c = contactById.get(String(value)); return c ? fullName(c) : '—' }
     if (field === 'owner_id') return memberById.get(String(value))?.full_name ?? '—'
-    if (MONEY_FIELDS.has(field) && typeof value === 'number') return value.toLocaleString()
+    if (MONEY_FIELDS.has(field) && typeof value === 'number') return groupDigits(value)
     return String(value)
   }
 }

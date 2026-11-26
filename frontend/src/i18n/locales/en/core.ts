@@ -1,6 +1,6 @@
 export const core = {
   common: {
-    select: 'Select', selectAll: 'Select all', som: 'soʻm', save: 'Save', cancel: 'Cancel', delete: 'Delete', edit: 'Edit', add: 'Add', back: 'Back', reset: 'Reset',
+    select: 'Select', selectAll: 'Select all', scale: { k: 'K', m: 'M', b: 'B' }, som: 'soʻm', save: 'Save', cancel: 'Cancel', delete: 'Delete', edit: 'Edit', add: 'Add', back: 'Back', reset: 'Reset',
     saveChanges: 'Save changes', pleaseWait: 'Please wait…', deleted: 'Deleted', viewAll: 'View all', none: '—',
     noResults: 'No results found.', cannotUndo: 'This action cannot be undone.', notFound: '{{label}} not found',
     notFoundDesc: 'It may have been deleted.', created: '{{entity}} created', updated: '{{entity}} updated',

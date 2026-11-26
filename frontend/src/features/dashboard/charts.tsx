@@ -5,10 +5,9 @@ import { useLabels } from '@/hooks/useLabels'
 import { Card, CardHeader } from '@/components/ui/card'
 import { STAGE_COLORS } from '@/lib/constants'
 import type { Dashboard } from '@/lib/types'
-import { money, monthLabel } from '@/lib/utils'
+import { compactNumber, money, monthLabel } from '@/lib/utils'
 
 export const axis = { fontSize: 11, fill: 'hsl(var(--muted-foreground))' }
-const compact = (v: number) => money(v, undefined, true)
 // Long stage names would overlap under the bars; the full name is in the chart tooltip.
 const short = (name: string) => (name.length > 11 ? `${name.slice(0, 10)}…` : name)
 
@@ -41,7 +40,8 @@ export function ChartCard({ title, description, className, children }: { title: 
 }
 
 export const grid = <CartesianGrid vertical={false} stroke="currentColor" />
-const yAxis = <YAxis tick={axis} tickLine={false} axisLine={false} tickFormatter={compact} width={56} />
+// Axis ticks without the currency word: the chart title says it is money, and "1,5 mln so'm" would not fit.
+const yAxis = <YAxis tick={axis} tickLine={false} axisLine={false} tickFormatter={compactNumber} width={60} />
 
 export function PipelineChart({ data, className }: { data: Dashboard['by_stage']; className?: string }) {
   const { t } = useTranslation()

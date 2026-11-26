@@ -17,12 +17,29 @@ const intlLocale = () => LANGUAGES.find((l) => l.code === i18n.language)?.intl ?
 /** The workspace currency: deals are in so'm unless one says otherwise. */
 export const DEFAULT_CURRENCY = 'UZS'
 
+/**
+ * 120000 → "120 000": thousands split by a non-breaking space, as so'm amounts are written in Uzbekistan. Done by hand
+ * because browsers ship no Uzbek number data and silently fall back to "120,000".
+ */
+export function groupDigits(value: number): string {
+  const n = Math.round(value)
+  return `${n < 0 ? '−' : ''}${Math.abs(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0')}`
+}
+
+const SCALES = [[1e9, 'common.scale.b'], [1e6, 'common.scale.m'], [1e3, 'common.scale.k']] as const
+
+/** 120000 → "120 ming", 1500000 → "1,5 mln" (тыс. / млн in Russian, K / M in English); chart axes use it bare. */
+export function compactNumber(value: number): string {
+  const [size, unit] = SCALES.find(([s]) => Math.abs(value) >= s) ?? [1, null]
+  if (!unit) return groupDigits(value)
+  const scaled = Math.round((value / size) * 10) / 10
+  const text = Number.isInteger(scaled) ? groupDigits(scaled) : scaled.toFixed(1).replace('.', i18n.language === 'en' ? '.' : ',')
+  return `${text}${i18n.language === 'en' ? '' : '\u00a0'}${i18n.t(unit)}`
+}
+
 export function money(value: number | null | undefined, currency = DEFAULT_CURRENCY, compact = false) {
-  // Browsers print so'm as "UZS 12,500,000" outside Uzbek; the local word reads naturally in every language.
-  if (currency === 'UZS') {
-    const n = new Intl.NumberFormat(intlLocale(), { notation: compact ? 'compact' : 'standard', maximumFractionDigits: compact ? 1 : 0 }).format(value ?? 0)
-    return `${n} ${i18n.t('common.som')}`
-  }
+  // So'm in every language as "120 000 so'm" (browsers print "UZS 120,000" and have no Uzbek grouping).
+  if (currency === 'UZS') return `${compact ? compactNumber(value ?? 0) : groupDigits(value ?? 0)}\u00a0${i18n.t('common.som')}`
   try {
     return new Intl.NumberFormat(intlLocale(), {
       style: 'currency', currency, notation: compact ? 'compact' : 'standard', maximumFractionDigits: compact ? 1 : 0,

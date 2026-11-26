@@ -5,7 +5,7 @@ export const setup = {
       profile: 'Профиль', security: 'Пароль', appearance: 'Внешний вид', members: 'Пользователи', roles: 'Роли и доступ', teams: 'Отделы продаж',
       pipelines: 'Воронки и этапы', fields: 'Поля сделки', lostReasons: 'Причины отказа', telephony: 'Телефония', instagram: 'Instagram', data: 'Импорт и экспорт',
     },
-    navLabel: 'Разделы настроек',
+    hideSections: 'Скрыть разделы', showSections: 'Показать разделы', navLabel: 'Разделы настроек',
     securityDesc: 'После смены пароля сеансы на других устройствах закрываются.',
     stageCols: { name: 'Этап', chance: 'Вероятность', deals: 'Сделки' },
     openStages: 'Рабочие этапы', closedStages: 'Итоговые этапы', closedHint: 'Здесь сделки завершаются. В воронке остаётся хотя бы один этап успеха и один этап отказа.',

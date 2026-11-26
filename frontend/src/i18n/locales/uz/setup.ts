@@ -5,7 +5,7 @@ export const setup = {
       profile: 'Profil', security: 'Parol', appearance: 'Koʻrinish', members: 'Foydalanuvchilar', roles: 'Rollar va huquqlar', teams: 'Savdo jamoalari',
       pipelines: 'Voronkalar va bosqichlar', fields: 'Bitim maydonlari', lostReasons: 'Rad etish sabablari', telephony: 'Telefoniya', instagram: 'Instagram', data: 'Import va eksport',
     },
-    navLabel: 'Sozlamalar boʻlimlari',
+    hideSections: 'Boʻlimlarni yashirish', showSections: 'Boʻlimlarni koʻrsatish', navLabel: 'Sozlamalar boʻlimlari',
     securityDesc: 'Parol oʻzgarsa, boshqa qurilmalardagi kirishlar yopiladi.',
     stageCols: { name: 'Bosqich', chance: 'Ehtimol', deals: 'Bitimlar' },
     openStages: 'Ish bosqichlari', closedStages: 'Yakuniy bosqichlar', closedHint: 'Bitimlar shu yerda yakunlanadi. Voronkada kamida bitta yutish va bitta yutqazish bosqichi qoladi.',

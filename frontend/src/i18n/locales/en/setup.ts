@@ -5,7 +5,7 @@ export const setup = {
       profile: 'Profile', security: 'Password', appearance: 'Appearance', members: 'Users', roles: 'Roles and access', teams: 'Sales teams',
       pipelines: 'Pipelines and stages', fields: 'Deal fields', lostReasons: 'Lost reasons', telephony: 'Telephony', instagram: 'Instagram', data: 'Import and export',
     },
-    navLabel: 'Settings sections',
+    hideSections: 'Hide sections', showSections: 'Show sections', navLabel: 'Settings sections',
     securityDesc: 'Changing the password signs you out on other devices.',
     stageCols: { name: 'Stage', chance: 'Chance', deals: 'Deals' },
     openStages: 'Working stages', closedStages: 'Final stages', closedHint: 'Deals end up here. A pipeline keeps at least one won and one lost stage.',
