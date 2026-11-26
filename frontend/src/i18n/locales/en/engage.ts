@@ -16,6 +16,7 @@ export const engage = {
     submit: { note: 'Save note', call: 'Log call', email: 'Log email', meeting: 'Log meeting', task: 'Create task' },
   },
   reminder: {
+    openRecord: 'Open',
     none: 'No reminder', atTime: 'At due time', min15: '15 minutes before', hour1: '1 hour before', day1: '1 day before',
     title: 'Reminders', empty: 'No reminders', emptyDesc: 'Reminders on tasks and follow-ups show up here.',
     due: 'Due now', upcoming: 'Upcoming', snooze: 'Snooze', snooze10: '10 minutes', snooze60: '1 hour',

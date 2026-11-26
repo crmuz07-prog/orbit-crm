@@ -19,6 +19,7 @@ export const engage: Locale<typeof en> = {
     submit: { note: 'Eslatmani saqlash', call: 'Qoʻngʻiroqni qayd etish', email: 'Emailni qayd etish', meeting: 'Uchrashuvni qayd etish', task: 'Vazifa yaratish' },
   },
   reminder: {
+    openRecord: 'Ochish',
     none: 'Eslatmasiz', atTime: 'Muddat vaqtida', min15: '15 daqiqa oldin', hour1: '1 soat oldin', day1: '1 kun oldin',
     title: 'Eslatmalar', empty: 'Eslatma yoʻq', emptyDesc: 'Vazifa va keyingi qadamlar eslatmalari shu yerda chiqadi.',
     due: 'Hozir', upcoming: 'Kelgusi', snooze: 'Kechiktirish', snooze10: '10 daqiqa', snooze60: '1 soat',

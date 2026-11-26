@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { CALL_QUERIES } from '@/features/calls/useLogCall'
+import { useOpenActivity } from '@/features/activities/useOpenActivity'
 import { useAccess } from '@/hooks/useAccess'
 import { useUpdateRow } from '@/hooks/useData'
 import { api } from '@/lib/api'
@@ -26,14 +27,17 @@ export function useReminderActions() {
   }
 }
 
-function notifyBrowser(title: string, body: string) {
-  if (typeof Notification !== 'undefined' && Notification.permission === 'granted' && document.hidden) new Notification(title, { body })
+function notifyBrowser(title: string, body: string, onClick?: () => void) {
+  if (typeof Notification === 'undefined' || Notification.permission !== 'granted' || !document.hidden) return
+  const note = new Notification(title, { body })
+  if (onClick) note.onclick = () => { window.focus(); onClick(); note.close() }
 }
 
 /** Polls pending reminders and announces each one once when it comes due. */
 export function useReminders() {
   const { t } = useTranslation()
   const actions = useReminderActions()
+  const openActivity = useOpenActivity()
   const announced = useRef(new Set<string>())
   const { can } = useAccess()
   const query = useQuery({ queryKey: CALL_QUERIES.reminders, queryFn: api.reminders, refetchInterval: POLL_MS, enabled: can('activities', 'view') })
@@ -49,9 +53,9 @@ export function useReminders() {
       return
     }
     for (const r of fresh) {
-      notifyBrowser(t('reminder.toast'), r.subject)
+      notifyBrowser(t('reminder.toast'), r.subject, () => openActivity(r))
       toast(t('reminder.toast'), {
-        description: r.subject,
+        description: <button type="button" className="text-left underline-offset-2 hover:underline" onClick={() => openActivity(r)}>{r.subject}</button>,
         duration: 12_000,
         action: { label: t('reminder.done'), onClick: () => actions.done(r) },
         cancel: { label: t('reminder.snooze10'), onClick: () => actions.snooze(r, SNOOZE_OPTIONS[0].until()) },
