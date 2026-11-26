@@ -26,6 +26,7 @@ function TasksHint({ activities, links }: { activities: Activity[]; links: Links
   )
 }
 
+// Columns stop at the bottom of the screen: the 3.5rem top bar plus the page gutter above and below.
 /** Centre column: the feed scrolls (newest at the bottom, next to the composer, as in amoCRM). */
 function FeedPanel({ link, recordId, activities, links }: { link: RecordLink; recordId: string; activities: Activity[]; links: Links }) {
   const { can } = useAccess()
@@ -40,7 +41,7 @@ function FeedPanel({ link, recordId, activities, links }: { link: RecordLink; re
     scroller.current?.scrollTo({ top: scroller.current.scrollHeight })
   }, [])
   return (
-    <section className="glass flex min-h-[320px] flex-col rounded-2xl lg:max-h-[calc(100vh-7rem)]">
+    <section className="glass flex min-h-[320px] flex-col rounded-2xl lg:max-h-[calc(100vh_-_3.5rem_-_2*var(--gutter))]">
       {/* Newest at the bottom (amoCRM): a short feed rests on the composer instead of floating at the top. */}
       <div ref={scroller} className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-3"><Feed link={link} recordId={recordId} activities={activities} onItemsChange={toBottom} /></div>
       {can('activities', 'create') && (
@@ -69,7 +70,7 @@ interface Props {
 export function RecordCard({ info, widgets, link, recordId, activities, links }: Props) {
   return (
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-[340px_minmax(0,1fr)] 2xl:grid-cols-[360px_minmax(0,1fr)_300px]">
-      <aside className="glass flex flex-col overflow-hidden rounded-2xl lg:max-h-[calc(100vh-7rem)]">
+      <aside className="glass flex flex-col overflow-hidden rounded-2xl lg:max-h-[calc(100vh_-_3.5rem_-_2*var(--gutter))]">
         <div className="flex-1 overflow-y-auto">{info}</div>
       </aside>
       <FeedPanel link={link} recordId={recordId} activities={activities} links={links} />

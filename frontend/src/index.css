@@ -85,13 +85,13 @@
   }
   /* The page gutter, in one place: the shell, the top bar and full-bleed rows (boards) all read it. */
   :root {
-    --gutter: 0.75rem;
+    --gutter: 0.5rem;
   }
   @media (min-width: 640px) {
-    :root { --gutter: 1.25rem; }
+    :root { --gutter: 0.75rem; }
   }
   @media (min-width: 1024px) {
-    :root { --gutter: 1.5rem; }
+    :root { --gutter: 1rem; }
   }
   body {
     @apply min-h-screen bg-background text-[13px] text-foreground antialiased;

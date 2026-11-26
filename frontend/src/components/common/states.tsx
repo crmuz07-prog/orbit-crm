@@ -45,8 +45,8 @@ export function PageLoading({ title, description }: { title: ReactNode; descript
 export function RecordSkeleton() {
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-[340px_minmax(0,1fr)]" aria-busy="true">
-      <Skeleton className="h-[calc(100vh-7rem)] min-h-[420px] rounded-2xl" />
-      <Skeleton className="h-[calc(100vh-7rem)] min-h-[420px] rounded-2xl" />
+      <Skeleton className="h-[calc(100vh_-_3.5rem_-_2*var(--gutter))] min-h-[420px] rounded-2xl" />
+      <Skeleton className="h-[calc(100vh_-_3.5rem_-_2*var(--gutter))] min-h-[420px] rounded-2xl" />
     </div>
   )
 }
