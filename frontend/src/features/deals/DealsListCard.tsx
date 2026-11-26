@@ -21,8 +21,8 @@ export function DealsListCard({ deals, onAdd }: { deals: Deal[]; onAdd: () => vo
         <RowLink to={`/deals/${d.id}`}>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium">{d.title}</p>
-            <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-              <StageBadge stage={stageById.get(d.stage_id)} /> {t('deals.closes', { date: shortDate(d.expected_close_date) })}
+            <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+              <StageBadge stage={stageById.get(d.stage_id)} /> {d.expected_close_date && t('deals.closes', { date: shortDate(d.expected_close_date) })}
             </div>
           </div>
           <span className="text-sm font-semibold tabular-nums">{money(d.amount, d.currency, true)}</span>

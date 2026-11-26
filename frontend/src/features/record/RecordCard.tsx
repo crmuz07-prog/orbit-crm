@@ -40,8 +40,9 @@ function FeedPanel({ link, recordId, activities, links }: { link: RecordLink; re
     scroller.current?.scrollTo({ top: scroller.current.scrollHeight })
   }, [])
   return (
-    <section className="glass flex min-h-[520px] flex-col rounded-2xl lg:h-[calc(100vh-7rem)]">
-      <div ref={scroller} className="flex-1 overflow-y-auto px-4 py-3"><Feed link={link} recordId={recordId} activities={activities} onItemsChange={toBottom} /></div>
+    <section className="glass flex min-h-[320px] flex-col rounded-2xl lg:max-h-[calc(100vh-7rem)]">
+      {/* Newest at the bottom (amoCRM): a short feed rests on the composer instead of floating at the top. */}
+      <div ref={scroller} className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-3"><Feed link={link} recordId={recordId} activities={activities} onItemsChange={toBottom} /></div>
       {can('activities', 'create') && (
         <div className="border-t border-foreground/[0.06] p-3">
           {instagramContact && <InstagramReply contactId={instagramContact} />}
@@ -68,7 +69,7 @@ interface Props {
 export function RecordCard({ info, widgets, link, recordId, activities, links }: Props) {
   return (
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-[340px_minmax(0,1fr)] 2xl:grid-cols-[360px_minmax(0,1fr)_300px]">
-      <aside className="glass flex flex-col overflow-hidden rounded-2xl lg:h-[calc(100vh-7rem)]">
+      <aside className="glass flex flex-col overflow-hidden rounded-2xl lg:max-h-[calc(100vh-7rem)]">
         <div className="flex-1 overflow-y-auto">{info}</div>
       </aside>
       <FeedPanel link={link} recordId={recordId} activities={activities} links={links} />

@@ -13,7 +13,7 @@ import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { useCreateRow } from '@/hooks/useData'
 import { remindAt, type ReminderKey } from '@/lib/reminders'
 import type { Activity, ActivityType } from '@/lib/types'
-import { fromLocalInput } from '@/lib/utils'
+import { cn, fromLocalInput } from '@/lib/utils'
 import { ACTIVITY_META } from './ActivityIcon'
 import { ReminderSelect } from './ReminderSelect'
 
@@ -65,6 +65,7 @@ export function Composer({ links }: { links: Links }) {
     setBody('')
   }
 
+  const submitButton = <Button type="submit" size="sm" disabled={create.isPending}>{t(`activities.submit.${type}`)}</Button>
   return (
     <form onSubmit={submit} className="glass rounded-2xl">
       {/* Wraps instead of overflowing; on phones the tabs and the call button are icons (names in tooltips). */}
@@ -85,19 +86,22 @@ export function Composer({ links }: { links: Links }) {
           <Phone className="text-emerald-500" /> <span className="hidden sm:inline">{t('calls.logCall')}</span>
         </Button>
       </div>
-      <motion.div layout className="space-y-2.5 p-3">
+      <motion.div layout className="space-y-2 p-3">
         {!isNote && <Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder={t('activities.subject')} />}
-        <Textarea value={body} onChange={(e) => setBody(e.target.value)} placeholder={t(`activities.placeholder.${type}`)} className="min-h-[64px]" />
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          {isNote ? <span /> : (
+        <div className={cn(isNote && 'flex flex-wrap items-end gap-2')}>
+          <Textarea value={body} onChange={(e) => setBody(e.target.value)} placeholder={t(`activities.placeholder.${type}`)} className={cn('min-h-[56px]', isNote && 'min-w-0 flex-1 basis-60')} />
+          {isNote && submitButton}
+        </div>
+        {!isNote && (
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               {type === 'task' ? t('activities.due') : t('activities.when')}
-              <DateTimePicker value={due} onChange={setDue} className="w-72" />
+              <DateTimePicker value={due} onChange={setDue} className="w-72 max-w-full" />
               {type !== 'email' && <ReminderSelect value={reminder} onChange={setReminder} className="h-8 w-44 text-xs" />}
             </div>
-          )}
-          <Button type="submit" size="sm" disabled={create.isPending}>{t(`activities.submit.${type}`)}</Button>
-        </div>
+            {submitButton}
+          </div>
+        )}
       </motion.div>
     </form>
   )

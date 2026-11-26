@@ -10,6 +10,9 @@ import { useRecordDraft, type Patch } from './RecordDraft'
 export type Editor = { kind: 'text' | 'number' | 'date' | 'email' | 'tel' | 'textarea' } | { kind: 'select'; options: Option[]; emptyLabel?: string }
   | { kind: 'multiselect'; options: string[] }
 
+/** One property row (label | value), shared by editable and read-only rows so they line up. */
+export const FIELD_ROW = 'grid grid-cols-[minmax(96px,40%)_1fr] items-start gap-2 text-[13px]'
+
 /** Multi-list values travel through the string-based editor joined by newlines (values may contain commas). */
 export const MULTI_SEPARATOR = '\n'
 
@@ -79,13 +82,13 @@ export function InlineField({ label, name, raw, display, editor, toPatch, readOn
 
   const shown = staged ? stagedText(editor, staged.value) : raw || display ? (display ?? raw) : ''
   return (
-    <div className={cn('grid grid-cols-[minmax(96px,40%)_1fr] items-start gap-2 rounded-md py-1 text-[13px]', staged && 'bg-amber-400/[0.07] shadow-[inset_2px_0_0] shadow-amber-400')}>
-      <span className="pl-1 pt-1 text-muted-foreground">{label}</span>
+    <div className={cn(FIELD_ROW, 'rounded-md py-0.5', staged && 'bg-amber-400/[0.07] shadow-[inset_2px_0_0] shadow-amber-400')}>
+      <span className="pt-1 text-muted-foreground">{label}</span>
       {editing ? (
         <div ref={box} onKeyDown={keys} onBlur={leave}>{control}</div>
       ) : (
         <button type="button" onClick={start} disabled={readOnly}
-          className={cn('min-h-7 rounded-md px-1.5 py-1 text-left -mx-1.5 transition-colors', !readOnly && 'hover:bg-foreground/[0.05] focus-visible:bg-foreground/[0.05] focus-visible:outline-none')}>
+          className={cn('min-h-6 rounded-md px-1.5 py-1 text-left -mx-1.5 transition-colors', !readOnly && 'hover:bg-foreground/[0.05] focus-visible:bg-foreground/[0.05] focus-visible:outline-none')}>
           {shown || <span className="text-muted-foreground/70">{t('card.none')}</span>}
         </button>
       )}

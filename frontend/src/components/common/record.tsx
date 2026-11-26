@@ -31,7 +31,7 @@ export function ListCard<T extends { id: string }>({ title, description, action,
 
 export function RowLink({ to, className, children }: { to: string; className?: string; children: ReactNode }) {
   return (
-    <Link to={to} className={cn('group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-foreground/[0.03]', className)}>
+    <Link to={to} className={cn('group flex items-center gap-3 px-4 py-2 transition-colors hover:bg-foreground/[0.03]', className)}>
       {children}
     </Link>
   )

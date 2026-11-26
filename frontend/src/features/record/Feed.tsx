@@ -23,7 +23,7 @@ function DaySeparator({ at }: { at: number }) {
   const day = new Date(at)
   const label = isToday(day) ? t('feed.today') : isYesterday(day) ? t('feed.yesterday') : shortDate(day.toISOString())
   return (
-    <div className="relative my-3 flex justify-center">
+    <div className="relative my-2 flex justify-center first:mt-0">
       <span className="absolute inset-x-0 top-1/2 h-px bg-foreground/[0.08]" />
       <span className="glass-subtle relative rounded-full px-3 py-0.5 text-xs font-medium text-muted-foreground">{label}</span>
     </div>
@@ -49,15 +49,15 @@ export function Feed({ link, recordId, activities, onItemsChange }: { link: Reco
     return <EmptyState icon={MessageSquareText} title={t('feed.empty')} compact className="flex-1" />
   }
   return (
-    <div className="space-y-1">
+    <div className="mt-auto space-y-1">
       {items.map((item, i) => (
         <Fragment key={item.event?.id ?? item.activity?.id}>
           {(i === 0 || dayOf(items[i - 1].at) !== dayOf(item.at)) && <DaySeparator at={item.at} />}
           {item.event && <EventLine event={item.event} link={link} />}
           {item.activity?.type === 'message' && <MessageBubble message={item.activity} />}
           {item.activity && item.activity.type !== 'message' && (
-            <div className="glass-subtle my-1.5 rounded-xl">
-              <ActivityRow activity={item.activity} meta={<ActivityMeta activity={item.activity} showType showDeal={link !== 'deal_id'} />} />
+            <div className="glass-subtle rounded-xl">
+              <ActivityRow activity={item.activity} meta={<ActivityMeta activity={item.activity} showType current={link} />} />
             </div>
           )}
         </Fragment>

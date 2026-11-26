@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/036-security-hardening.md](docs/prompts/036-security-hardening.md)
+Latest: [docs/prompts/037-record-card-tightening.md](docs/prompts/037-record-card-tightening.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -41,3 +41,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [034 — Find companies by the people in them](docs/prompts/034-search-companies-by-person.md)
 - [035 — One spacing scale, one page gutter, layout guards](docs/prompts/035-spacing-scale-and-layout-guard.md)
 - [036 — Security review and hardening](docs/prompts/036-security-hardening.md)
+- [037 — Record card: remove leftover space](docs/prompts/037-record-card-tightening.md)

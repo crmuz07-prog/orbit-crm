@@ -34,24 +34,34 @@ function RowActions({ activity: a }: { activity: Activity }) {
   )
 }
 
+/** Notes are titled with their first line (imports, quick notes): that line is not shown a second time. */
+function bodyAfterSubject(body: string | null, subject: string): string {
+  const text = (body ?? '').trim()
+  if (!text.startsWith(subject)) return text
+  return text.slice(subject.length).trim()
+}
+
 /** One activity line: complete checkbox, type icon, subject, details, call info, hover actions. */
 export function ActivityRow({ activity: a, meta, compact }: Props) {
   const { t } = useTranslation()
   const subject = useSubject()
   const actions = useActivityActions()
   const schedulable = a.type !== 'note' && a.type !== 'call'
+  const body = bodyAfterSubject(a.body, subject(a))
 
   return (
     <div className={cn('group flex items-start gap-3 px-4', compact ? 'py-3' : 'py-2.5')}>
-      <div className="w-[18px] pt-1.5">
-        {schedulable && <Checkbox checked={a.done} onCheckedChange={() => actions.toggleDone(a)} aria-label={t('activities.markDone')} />}
-        {a.pinned && <Pin className="mt-0.5 size-3.5 text-primary" />}
-      </div>
+      {(schedulable || a.pinned) && (
+        <div className="w-[18px] pt-1.5">
+          {schedulable && <Checkbox checked={a.done} onCheckedChange={() => actions.toggleDone(a)} aria-label={t('activities.markDone')} />}
+          {a.pinned && <Pin className="mt-0.5 size-3.5 text-primary" />}
+        </div>
+      )}
       <ActivityIcon type={a.type} className={compact ? 'size-6' : undefined} />
       <div className="min-w-0 flex-1">
         <p className={cn('text-sm font-medium transition-colors', a.done && schedulable && 'text-muted-foreground line-through')}>{subject(a)}</p>
         {a.type === 'call' && <CallDetails activity={a} />}
-        {!compact && a.body && <p className="mt-0.5 line-clamp-3 whitespace-pre-wrap text-sm text-muted-foreground">{a.body}</p>}
+        {!compact && body && <p className="mt-0.5 line-clamp-3 whitespace-pre-wrap text-sm text-muted-foreground">{body}</p>}
         {a.done && a.result && <p className="mt-1 rounded-md bg-emerald-500/10 px-2 py-1 text-[12px] text-emerald-800 dark:text-emerald-300"><b className="font-medium">{t('tasks.complete.result')}:</b> {a.result}</p>}
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           {meta}
