@@ -3,15 +3,34 @@ import { RowLink } from '@/components/common/record'
 import { LinkedSection } from '@/features/record/LinkedSection'
 import { useCrm } from '@/hooks/useData'
 import type { Deal } from '@/lib/types'
+import { dealStatus, sumAmount } from '@/lib/metrics'
 import { money } from '@/lib/utils'
 import { StageBadge } from './bits'
 
-/** Deals of a company / contact in its info panel: one line per deal (title, stage, amount). */
+/** Open pipeline and won revenue in one muted line — only what is non-zero (it replaced two stat tiles). */
+function DealTotals({ deals }: { deals: Deal[] }) {
+  const { stageById } = useCrm()
+  const { t } = useTranslation()
+  const sum = (status: string) => sumAmount(deals.filter((d) => dealStatus(d, stageById) === status))
+  const open = sum('open')
+  const won = sum('won')
+  if (!open && !won) return null
+  return (
+    <p className="truncate px-4 pb-1 text-xs text-muted-foreground">
+      {open > 0 && <>{t('companies.openPipeline')}: <b className="font-semibold tabular-nums text-foreground">{money(open)}</b></>}
+      {open > 0 && won > 0 && ' · '}
+      {won > 0 && <>{t('companies.wonRevenue')}: <b className="font-semibold tabular-nums text-emerald-600 dark:text-emerald-400">{money(won)}</b></>}
+    </p>
+  )
+}
+
+/** Deals of a company / contact in its info panel: totals, then one line per deal (title, stage, amount). */
 export function LinkedDeals({ deals, onAdd }: { deals: Deal[]; onAdd: () => void }) {
   const { stageById } = useCrm()
   const { t } = useTranslation()
   return (
     <LinkedSection
+      summary={<DealTotals deals={deals} />}
       title={t('deals.count', { count: deals.length })}
       addLabel={t('common.add')}
       onAdd={onAdd}

@@ -10,17 +10,20 @@ interface Props<T> {
   items: T[]
   empty: string
   render: (item: T) => ReactNode
+  /** A line under the heading (e.g. deal totals). */
+  summary?: ReactNode
 }
 
 /**
  * Linked records inside the info panel (amoCRM keeps a company's people and deals in the card itself): a heading with
  * "+", one line per record, scrolling inside the panel past a handful of rows.
  */
-export function LinkedSection<T extends { id: string }>({ title, addLabel, onAdd, items, empty, render }: Props<T>) {
+export function LinkedSection<T extends { id: string }>({ title, addLabel, onAdd, items, empty, render, summary }: Props<T>) {
   return (
     // Rows run edge to edge (their own px-4) so the hover fills the panel; heading and empty text keep the inset.
     <section className="border-t border-foreground/[0.06] py-2.5">
       <SectionHeading title={title} action={onAdd && <AddButton label={addLabel} onClick={onAdd} />} className="px-4" />
+      {summary}
       {items.length === 0
         ? <p className="px-4 py-1 text-xs text-muted-foreground">{empty}</p>
         : <ul className="max-h-60 overflow-y-auto">{items.map((item) => <li key={item.id}>{render(item)}</li>)}</ul>}

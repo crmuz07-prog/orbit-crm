@@ -11,27 +11,25 @@ import { CompanyInfo } from '@/features/record/ClientInfo'
 import { LinkedSection } from '@/features/record/LinkedSection'
 import { InfoHeader, RecordCard } from '@/features/record/RecordCard'
 import { useCrm } from '@/hooks/useData'
-import { dealStatus, sumAmount } from '@/lib/metrics'
-import { fullName, money } from '@/lib/utils'
+import { fullName } from '@/lib/utils'
 import { IconButton } from '@/components/common/icon-button'
 
 /** Everything associated with a company: its people, deals and their activity roll-up. */
 function useCompanyRecord(id: string) {
-  const { contacts, deals, activities, stageById } = useCrm()
+  const { contacts, deals, activities } = useCrm()
   const people = contacts.filter((c) => c.company_id === id)
   const companyDeals = deals.filter((d) => d.company_id === id)
   const dealIds = new Set(companyDeals.map((d) => d.id))
   const peopleIds = new Set(people.map((c) => c.id))
   const related = activities.filter((a) => a.company_id === id || (a.deal_id && dealIds.has(a.deal_id)) || (a.contact_id && peopleIds.has(a.contact_id)))
-  const valueOf = (status: string) => sumAmount(companyDeals.filter((d) => dealStatus(d, stageById) === status))
-  return { people, companyDeals, related, openValue: valueOf('open'), wonValue: valueOf('won') }
+  return { people, companyDeals, related }
 }
 
 export default function CompanyDetailPage() {
   const { id = '' } = useParams()
   const { isLoading, companyById } = useCrm()
   const openModal = useEntityModal()
-  const { people, companyDeals, related, openValue, wonValue } = useCompanyRecord(id)
+  const { people, companyDeals, related } = useCompanyRecord(id)
   const { t } = useTranslation()
 
   if (isLoading) return <RecordSkeleton />
@@ -56,12 +54,7 @@ export default function CompanyDetailPage() {
                 <IconButton label={t('common.edit')} onClick={() => openModal({ kind: 'company', initial: company })}><Pencil /></IconButton>
                 <DeleteRecordButton table="companies" id={id} title={t('companies.deleteTitle', { name: company.name })} description={t('companies.deleteDesc')} redirectTo="/companies" />
               </>
-            }>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div className="glass-subtle rounded-lg px-3 py-2"><p className="text-xs text-muted-foreground">{t('companies.openPipeline')}</p><p className="font-semibold tabular-nums">{money(openValue)}</p></div>
-              <div className="glass-subtle rounded-lg px-3 py-2"><p className="text-xs text-muted-foreground">{t('companies.wonRevenue')}</p><p className="font-semibold tabular-nums text-emerald-600 dark:text-emerald-400">{money(wonValue)}</p></div>
-            </div>
-          </InfoHeader>
+            } />
           <CompanyInfo company={company} />
           <LinkedDeals deals={companyDeals} onAdd={addDeal} />
           <LinkedSection

@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/042-linked-records-in-info-panel.md](docs/prompts/042-linked-records-in-info-panel.md)
+Latest: [docs/prompts/043-split-window-record-pages.md](docs/prompts/043-split-window-record-pages.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -47,3 +47,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [040 — Company and contact cards: dense side widgets](docs/prompts/040-dense-side-cards.md)
 - [041 — Smaller page gutter](docs/prompts/041-smaller-page-gutter.md)
 - [042 — Linked records inside the info panel](docs/prompts/042-linked-records-in-info-panel.md)
+- [043 — Company and contact: the window split in two](docs/prompts/043-split-window-record-pages.md)

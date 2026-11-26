@@ -27,9 +27,12 @@ function TasksHint({ activities, links }: { activities: Activity[]; links: Links
   )
 }
 
-// Columns stop at the bottom of the screen: the 3.5rem top bar plus the page gutter above and below.
+// Heights below are "the window": 100vh minus the 3.5rem top bar and the page gutter above and below it. Tailwind
+// only sees complete class names, so the value is written out in each class rather than built from a constant.
+const CAPPED = 'lg:max-h-[calc(100vh_-_3.5rem_-_2*var(--gutter))]'
+
 /** Centre column: the feed scrolls (newest at the bottom, next to the composer, as in amoCRM). */
-function FeedPanel({ link, recordId, activities, links }: { link: RecordLink; recordId: string; activities: Activity[]; links: Links }) {
+function FeedPanel({ link, recordId, activities, links, className }: { link: RecordLink; recordId: string; activities: Activity[]; links: Links; className?: string }) {
   const { can } = useAccess()
   const { contactById } = useCrm()
   // People who wrote on Instagram can be answered from the card (amoCRM / Kommo chat in the lead card).
@@ -42,7 +45,7 @@ function FeedPanel({ link, recordId, activities, links }: { link: RecordLink; re
     scroller.current?.scrollTo({ top: scroller.current.scrollHeight })
   }, [])
   return (
-    <section className="glass flex min-h-[320px] flex-col rounded-2xl lg:max-h-[calc(100vh_-_3.5rem_-_2*var(--gutter))]">
+    <section className={cn('glass flex min-h-[320px] flex-col rounded-2xl', className)}>
       {/* Newest at the bottom (amoCRM): a short feed rests on the composer instead of floating at the top. */}
       <div ref={scroller} className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-3"><Feed link={link} recordId={recordId} activities={activities} onItemsChange={toBottom} /></div>
       {can('activities', 'create') && (
@@ -67,14 +70,23 @@ interface Props {
   links: Links
 }
 
-/** The record card shared by deals, companies and contacts: info | feed | widgets. */
+/**
+ * The record card shared by deals, companies and contacts.
+ * Without widgets (company, contact) the page is the window split in two — info | feed — at every size from `sm` up:
+ * both halves always fill the window and scroll inside themselves as the record grows; the page never scrolls.
+ * With widgets (deal) the columns size to their content and the widgets follow (beside the feed at `2xl`).
+ */
 export function RecordCard({ info, widgets, link, recordId, activities, links }: Props) {
+  const split = !widgets
   return (
-    <div className={cn('grid grid-cols-1 gap-3 lg:grid-cols-[340px_minmax(0,1fr)]', widgets ? '2xl:grid-cols-[360px_minmax(0,1fr)_300px]' : '2xl:grid-cols-[360px_minmax(0,1fr)]')}>
-      <aside className="glass flex flex-col overflow-hidden rounded-2xl lg:max-h-[calc(100vh_-_3.5rem_-_2*var(--gutter))]">
-        <div className="flex-1 overflow-y-auto">{info}</div>
+    <div className={cn('grid grid-cols-1 gap-3',
+      split
+        ? 'sm:h-[calc(100vh_-_3.5rem_-_2*var(--gutter))] sm:grid-cols-[minmax(240px,2fr)_minmax(0,3fr)] sm:grid-rows-[minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)] 2xl:grid-cols-[360px_minmax(0,1fr)]'
+        : 'lg:grid-cols-[340px_minmax(0,1fr)] 2xl:grid-cols-[360px_minmax(0,1fr)_300px]')}>
+      <aside className={cn('glass flex min-h-0 flex-col overflow-hidden rounded-2xl', !split && CAPPED)}>
+        <div className="min-h-0 flex-1 overflow-y-auto">{info}</div>
       </aside>
-      <FeedPanel link={link} recordId={recordId} activities={activities} links={links} />
+      <FeedPanel link={link} recordId={recordId} activities={activities} links={links} className={split ? 'sm:min-h-0' : CAPPED} />
       {widgets && <aside className="grid content-start items-start gap-3 sm:grid-cols-2 lg:col-span-2 2xl:col-span-1 2xl:grid-cols-1">{widgets}</aside>}
     </div>
   )
