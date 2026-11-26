@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/045-som-format-and-right-settings-menu.md](docs/prompts/045-som-format-and-right-settings-menu.md)
+Latest: [docs/prompts/046-pipelines-and-stages-ux.md](docs/prompts/046-pipelines-and-stages-ux.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -50,3 +50,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [043 — Company and contact: the window split in two](docs/prompts/043-split-window-record-pages.md)
 - [044 — Settings redesign; won/lost stages deletable](docs/prompts/044-settings-redesign-and-stage-delete.md)
 - [045 — So'm format; settings menu on the right](docs/prompts/045-som-format-and-right-settings-menu.md)
+- [046 — Pipelines and stages: understandable at a glance](docs/prompts/046-pipelines-and-stages-ux.md)

@@ -7,7 +7,7 @@ export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
 
 export function CardHeader({ title, description, action, className }: { title: ReactNode; description?: ReactNode; action?: ReactNode; className?: string }) {
   return (
-    <div className={cn('flex items-center justify-between gap-3 border-b border-foreground/[0.06] px-4 py-2', className)}>
+    <div className={cn('flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-foreground/[0.06] px-4 py-2', className)}>
       <div className="min-w-0">
         <h3 className="text-sm font-semibold">{title}</h3>
         {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}

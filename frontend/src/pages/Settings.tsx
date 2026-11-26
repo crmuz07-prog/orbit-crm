@@ -49,7 +49,7 @@ export default function SettingsPage() {
   return (
     <Page title={t('settings.title')} description={t('settings.description')} actions={actions}>
       <div className={open ? 'grid gap-3 lg:grid-cols-[minmax(0,1fr)_200px] lg:items-start' : 'grid gap-3'}>
-        <div key={current.id} className="grid min-w-0 gap-3">{current.render(isAdmin)}</div>
+        <div key={current.id} className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3">{current.render(isAdmin)}</div>
         {open && (
           <aside className="hidden lg:sticky lg:top-[calc(3.5rem_+_var(--gutter))] lg:block">
             <SettingsNav sections={sections} current={current.id} onSelect={select} />
