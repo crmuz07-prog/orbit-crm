@@ -47,7 +47,7 @@ export const sales: Locale<typeof en> = {
     search: 'Компания, имя или телефон', allLifecycle: 'Все стадии', allIndustries: 'Все отрасли',
     empty: 'Компаний пока нет', emptyDesc: 'Аккаунты — основа B2B-продаж. Добавьте первый.', noMatch: 'Компании не найдены',
     colCompany: 'Компания', colContacts: 'Контакты', colOpen: 'Открытая воронка', colWon: 'Выиграно', colCreated: 'Создана',
-    colLocation: 'Локация', openPipeline: 'Открытая воронка', wonRevenue: 'Выигранная выручка', contacts: 'Контакты',
+    colLocation: 'Локация', inProgress: 'В работе', inProgressHint: 'Сумма ещё не закрытых сделок', sold: 'Продано', soldHint: 'Сумма выигранных сделок', contacts: 'Контакты',
     lastActivity: 'Последняя активность', about: 'О компании', location: 'Локация', created: 'Создана',
     people: 'Люди · {{count}}', noPeople: 'Контактов пока нет.', deleteTitle: 'Удалить {{name}}?',
     deleteDesc: 'Контакты и сделки сохранятся, но будут отвязаны от компании.',

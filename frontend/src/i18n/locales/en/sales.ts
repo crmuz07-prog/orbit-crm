@@ -42,7 +42,7 @@ export const sales = {
     search: 'Company, person or phone', allLifecycle: 'All lifecycle stages', allIndustries: 'All industries',
     empty: 'No companies yet', emptyDesc: 'Accounts are the backbone of B2B sales. Add your first one.', noMatch: 'No matching companies',
     colCompany: 'Company', colContacts: 'Contacts', colOpen: 'Open pipeline', colWon: 'Won', colCreated: 'Created',
-    colLocation: 'Location', openPipeline: 'Open pipeline', wonRevenue: 'Won revenue', contacts: 'Contacts',
+    colLocation: 'Location', inProgress: 'In progress', inProgressHint: 'Total of deals not closed yet', sold: 'Sold', soldHint: 'Total of won deals', contacts: 'Contacts',
     lastActivity: 'Last activity', about: 'About', location: 'Location', created: 'Created',
     people: 'People · {{count}}', noPeople: 'No contacts yet.', deleteTitle: 'Delete {{name}}?',
     deleteDesc: 'Contacts and deals are kept but unlinked from this company.',

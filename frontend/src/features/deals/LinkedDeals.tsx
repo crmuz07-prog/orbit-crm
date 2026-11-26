@@ -7,7 +7,7 @@ import { dealStatus, sumAmount } from '@/lib/metrics'
 import { money } from '@/lib/utils'
 import { StageBadge } from './bits'
 
-/** Open pipeline and won revenue in one muted line — only what is non-zero (it replaced two stat tiles). */
+/** Money still in play and money won, in one muted line — only what is non-zero (it replaced two stat tiles). */
 function DealTotals({ deals }: { deals: Deal[] }) {
   const { stageById } = useCrm()
   const { t } = useTranslation()
@@ -17,9 +17,9 @@ function DealTotals({ deals }: { deals: Deal[] }) {
   if (!open && !won) return null
   return (
     <p className="truncate px-4 pb-1 text-xs text-muted-foreground">
-      {open > 0 && <>{t('companies.openPipeline')}: <b className="font-semibold tabular-nums text-foreground">{money(open)}</b></>}
+      {open > 0 && <span title={t('companies.inProgressHint')}>{t('companies.inProgress')}: <b className="font-semibold tabular-nums text-foreground">{money(open)}</b></span>}
       {open > 0 && won > 0 && ' · '}
-      {won > 0 && <>{t('companies.wonRevenue')}: <b className="font-semibold tabular-nums text-emerald-600 dark:text-emerald-400">{money(won)}</b></>}
+      {won > 0 && <span title={t('companies.soldHint')}>{t('companies.sold')}: <b className="font-semibold tabular-nums text-emerald-600 dark:text-emerald-400">{money(won)}</b></span>}
     </p>
   )
 }
