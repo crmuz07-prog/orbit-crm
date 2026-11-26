@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api, type Draft } from '@/lib/api'
-import type { TableMap, TableName } from '@/lib/types'
+import type { Dashboard, TableMap, TableName } from '@/lib/types'
 import { byId, errorMessage } from '@/lib/utils'
 import { TABLE_MODULE, useAccess } from './useAccess'
 
@@ -19,6 +19,17 @@ const refresh = (qc: QueryClient, table: TableName) =>
 
 const notifyError = (e: unknown) => toast.error(errorMessage(e))
 
+/**
+ * Fields added to the dashboard later get defaults: a copy restored from the offline cache (or an API one deploy
+ * behind) may not have them, and the page must not crash on it.
+ */
+const withDashboardDefaults = (d: Dashboard): Dashboard => ({
+  ...d,
+  won_count: d.won_count ?? 0, lost_count: d.lost_count ?? 0, new_today: d.new_today ?? 0, new_week: d.new_week ?? 0,
+  recent_open: d.recent_open ?? [],
+  monthly: d.monthly.map((m) => ({ ...m, won_count: m.won_count ?? 0, lost_count: m.lost_count ?? 0 })),
+})
+
 /** Tables the caller may not view are not requested at all (they read as empty). */
 export function useRows<K extends TableName>(table: K) {
   const { can } = useAccess()
@@ -27,7 +38,7 @@ export function useRows<K extends TableName>(table: K) {
 
 export function useDashboard() {
   const { can } = useAccess()
-  return useQuery({ queryKey: DASHBOARD, queryFn: api.dashboard, enabled: can('reports', 'view') })
+  return useQuery({ queryKey: DASHBOARD, queryFn: api.dashboard, enabled: can('reports', 'view'), select: withDashboardDefaults })
 }
 
 export function useCreateRow<K extends TableName>(table: K) {

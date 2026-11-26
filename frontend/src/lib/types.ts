@@ -184,9 +184,14 @@ export interface Dashboard {
   avg_deal_size: number
   avg_cycle_days: number
   by_stage: { id: string; name: string; color: StageColor; count: number; value: number }[]
-  monthly: { month: string; won: number; lost: number }[]
+  monthly: { month: string; won: number; lost: number; won_count: number; lost_count: number }[]
   stale: Deal[]
   top_open: Deal[]
+  won_count: number
+  lost_count: number
+  new_today: number
+  new_week: number
+  recent_open: Deal[]
 }
 
 export interface AdminUser {

@@ -7,6 +7,19 @@ export const sales = {
     firstName: 'First name *', lastName: 'Last name', email: 'Email', phone: 'Phone', jobTitle: 'Job title',
     linkedin: 'LinkedIn URL', noCompany: 'No company', noContact: 'No contact',
   },
+  overview: {
+    subtitle: 'What is happening today and what needs attention.',
+    open: 'Open deals', openSum: '{{sum}} in progress', openNone: 'Deals not closed yet',
+    newLeads: 'New leads', newSub: 'Last 7 days · today {{count}}',
+    tasks: 'Tasks', tasksSub: 'Overdue · today {{count}}',
+    winRate: 'Win rate', winSub: '{{won}} sold · {{lost}} lost',
+    stagesCount: 'Deals by stage', stagesCountDesc: 'How many open deals sit in each stage',
+    stagesValue: 'Amount by stage', stagesValueDesc: 'Total of the open deals in each stage',
+    closedCount: 'Closed deals', closedCountDesc: 'Sold and lost, last 6 months', closedValue: 'Closed amount', closedValueDesc: 'Sold and lost by amount, last 6 months',
+    count: 'Deals', won: 'Sold', lost: 'Lost',
+    recent: 'New leads', recentDesc: 'The latest open deals that came in', biggest: 'Biggest open deals', biggestDesc: 'Open deals with the largest amounts',
+    stale: 'Needs attention', staleDesc: 'Open deals unchanged for 14+ days', idle: 'unchanged for {{days}} days', allDeals: 'Deals',
+  },
   dashboard: {
     morning: 'Good morning, {{name}}', afternoon: 'Good afternoon, {{name}}', evening: 'Good evening, {{name}}',
     subtitle: "Here's how your pipeline looks today.",
@@ -18,7 +31,7 @@ export const sales = {
     revenueTitle: 'Closed revenue', revenueDesc: 'Won vs lost, last 6 months', won: 'Won', lost: 'Lost', value: 'Value',
     tasks: 'My tasks', tasksDesc: 'Overdue and due today', tasksEmpty: "You're all caught up", tasksEmptyDesc: 'No overdue or due-today tasks.',
     topDeals: 'Top open deals', topDealsDesc: 'Largest opportunities in play', pipelineLink: 'Pipeline', noOpenDeals: 'No open deals',
-    atRisk: 'Deals at risk', atRiskDesc: 'Open deals with no update in 14+ days', healthy: 'Pipeline is healthy',
+    atRisk: 'Deals at risk', atRiskDesc: 'Open deals with no update in 14+ days', healthy: 'All good',
     healthyDesc: 'Every open deal was touched recently.', idleCloses: 'Idle {{days}} days · closes {{date}}',
   },
   deals: {

@@ -10,6 +10,19 @@ export const sales: Locale<typeof en> = {
     firstName: 'Имя *', lastName: 'Фамилия', email: 'Email', phone: 'Телефон', jobTitle: 'Должность',
     linkedin: 'Ссылка на LinkedIn', noCompany: 'Без компании', noContact: 'Без контакта',
   },
+  overview: {
+    subtitle: 'Что происходит сегодня и на что обратить внимание.',
+    open: 'Открытые сделки', openSum: 'в работе {{sum}}', openNone: 'Ещё не закрытые сделки',
+    newLeads: 'Новые лиды', newSub: 'За 7 дней · сегодня {{count}}',
+    tasks: 'Задачи', tasksSub: 'Просрочено · сегодня {{count}}',
+    winRate: 'Доля успеха', winSub: 'продано {{won}} · отказ {{lost}}',
+    stagesCount: 'Сделки по этапам', stagesCountDesc: 'Сколько открытых сделок на каждом этапе',
+    stagesValue: 'Сумма по этапам', stagesValueDesc: 'Сумма открытых сделок на каждом этапе',
+    closedCount: 'Закрытые сделки', closedCountDesc: 'Продано и отказ, последние 6 месяцев', closedValue: 'Закрытая сумма', closedValueDesc: 'Продано и отказ по сумме, последние 6 месяцев',
+    count: 'Сделки', won: 'Продано', lost: 'Отказ',
+    recent: 'Новые лиды', recentDesc: 'Последние поступившие открытые сделки', biggest: 'Крупнейшие открытые сделки', biggestDesc: 'Открытые сделки с наибольшей суммой',
+    stale: 'Требуют внимания', staleDesc: 'Открытые сделки без изменений 14+ дней', idle: 'без изменений {{days}} дн.', allDeals: 'Сделки',
+  },
   dashboard: {
     morning: 'Доброе утро, {{name}}', afternoon: 'Добрый день, {{name}}', evening: 'Добрый вечер, {{name}}',
     subtitle: 'Так выглядит ваша воронка сегодня.',
@@ -23,7 +36,7 @@ export const sales: Locale<typeof en> = {
     revenueTitle: 'Закрытая выручка', revenueDesc: 'Выиграно и проиграно, последние 6 месяцев', won: 'Выиграно', lost: 'Проиграно', value: 'Сумма',
     tasks: 'Мои задачи', tasksDesc: 'Просроченные и на сегодня', tasksEmpty: 'Всё сделано', tasksEmptyDesc: 'Нет просроченных задач и задач на сегодня.',
     topDeals: 'Крупнейшие открытые сделки', topDealsDesc: 'Самые большие возможности в работе', pipelineLink: 'Воронка', noOpenDeals: 'Нет открытых сделок',
-    atRisk: 'Сделки под угрозой', atRiskDesc: 'Открытые сделки без обновлений 14+ дней', healthy: 'Воронка в порядке',
+    atRisk: 'Сделки под угрозой', atRiskDesc: 'Открытые сделки без обновлений 14+ дней', healthy: 'Всё в порядке',
     healthyDesc: 'Все открытые сделки недавно обновлялись.', idleCloses: 'Без движения {{days}} дн. · закрытие {{date}}',
   },
   deals: {

@@ -10,6 +10,19 @@ export const sales: Locale<typeof en> = {
     firstName: 'Ism *', lastName: 'Familiya', email: 'Email', phone: 'Telefon', jobTitle: 'Lavozim',
     linkedin: 'LinkedIn havolasi', noCompany: 'Kompaniyasiz', noContact: 'Kontaktsiz',
   },
+  overview: {
+    subtitle: 'Bugun nima boʻlyapti va nimaga eʼtibor berish kerak.',
+    open: 'Ochiq bitimlar', openSum: '{{sum}} jarayonda', openNone: 'Hali yopilmagan bitimlar',
+    newLeads: 'Yangi lidlar', newSub: 'Oxirgi 7 kun · bugun {{count}} ta',
+    tasks: 'Vazifalar', tasksSub: 'Muddati oʻtgan · bugun {{count}} ta',
+    winRate: 'Yutish darajasi', winSub: '{{won}} ta sotildi · {{lost}} ta rad etildi',
+    stagesCount: 'Bosqichlar boʻyicha bitimlar', stagesCountDesc: 'Har bir bosqichda nechta ochiq bitim turibdi',
+    stagesValue: 'Bosqichlar boʻyicha summa', stagesValueDesc: 'Har bir bosqichdagi ochiq bitimlar summasi',
+    closedCount: 'Yopilgan bitimlar', closedCountDesc: 'Sotilgan va rad etilgan, oxirgi 6 oy', closedValue: 'Yopilgan summa', closedValueDesc: 'Sotilgan va rad etilgan summa, oxirgi 6 oy',
+    count: 'Bitimlar', won: 'Sotildi', lost: 'Rad etildi',
+    recent: 'Yangi lidlar', recentDesc: 'Eng oxirgi tushgan ochiq bitimlar', biggest: 'Eng yirik ochiq bitimlar', biggestDesc: 'Summasi eng katta ochiq bitimlar',
+    stale: 'Eʼtibor kerak', staleDesc: '14 kundan beri oʻzgarmagan ochiq bitimlar', idle: '{{days}} kundan beri oʻzgarmagan', allDeals: 'Bitimlar',
+  },
   dashboard: {
     morning: 'Xayrli tong, {{name}}', afternoon: 'Xayrli kun, {{name}}', evening: 'Xayrli kech, {{name}}',
     subtitle: 'Bugungi pipeline holati.',
@@ -21,7 +34,7 @@ export const sales: Locale<typeof en> = {
     revenueTitle: 'Yopilgan daromad', revenueDesc: 'Yutilgan va yutqazilgan, oxirgi 6 oy', won: 'Yutilgan', lost: 'Yutqazilgan', value: 'Qiymat',
     tasks: 'Vazifalarim', tasksDesc: 'Muddati oʻtgan va bugungi', tasksEmpty: 'Hammasi bajarilgan', tasksEmptyDesc: 'Muddati oʻtgan yoki bugungi vazifa yoʻq.',
     topDeals: 'Eng yirik ochiq bitimlar', topDealsDesc: 'Jarayondagi eng katta imkoniyatlar', pipelineLink: 'Pipeline', noOpenDeals: 'Ochiq bitim yoʻq',
-    atRisk: 'Xavf ostidagi bitimlar', atRiskDesc: '14+ kun yangilanmagan ochiq bitimlar', healthy: 'Pipeline sogʻlom',
+    atRisk: 'Xavf ostidagi bitimlar', atRiskDesc: '14+ kun yangilanmagan ochiq bitimlar', healthy: 'Hammasi joyida',
     healthyDesc: 'Barcha ochiq bitimlar yaqinda yangilangan.', idleCloses: '{{days}} kun harakatsiz · yopilishi {{date}}',
   },
   deals: {

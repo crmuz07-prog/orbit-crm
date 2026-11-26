@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/048-compact-users-page.md](docs/prompts/048-compact-users-page.md)
+Latest: [docs/prompts/049-dashboard-that-fits-the-data.md](docs/prompts/049-dashboard-that-fits-the-data.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -53,3 +53,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [046 — Pipelines and stages: understandable at a glance](docs/prompts/046-pipelines-and-stages-ux.md)
 - [047 — One profile page](docs/prompts/047-one-profile-page.md)
 - [048 — Users: a calm list, one dialog per person](docs/prompts/048-compact-users-page.md)
+- [049 — A dashboard that fits the workspace's data](docs/prompts/049-dashboard-that-fits-the-data.md)

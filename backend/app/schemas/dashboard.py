@@ -14,6 +14,9 @@ class MonthTotal(Schema):
     month: str
     won: float
     lost: float
+    # Counts too: workspaces that do not enter amounts still see how many deals were won and lost.
+    won_count: int = 0
+    lost_count: int = 0
 
 
 class DashboardOut(Schema):
@@ -29,3 +32,10 @@ class DashboardOut(Schema):
     monthly: list[MonthTotal]
     stale: list[DealOut]
     top_open: list[DealOut]
+    won_count: int = 0
+    lost_count: int = 0
+    # New deals (leads) created today and in the last 7 days.
+    new_today: int = 0
+    new_week: int = 0
+    # The newest open deals — the list to show when deals carry no amounts.
+    recent_open: list[DealOut] = []

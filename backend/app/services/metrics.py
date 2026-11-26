@@ -2,10 +2,12 @@
 
 from collections.abc import Iterable
 from datetime import UTC, datetime, timedelta
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.config import get_settings
 from app.core.db import utcnow
 from app.models import Deal, Pipeline, Stage
 from app.schemas.dashboard import DashboardOut, MonthTotal, StageTotal
@@ -38,6 +40,8 @@ def monthly_totals(won: list[Deal], lost: list[Deal], now: datetime) -> list[Mon
             month=m.strftime("%Y-%m"),
             won=total(d for d in won if in_month(d, m)),
             lost=total(d for d in lost if in_month(d, m)),
+            won_count=sum(1 for d in won if in_month(d, m)),
+            lost_count=sum(1 for d in lost if in_month(d, m)),
         )
         for m in months
     ]
@@ -77,6 +81,8 @@ def build_dashboard(db: Session, workspace_id: str, reports: Visibility, deals_s
     lost = [d for d in deals if by_id[d.stage_id].is_lost]
     won_quarter = [d for d in won if d.closed_at and d.closed_at >= quarter_start(now)]
     stale_before = now - timedelta(days=STALE_AFTER_DAYS)
+    # "Today" is the local calendar day (Tashkent), not the UTC one that starts at 05:00 there.
+    day_start = now.astimezone(ZoneInfo(get_settings().billing_timezone)).replace(hour=0, minute=0, second=0, microsecond=0)
     closed_count = len(won) + len(lost)
 
     return DashboardOut(
@@ -93,4 +99,9 @@ def build_dashboard(db: Session, workspace_id: str, reports: Visibility, deals_s
         monthly=monthly_totals(won, lost, now),
         stale=[DealOut.model_validate(d) for d in open_deals if d.updated_at <= stale_before and deals_scope.allows(d)],
         top_open=[DealOut.model_validate(d) for d in sorted(filter(deals_scope.allows, open_deals), key=lambda d: -d.amount)[:5]],
+        won_count=len(won),
+        lost_count=len(lost),
+        new_today=sum(1 for d in deals if d.created_at >= day_start),
+        new_week=sum(1 for d in deals if d.created_at >= now - timedelta(days=7)),
+        recent_open=[DealOut.model_validate(d) for d in sorted(filter(deals_scope.allows, open_deals), key=lambda d: d.created_at, reverse=True)[:5]],
     )
