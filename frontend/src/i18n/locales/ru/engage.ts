@@ -28,6 +28,7 @@ export const engage: Locale<typeof en> = {
     dueCount_one: '{{count}} напоминание', dueCount_few: '{{count}} напоминания', dueCount_many: '{{count}} напоминаний', dueCount_other: '{{count}} напоминания',
   },
   calls: {
+    list: { search: 'Клиент, номер или заметка', all: 'Все', connected: 'Состоялись', missed: 'Без ответа', summary: 'Нужен итог', inbound: 'Входящие', outbound: 'Исходящие', callBack: 'Перезвонить', listen: 'Прослушать запись', unknown: 'Неизвестный номер' },
     title: 'Звонки', description: 'Каждый разговор с клиентами зафиксирован', logCall: 'Записать звонок',
     today: 'Звонков сегодня', week: 'На этой неделе', connectRate: 'Дозвон', avgDuration: 'Средний разговор',
     talkTime: 'Время разговоров', last30: 'Последние 30 дней', allOutcomes: 'Все результаты', allDirections: 'Все направления',

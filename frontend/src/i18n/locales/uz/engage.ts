@@ -28,6 +28,7 @@ export const engage: Locale<typeof en> = {
     dueCount_one: '{{count}} ta eslatma vaqti keldi', dueCount_other: '{{count}} ta eslatma vaqti keldi',
   },
   calls: {
+    list: { search: 'Mijoz, raqam yoki izoh', all: 'Hammasi', connected: 'Gaplashildi', missed: 'Javobsiz', summary: 'Xulosa kerak', inbound: 'Kiruvchi', outbound: 'Chiquvchi', callBack: 'Qayta qoʻngʻiroq qilish', listen: 'Yozuvni tinglash', unknown: 'Nomaʼlum raqam' },
     title: 'Qoʻngʻiroqlar', description: 'Mijozlar bilan har bir suhbat qayd etilgan', logCall: 'Qoʻngʻiroqni qayd etish',
     today: 'Bugungi qoʻngʻiroqlar', week: 'Shu hafta', connectRate: 'Ulanish darajasi', avgDuration: 'Oʻrtacha suhbat',
     talkTime: 'Suhbat vaqti', last30: 'Oxirgi 30 kun', allOutcomes: 'Barcha natijalar', allDirections: 'Barcha yoʻnalishlar',

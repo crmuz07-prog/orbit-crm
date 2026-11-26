@@ -25,6 +25,7 @@ export const engage = {
     dueCount_one: '{{count}} reminder is due', dueCount_other: '{{count}} reminders are due',
   },
   calls: {
+    list: { search: 'Client, number or note', all: 'All', connected: 'Connected', missed: 'Missed', summary: 'Needs a summary', inbound: 'Inbound', outbound: 'Outbound', callBack: 'Call back', listen: 'Play recording', unknown: 'Unknown number' },
     title: 'Calls', description: 'Every conversation with your customers, on record', logCall: 'Log call',
     today: 'Calls today', week: 'This week', connectRate: 'Connect rate', avgDuration: 'Avg talk time',
     talkTime: 'Talk time', last30: 'Last 30 days', allOutcomes: 'All outcomes', allDirections: 'All directions',
