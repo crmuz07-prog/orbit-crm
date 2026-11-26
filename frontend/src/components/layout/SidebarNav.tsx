@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import type { LucideIcon } from 'lucide-react'
 import { Tooltip } from '@/components/ui/tooltip'
@@ -6,14 +6,17 @@ import { spring } from '@/lib/motion'
 import type { Module } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
-export type NavItem = { to: string; label: string; icon: LucideIcon; end?: boolean; badge?: number; module?: Module }
+/** `also`: other path prefixes that belong to the same section (Clients → contacts and companies). */
+export type NavItem = { to: string; label: string; icon: LucideIcon; end?: boolean; badge?: number; module?: Module; also?: string[] }
 export type NavProps = { onNavigate?: () => void; collapsed?: boolean }
 
 /** One sidebar link; collapsed it is just the icon, with the name as a tooltip and the badge on the corner. */
-export function NavItemLink({ to, label, icon: Icon, end, badge, onNavigate, collapsed }: NavItem & NavProps) {
+export function NavItemLink({ to, label, icon: Icon, end, badge, also, onNavigate, collapsed }: NavItem & NavProps) {
+  const { pathname } = useLocation()
+  const inSection = !!also?.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`))
   const link = (
     <NavLink to={to} end={end} onClick={onNavigate} aria-label={collapsed ? label : undefined} className="relative block">
-      {({ isActive }) => (
+      {({ isActive: exact }) => { const isActive = exact || inSection; return (
         <span className={cn('relative flex h-8 items-center gap-2.5 rounded-md text-[13px] font-medium transition-colors', collapsed ? 'justify-center px-0' : 'px-2',
           isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground')}>
           {/* Shared layoutId slides the highlight between items (Linear-style). */}
@@ -25,7 +28,7 @@ export function NavItemLink({ to, label, icon: Icon, end, badge, onNavigate, col
               collapsed ? 'absolute -right-0.5 -top-0.5 min-w-4 px-1 text-center' : 'px-1.5')}>{badge}</span>
           )}
         </span>
-      )}
+      ) }}
     </NavLink>
   )
   return collapsed ? <Tooltip content={label} side="right">{link}</Tooltip> : link

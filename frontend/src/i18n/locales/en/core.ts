@@ -12,6 +12,7 @@ export const core = {
     edit: { deal: 'Edit deal', company: 'Edit company', contact: 'Edit contact', activity: 'Edit activity', call: 'Edit call', wrapUp: 'Call summary' },
   },
   nav: {
+    clients: 'Clients',
     collapse: 'Collapse sidebar (⌘B)', expand: 'Expand sidebar (⌘B)', workspace: 'Workspace', dashboard: 'Dashboard', deals: 'Deals', companies: 'Companies', contacts: 'Contacts',
     activities: 'Tasks', calls: 'Calls', settings: 'Settings', signOut: 'Sign out', openMenu: 'Open menu',
     search: 'Search or jump to…', lightMode: 'Light mode', darkMode: 'Dark mode', language: 'Language',

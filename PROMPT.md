@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/054-contacts-list-compact.md](docs/prompts/054-contacts-list-compact.md)
+Latest: [docs/prompts/055-one-clients-section.md](docs/prompts/055-one-clients-section.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -59,3 +59,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [052 — Tasks: one line per task, the next step at hand](docs/prompts/052-tasks-compact-rows.md)
 - [053 — Calls: a call log you can scan](docs/prompts/053-calls-log-compact.md)
 - [054 — Contacts: a list that fits and filters in one tap](docs/prompts/054-contacts-list-compact.md)
+- [055 — One Clients section](docs/prompts/055-one-clients-section.md)

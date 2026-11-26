@@ -11,6 +11,7 @@ import { useCrm } from '@/hooks/useData'
 import { dueBucket } from '@/lib/metrics'
 import { cn } from '@/lib/utils'
 import { Logo } from './Logo'
+import { lastPeopleTab } from '@/features/people/PeopleTabs'
 import { NavItemLink, NavSection, type NavItem, type NavProps } from './SidebarNav'
 
 /** CRM sections the caller may view. The section title only matters next to the platform section. */
@@ -19,11 +20,13 @@ function WorkspaceNav({ titled, ...nav }: NavProps & { titled: boolean }) {
   const { t } = useTranslation()
   const { can } = useAccess()
   const overdue = activities.filter((a) => dueBucket(a) === 'overdue').length
+  const peopleTo = can('contacts', 'view') ? lastPeopleTab() : '/companies'
+  const peopleItem: NavItem = { to: peopleTo, label: t('nav.clients'), icon: Users, module: peopleTo === '/companies' ? 'companies' : 'contacts', also: ['/contacts', '/companies'] }
   const items: NavItem[] = [
     { to: '/', label: t('nav.dashboard'), icon: LayoutDashboard, end: true, module: 'reports' },
     { to: '/deals', label: t('nav.deals'), icon: Handshake, module: 'deals' },
-    { to: '/companies', label: t('nav.companies'), icon: Building2, module: 'companies' },
-    { to: '/contacts', label: t('nav.contacts'), icon: Users, module: 'contacts' },
+    // One "Clients" section (amoCRM): contacts and companies switch with the tabs inside it.
+    peopleItem,
     { to: '/calls', label: t('nav.calls'), icon: Phone, module: 'activities' },
     { to: '/tasks', label: t('nav.activities'), icon: CalendarCheck, badge: overdue, module: 'activities' },
     { to: '/reports', label: t('reports.nav'), icon: BarChart3, module: 'reports' },

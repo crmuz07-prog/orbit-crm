@@ -15,6 +15,7 @@ export const core: Locale<typeof en> = {
     edit: { deal: 'Bitimni tahrirlash', company: 'Kompaniyani tahrirlash', contact: 'Kontaktni tahrirlash', activity: 'Faoliyatni tahrirlash', call: 'Qoʻngʻiroqni tahrirlash', wrapUp: 'Qoʻngʻiroq xulosasi' },
   },
   nav: {
+    clients: 'Mijozlar',
     collapse: 'Panelni yigʻish (⌘B)', expand: 'Panelni ochish (⌘B)', workspace: 'Ish maydoni', dashboard: 'Boshqaruv paneli', deals: 'Bitimlar', companies: 'Kompaniyalar', contacts: 'Kontaktlar',
     activities: 'Vazifalar', calls: 'Qoʻngʻiroqlar', settings: 'Sozlamalar', signOut: 'Chiqish', openMenu: 'Menyuni ochish',
     search: 'Qidirish yoki oʻtish…', lightMode: 'Yorugʻ rejim', darkMode: 'Qorongʻi rejim', language: 'Til',
