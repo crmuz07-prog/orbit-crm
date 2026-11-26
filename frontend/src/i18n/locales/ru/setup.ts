@@ -2,10 +2,11 @@ export const setup = {
   setup: {
     groups: { personal: 'Личное', team: 'Команда', sales: 'Продажи', integrations: 'Интеграции', data: 'Данные' },
     nav: {
-      profile: 'Профиль', security: 'Пароль', appearance: 'Внешний вид', members: 'Пользователи', roles: 'Роли и доступ', teams: 'Отделы продаж',
+      profile: 'Профиль', members: 'Пользователи', roles: 'Роли и доступ', teams: 'Отделы продаж',
       pipelines: 'Воронки и этапы', fields: 'Поля сделки', lostReasons: 'Причины отказа', telephony: 'Телефония', instagram: 'Instagram', data: 'Импорт и экспорт',
     },
     hideSections: 'Скрыть разделы', showSections: 'Показать разделы', navLabel: 'Разделы настроек',
+    profile: { email: 'Логин (email)', emailHint: 'По нему вы входите в систему — чтобы изменить, обратитесь к администратору.', passwordHint: 'Не короче {{min}} символов.' },
     securityDesc: 'После смены пароля сеансы на других устройствах закрываются.',
     openStages: 'Рабочие этапы', closedStages: 'Итоговые этапы', closedHint: 'Здесь сделки завершаются. В воронке остаётся хотя бы один этап успеха и один этап отказа.',
     pipe: {

@@ -2,10 +2,11 @@ export const setup = {
   setup: {
     groups: { personal: 'Personal', team: 'Team', sales: 'Sales', integrations: 'Integrations', data: 'Data' },
     nav: {
-      profile: 'Profile', security: 'Password', appearance: 'Appearance', members: 'Users', roles: 'Roles and access', teams: 'Sales teams',
+      profile: 'Profile', members: 'Users', roles: 'Roles and access', teams: 'Sales teams',
       pipelines: 'Pipelines and stages', fields: 'Deal fields', lostReasons: 'Lost reasons', telephony: 'Telephony', instagram: 'Instagram', data: 'Import and export',
     },
     hideSections: 'Hide sections', showSections: 'Show sections', navLabel: 'Settings sections',
+    profile: { email: 'Login (email)', emailHint: 'You sign in with it — ask an administrator to change it.', passwordHint: 'At least {{min}} characters.' },
     securityDesc: 'Changing the password signs you out on other devices.',
     openStages: 'Working stages', closedStages: 'Final stages', closedHint: 'Deals end up here. A pipeline keeps at least one won and one lost stage.',
     pipe: {

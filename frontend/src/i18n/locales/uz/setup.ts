@@ -2,10 +2,11 @@ export const setup = {
   setup: {
     groups: { personal: 'Shaxsiy', team: 'Jamoa', sales: 'Savdo', integrations: 'Integratsiyalar', data: 'Maʼlumotlar' },
     nav: {
-      profile: 'Profil', security: 'Parol', appearance: 'Koʻrinish', members: 'Foydalanuvchilar', roles: 'Rollar va huquqlar', teams: 'Savdo jamoalari',
+      profile: 'Profil', members: 'Foydalanuvchilar', roles: 'Rollar va huquqlar', teams: 'Savdo jamoalari',
       pipelines: 'Voronkalar va bosqichlar', fields: 'Bitim maydonlari', lostReasons: 'Rad etish sabablari', telephony: 'Telefoniya', instagram: 'Instagram', data: 'Import va eksport',
     },
     hideSections: 'Boʻlimlarni yashirish', showSections: 'Boʻlimlarni koʻrsatish', navLabel: 'Sozlamalar boʻlimlari',
+    profile: { email: 'Login (email)', emailHint: 'Login bilan tizimga kirasiz — oʻzgartirish uchun administratorga murojaat qiling.', passwordHint: 'Kamida {{min}} ta belgi.' },
     securityDesc: 'Parol oʻzgarsa, boshqa qurilmalardagi kirishlar yopiladi.',
     openStages: 'Ish bosqichlari', closedStages: 'Yakuniy bosqichlar', closedHint: 'Bitimlar shu yerda yakunlanadi. Voronkada kamida bitta yutish va bitta yutqazish bosqichi qoladi.',
     pipe: {

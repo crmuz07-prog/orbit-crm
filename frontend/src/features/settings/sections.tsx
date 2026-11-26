@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import {
-  Ban, Database, Instagram, KeyRound, ListChecks, Palette, Phone, ShieldCheck, SlidersHorizontal, UserCircle, Users, UsersRound, type LucideIcon,
+  Ban, Database, Instagram, ListChecks, Phone, ShieldCheck, SlidersHorizontal, UserCircle, Users, UsersRound, type LucideIcon,
 } from 'lucide-react'
 import { AccessRolesCard } from '@/features/access/AccessRolesCard'
 import { SalesTeamsCard } from '@/features/access/SalesTeamsCard'
@@ -10,8 +10,7 @@ import { LostReasonsCard } from '@/features/fields/LostReasonsCard'
 import { InstagramCard } from '@/features/instagram/InstagramCard'
 import { TeamCard } from '@/features/team/TeamCard'
 import { TelephonyCard } from '@/features/telephony/TelephonyCard'
-import { PasswordCard, ProfileCard } from './AccountCard'
-import { AppearanceCard } from './AppearanceCard'
+import { ProfileSection } from './AccountCard'
 import { DataCard } from './DataCard'
 import { StageEditor } from './StageEditor'
 import type { setup } from '@/i18n/locales/en/setup'
@@ -46,9 +45,7 @@ function Teams() {
 
 /** Every settings section, in menu order: one job per section, grouped the way the menu shows them. */
 export const SECTIONS: Section[] = [
-  { id: 'profile', group: 'personal', icon: UserCircle, render: () => <ProfileCard /> },
-  { id: 'security', group: 'personal', icon: KeyRound, render: () => <PasswordCard /> },
-  { id: 'appearance', group: 'personal', icon: Palette, render: () => <AppearanceCard /> },
+  { id: 'profile', group: 'personal', icon: UserCircle, render: () => <ProfileSection /> },
   { id: 'members', group: 'team', icon: Users, render: (isAdmin) => <Members isAdmin={isAdmin} /> },
   { id: 'roles', group: 'team', icon: ShieldCheck, admin: true, render: () => <Roles /> },
   { id: 'teams', group: 'team', icon: UsersRound, admin: true, render: () => <Teams /> },
