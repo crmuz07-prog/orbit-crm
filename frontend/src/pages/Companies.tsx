@@ -41,22 +41,27 @@ export default function CompaniesPage() {
   const matchedPerson = (c: Company) => (query.trim() && !matches(query, c.name, c.domain, c.city, c.country)
     ? people.get(c.id)?.find((p) => matches(query, fullName(p), p.phone, p.email)) : undefined)
   const industries = [...new Set(companies.map((c) => c.industry).filter((i): i is string => !!i))].sort()
-  const filtered = companies.filter(
-    (c) => (!lifecycle || c.lifecycle === lifecycle) && (!industry || c.industry === industry) && filters.apply(c) && (matches(query, c.name, c.domain, c.city, c.country) || !!matchedPerson(c)),
+  // Search and the company filters first; the chips count within that, then narrow it.
+  const searched = companies.filter(
+    (c) => (!lifecycle || c.lifecycle === lifecycle) && (!industry || c.industry === industry) && (matches(query, c.name, c.domain, c.city, c.country) || !!matchedPerson(c)),
   )
+  const filtered = searched.filter(filters.apply)
+  const controls = filters.controls(searched, () => { setLifecycle(''); setIndustry('') })
   const newCompany = <CreateButton module="companies" onClick={() => openModal({ kind: 'company' })}><Plus /> {t('companies.newCompany')}</CreateButton>
 
   if (isLoading) return <PageLoading title={t('companies.title')} />
 
   return (
     <Page title={t('people.section')} description={t('people.shown', { shown: filtered.length, total: companies.length })} actions={<><ExportButton table="companies" />{newCompany}</>}>
-      <div className="mb-3 flex flex-wrap items-center gap-2">
+      <div className="mb-2 flex flex-wrap items-center gap-2">
         <PeopleTabs />
         <SearchInput value={query} onChange={setQuery} placeholder={t('companies.search')} />
         <SelectBox value={lifecycle} onChange={setLifecycle} emptyLabel={t('companies.allLifecycle')} options={LIFECYCLES.map((l) => ({ value: l.value, label: t(`enums.lifecycle.${l.value}`) }))} className="w-36" />
         <SelectBox value={industry} onChange={setIndustry} emptyLabel={t('companies.allIndustries')} options={industries.map((i) => ({ value: i, label: labels.industry(i) }))} className="w-36" />
-        {filters.controls(() => { setLifecycle(''); setIndustry('') })}
+        {controls.owner}
+        {controls.reset}
       </div>
+      <div className="mb-3">{controls.chips}</div>
       <LoosePeopleHint query={query} />
       <BulkBar table="companies" selected={selected} onClear={() => setSelected(new Set())} />
       {companies.length === 0 ? (

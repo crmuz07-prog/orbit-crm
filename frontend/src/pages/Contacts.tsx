@@ -27,19 +27,24 @@ export default function ContactsPage() {
   const rollup = useDealRollups('contact_id')
   const filters = usePeopleFilters<Contact>('contact_id', (c) => rollup(c.id).open, companyId ? 1 : 0)
 
-  const filtered = contacts.filter((c) => (!companyId || c.company_id === companyId) && filters.apply(c) && matches(query, fullName(c), c.email, c.phone, c.title, c.company_id ? companyById.get(c.company_id)?.name : undefined))
+  // Search and company first; the chips count within that, then narrow it.
+  const searched = contacts.filter((c) => (!companyId || c.company_id === companyId) && matches(query, fullName(c), c.email, c.phone, c.title, c.company_id ? companyById.get(c.company_id)?.name : undefined))
+  const filtered = searched.filter(filters.apply)
+  const controls = filters.controls(searched, () => setCompanyId(''))
   const newContact = <CreateButton module="contacts" onClick={() => openModal({ kind: 'contact' })}><Plus /> {t('contacts.newContact')}</CreateButton>
 
   if (isLoading) return <PageLoading title={t('contacts.title')} />
 
   return (
     <Page title={t('people.section')} description={t('people.shown', { shown: filtered.length, total: contacts.length })} actions={<><ExportButton table="contacts" />{newContact}</>}>
-      <div className="mb-3 flex flex-wrap items-center gap-2">
+      <div className="mb-2 flex flex-wrap items-center gap-2">
         <PeopleTabs />
         <SearchInput value={query} onChange={setQuery} placeholder={t('contacts.search')} />
         <SelectBox value={companyId} onChange={setCompanyId} emptyLabel={t('contacts.allCompanies')} options={companies.map((c) => ({ value: c.id, label: c.name }))} className="w-48" />
-        {filters.controls(() => setCompanyId(''))}
+        {controls.owner}
+        {controls.reset}
       </div>
+      <div className="mb-3">{controls.chips}</div>
       <BulkBar table="contacts" selected={selected} onClear={() => setSelected(new Set())} />
       {contacts.length === 0 ? (
         <Card><EmptyState icon={Users} title={t('contacts.empty')} description={t('contacts.emptyDesc')} action={newContact} /></Card>

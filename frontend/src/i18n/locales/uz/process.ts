@@ -1,5 +1,6 @@
 export const process = {
   people: {
+    presets: { all: 'Hammasi', overdue: 'Vazifasi kechikkan', today: 'Bugun aloqa', noTask: 'Vazifasiz', withDeals: 'Ochiq bitimi bor', noDeals: 'Bitimsiz' },
     moveAction: 'Oʻtkazish', moveDesc: 'Bosqichdagi vaqt qaytadan hisoblanadi; yutish yoki yutqazish bosqichiga oʻtganlar natijalarda hisoblanadi.', moveTo: 'Bosqichga oʻtkazish…', moveTitle_one: '{{count}} ta bitim «{{name}}» bosqichiga oʻtkazilsinmi?', moveTitle_other: '{{count}} ta bitim «{{name}}» bosqichiga oʻtkazilsinmi?', moved_one: '{{count}} ta bitim oʻtkazildi', moved_other: '{{count}} ta bitim oʻtkazildi', section: 'Kontaktlar va kompaniyalar', shown: '{{total}} tadan {{shown}} tasi', allDeals: 'Barcha bitimlar', deals: { open: 'Ochiq bitimi bor', none: 'Ochiq bitimi yoʻq' },
     reset: 'Filtrlarni tozalash', colLast: 'Oxirgi faollik', selected_one: '{{count}} ta tanlandi', selected_other: '{{count}} ta tanlandi', clear: 'Tanlovni bekor qilish',
     assignTo: 'Masʼulga berish…', assign: 'Berish', assignTitle_one: '{{count}} ta yozuv {{name}}ga berilsinmi?', assignTitle_other: '{{count}} ta yozuv {{name}}ga berilsinmi?',

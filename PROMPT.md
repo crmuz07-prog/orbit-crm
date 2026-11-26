@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/053-calls-log-compact.md](docs/prompts/053-calls-log-compact.md)
+Latest: [docs/prompts/054-contacts-list-compact.md](docs/prompts/054-contacts-list-compact.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -58,3 +58,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [051 — The deal card like the company and contact cards](docs/prompts/051-deal-card-like-company.md)
 - [052 — Tasks: one line per task, the next step at hand](docs/prompts/052-tasks-compact-rows.md)
 - [053 — Calls: a call log you can scan](docs/prompts/053-calls-log-compact.md)
+- [054 — Contacts: a list that fits and filters in one tap](docs/prompts/054-contacts-list-compact.md)

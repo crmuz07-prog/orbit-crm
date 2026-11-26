@@ -31,7 +31,7 @@ export function EmailCell({ email }: { email: string | null }) {
 /** Open deals: count and amount, as amoCRM lists show them. */
 export function DealsCell({ count, amount }: { count: number; amount: number }) {
   if (!count) return <span className="text-muted-foreground">—</span>
-  return <span className="tabular-nums"><b className="font-medium">{count}</b> · {money(amount, undefined, true)}</span>
+  return <span className="tabular-nums"><b className="font-medium">{count}</b>{amount > 0 && <> · {money(amount, undefined, true)}</>}</span>
 }
 
 export function TaskCell({ next }: { next: NextTask }) {

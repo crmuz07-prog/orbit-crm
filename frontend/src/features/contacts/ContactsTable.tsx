@@ -53,12 +53,24 @@ function useContactColumns({ rollup, nextTask }: Pick<Props, 'rollup' | 'nextTas
   ]
 }
 
+/**
+ * Columns with nothing to say in this list are left out: no e-mail anywhere, or every company merely repeating the
+ * person's name (imports that open one company per client) — and the table is only as wide as what is left.
+ */
+function useVisibleColumns(contacts: Contact[], columns: Column<Contact>[]) {
+  const { companyById } = useCrm()
+  const hasEmail = contacts.some((c) => c.email)
+  const companyAddsSomething = contacts.some((c) => c.company_id && companyById.get(c.company_id)?.name !== fullName(c))
+  return columns.filter((col) => (col.key !== 'email' || hasEmail) && (col.key !== 'company' || companyAddsSomething))
+}
+
 export function ContactsTable({ contacts, rollup, nextTask, selection }: Props) {
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const columns = useVisibleColumns(contacts, useContactColumns({ rollup, nextTask }))
   return (
     <Card>
-      <DataTable rows={contacts} columns={useContactColumns({ rollup, nextTask })} selection={selection} minWidth={980}
+      <DataTable rows={contacts} columns={columns} selection={selection} minWidth={columns.length * 110}
         onRowClick={(c) => navigate(`/contacts/${c.id}`)} empty={<EmptyState icon={Search} title={t('contacts.noMatch')} />} />
     </Card>
   )
