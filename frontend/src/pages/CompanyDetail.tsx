@@ -1,11 +1,10 @@
-import { Building2, Pencil, Phone, Plus } from 'lucide-react'
+import { Building2, Pencil, Phone } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { PersonAvatar } from '@/components/common/avatars'
-import { BackLink, ListCard, RowLink } from '@/components/common/record'
+import { AddButton, BackLink, DenseEmpty, ListCard, RowLink } from '@/components/common/record'
 import { DeleteRecordButton, RecordNotFound } from '@/components/common/record-actions'
 import { RecordSkeleton } from '@/components/common/states'
-import { Button } from '@/components/ui/button'
 import { DealsListCard } from '@/features/deals/DealsListCard'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { CompanyInfo } from '@/features/record/ClientInfo'
@@ -69,17 +68,18 @@ export default function CompanyDetailPage() {
         <>
           <DealsListCard deals={companyDeals} onAdd={addDeal} />
           <ListCard
+            dense
             title={t('companies.people', { count: people.length })}
-            action={<Button size="sm" variant="ghost" onClick={addContact}><Plus /> {t('common.add')}</Button>}
+            action={<AddButton label={t('common.add')} onClick={addContact} />}
             items={people}
-            empty={<p className="px-4 py-3 text-sm text-muted-foreground">{t('companies.noPeople')}</p>}
+            empty={<DenseEmpty>{t('companies.noPeople')}</DenseEmpty>}
             render={(c) => (
-              <RowLink to={`/contacts/${c.id}`}>
-                <PersonAvatar name={fullName(c)} />
-                <div className="min-w-0">
-                  <p className="text-sm font-medium">{fullName(c)}</p>
-                  <p className="truncate text-xs text-muted-foreground">{c.title ?? c.email}</p>
-                </div>
+              <RowLink dense to={`/contacts/${c.id}`}>
+                <PersonAvatar name={fullName(c)} size="xs" />
+                <span className="min-w-0 flex-1 truncate text-sm">
+                  <span className="font-medium">{fullName(c)}</span>
+                  {(c.title ?? c.phone ?? c.email) && <span className="text-muted-foreground"> · {c.title ?? c.phone ?? c.email}</span>}
+                </span>
               </RowLink>
             )}
           />

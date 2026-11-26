@@ -1,31 +1,26 @@
-import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { ListCard, RowLink } from '@/components/common/record'
-import { Button } from '@/components/ui/button'
+import { AddButton, DenseEmpty, ListCard, RowLink } from '@/components/common/record'
 import { useCrm } from '@/hooks/useData'
 import type { Deal } from '@/lib/types'
-import { money, shortDate } from '@/lib/utils'
+import { money } from '@/lib/utils'
 import { StageBadge } from './bits'
 
-/** Associated deals on company / contact records. */
+/** Associated deals on company / contact records: one line per deal (title, stage, amount). */
 export function DealsListCard({ deals, onAdd }: { deals: Deal[]; onAdd: () => void }) {
   const { stageById } = useCrm()
   const { t } = useTranslation()
   return (
     <ListCard
+      dense
       title={t('deals.count', { count: deals.length })}
-      action={<Button size="sm" variant="ghost" onClick={onAdd}><Plus /> {t('common.add')}</Button>}
+      action={<AddButton label={t('common.add')} onClick={onAdd} />}
       items={deals}
-      empty={<p className="px-4 py-3 text-sm text-muted-foreground">{t('deals.none')}</p>}
+      empty={<DenseEmpty>{t('deals.none')}</DenseEmpty>}
       render={(d) => (
-        <RowLink to={`/deals/${d.id}`}>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">{d.title}</p>
-            <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-              <StageBadge stage={stageById.get(d.stage_id)} /> {d.expected_close_date && t('deals.closes', { date: shortDate(d.expected_close_date) })}
-            </div>
-          </div>
-          <span className="text-sm font-semibold tabular-nums">{money(d.amount, d.currency, true)}</span>
+        <RowLink dense to={`/deals/${d.id}`}>
+          <span className="min-w-0 flex-1 truncate text-sm font-medium" title={d.title}>{d.title}</span>
+          <StageBadge stage={stageById.get(d.stage_id)} className="max-w-[45%]" />
+          <span className="shrink-0 text-sm font-semibold tabular-nums">{money(d.amount, d.currency, true)}</span>
         </RowLink>
       )}
     />

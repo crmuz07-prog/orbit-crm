@@ -7,14 +7,14 @@ import type { DealStatus, Priority, Stage } from '@/lib/types'
 import { Tooltip } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
-export function StageBadge({ stage }: { stage?: Stage }) {
+export function StageBadge({ stage, className }: { stage?: Stage; className?: string }) {
   const labels = useLabels()
   if (!stage) return <span className="text-muted-foreground">—</span>
   const color = STAGE_COLORS[stage.color]
   return (
-    <span className={cn('inline-flex items-center gap-1.5 whitespace-nowrap rounded-md px-1.5 py-0.5 text-xs font-medium', color.soft)}>
-      <span className={cn('size-1.5 rounded-full', color.dot)} />
-      {labels.stage(stage.name)}
+    <span className={cn('inline-flex min-w-0 items-center gap-1.5 whitespace-nowrap rounded-md px-1.5 py-0.5 text-xs font-medium', color.soft, className)} title={labels.stage(stage.name)}>
+      <span className={cn('size-1.5 shrink-0 rounded-full', color.dot)} />
+      <span className="truncate">{labels.stage(stage.name)}</span>
     </span>
   )
 }
