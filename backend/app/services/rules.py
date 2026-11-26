@@ -1,5 +1,6 @@
 """Business rules plugged into the generic CRUD as hooks."""
 
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.db import utcnow
@@ -32,6 +33,18 @@ def before_deal_save(db: Session, deal: Deal, changed: set[str]) -> None:
         clean_custom(db, deal)
 
 
+def ensure_not_last_closed(db: Session, stage: Stage) -> None:
+    """Won / lost drop zones, win rate and lost reasons need one won and one lost stage in every pipeline."""
+    if not stage.is_closed:
+        return
+    kind = Stage.is_won if stage.is_won else Stage.is_lost
+    others = db.scalar(select(func.count()).select_from(Stage).where(
+        Stage.workspace_id == stage.workspace_id, Stage.pipeline_id == stage.pipeline_id, kind.is_(True), Stage.id != stage.id))
+    if not others:
+        raise Conflict("A pipeline keeps at least one won and one lost stage", "last_won_stage" if stage.is_won else "last_lost_stage")
+
+
 def guard_stage_delete(db: Session, stage: Stage) -> None:
+    ensure_not_last_closed(db, stage)
     if count_rows(db, Deal, stage_id=stage.id):
         raise Conflict("Move the deals out of this stage before deleting it", "stage_has_deals")

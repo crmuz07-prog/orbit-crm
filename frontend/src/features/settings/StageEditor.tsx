@@ -13,9 +13,33 @@ import { useCreateRow, useCrm, useUpdateRow } from '@/hooks/useData'
 import { useLabels } from '@/hooks/useLabels'
 import { stagesOf, useCurrentPipeline, usePipelines } from '@/hooks/usePipelines'
 import type { Pipeline, Stage } from '@/lib/types'
-import { StageRow } from './StageRow'
+import { STAGE_GRID, StageRow } from './StageRow'
 import { IconButton } from '@/components/common/icon-button'
 import { useConfirm } from '@/components/common/confirm-provider'
+import { cn } from '@/lib/utils'
+
+/** Header of the stage list: what each column is. */
+function StageColumns() {
+  const { t } = useTranslation()
+  return (
+    <div className={cn(STAGE_GRID, 'border-b border-foreground/[0.06] px-4 py-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground')}>
+      <span />
+      <span>{t('setup.stageCols.name')}</span>
+      <span>{t('setup.stageCols.chance')}</span>
+      <span className="hidden text-right sm:block">{t('setup.stageCols.deals')}</span>
+      <span className="hidden sm:block" />
+    </div>
+  )
+}
+
+function GroupTitle({ title, hint }: { title: string; hint?: string }) {
+  return (
+    <li className="bg-foreground/[0.02] px-4 py-1.5">
+      <p className="text-xs font-semibold">{title}</p>
+      {hint && <p className="text-[11px] text-muted-foreground">{hint}</p>}
+    </li>
+  )
+}
 
 /** Name, default flag and delete of the selected pipeline. */
 function PipelineToolbar({ pipeline, onDeleted }: { pipeline: Pipeline; onDeleted: () => void }) {
@@ -33,7 +57,7 @@ function PipelineToolbar({ pipeline, onDeleted }: { pipeline: Pipeline; onDelete
     if (await ask(options)) actions.update.mutate({ id: pipeline.id, patch: { is_default: true } })
   }
   return (
-    <div className="flex flex-wrap items-center gap-2 border-b border-foreground/[0.06] px-4 py-3">
+    <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
       <Input value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') rename(); if (e.key === 'Escape') setName(shown) }}
         aria-label={t('pipelines.name')} className="h-8 max-w-xs flex-1" />
       {dirty && <SaveBar dirty onSave={rename} onCancel={() => setName(shown)} />}
@@ -80,16 +104,20 @@ export function StageEditor() {
     <Card>
       <CardHeader title={t('pipelines.title')} description={t('pipelines.description')}
         action={<Button size="sm" variant="outline" onClick={addPipeline}><Plus /> {t('pipelines.add')}</Button>} />
-      <div className="flex flex-wrap items-center justify-between gap-2 px-4 pt-3">
-        <PipelineSwitcher pipelines={pipelines} current={pipeline} onChange={setPipeline} />
-        <Button size="sm" variant="outline" onClick={addStage}><Plus /> {t('settings.addStage')}</Button>
+      {/* One row for the pipeline itself: which one, its name, default, delete; stages come below. */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-foreground/[0.06] px-4 py-2">
+        {pipelines.length > 1 && <PipelineSwitcher pipelines={pipelines} current={pipeline} onChange={setPipeline} />}
+        {pipeline && <PipelineToolbar key={pipeline.id} pipeline={pipeline} onDeleted={() => setPipeline(pipelines.find((p) => p.is_default)?.id ?? '')} />}
+        <Button size="sm" variant="outline" onClick={addStage} className="ml-auto"><Plus /> {t('settings.addStage')}</Button>
       </div>
-      {pipeline && <PipelineToolbar key={pipeline.id} pipeline={pipeline} onDeleted={() => setPipeline(pipelines.find((p) => p.is_default)?.id ?? '')} />}
+      <StageColumns />
       <ul className="divide-y divide-foreground/[0.06]">
+        <GroupTitle title={t('setup.openStages')} />
         {open.map((s, i) => (
-          <StageRow key={s.id} stage={s} dealCount={dealCount(s)} canUp={i > 0} canDown={i < open.length - 1} onMove={(dir) => move(i, dir)} />
+          <StageRow key={s.id} stage={s} siblings={ordered} dealCount={dealCount(s)} canUp={i > 0} canDown={i < open.length - 1} onMove={(dir) => move(i, dir)} />
         ))}
-        {closed.map((s) => <StageRow key={s.id} stage={s} dealCount={dealCount(s)} />)}
+        <GroupTitle title={t('setup.closedStages')} hint={t('setup.closedHint')} />
+        {closed.map((s) => <StageRow key={s.id} stage={s} siblings={ordered} dealCount={dealCount(s)} />)}
       </ul>
     </Card>
   )

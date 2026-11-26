@@ -16,6 +16,7 @@ import { MemberAccess } from './MemberAccess'
 import { RoleSelect } from './RoleSelect'
 import type { TeamActions } from './useTeam'
 import { IconButton } from '@/components/common/icon-button'
+import { cn } from '@/lib/utils'
 
 interface Props {
   member: TeamMember
@@ -67,6 +68,9 @@ function SetPasswordButton({ member, setPassword }: { member: TeamMember; setPas
   )
 }
 
+/** Column widths shared by the member list header and its rows. */
+export const MEMBER_GRID = 'grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_150px_150px_140px_72px]'
+
 /** One person in Settings → Team; owners can't be edited by admins (mirrors the API). */
 export function MemberRow({ member, isSelf, canManage, actorRole, actions, access }: Props) {
   const { t } = useTranslation()
@@ -75,7 +79,8 @@ export function MemberRow({ member, isSelf, canManage, actorRole, actions, acces
   const change = useMemberChange(member, actions.update)
 
   return (
-    <li className="flex flex-wrap items-center gap-3 px-4 py-3">
+    <li className={cn(MEMBER_GRID, 'px-4 py-2')}>
+      <div className="flex min-w-0 items-center gap-3">
       <PersonAvatar name={member.full_name} />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">
@@ -87,18 +92,23 @@ export function MemberRow({ member, isSelf, canManage, actorRole, actions, acces
           {!member.is_active && <Badge tone="red">{t('team.inactive')}</Badge>}
         </p>
       </div>
-      {editable ? (
-        <RoleSelect value={member.role} actorRole={actorRole} className="w-40" onChange={(role) => change({ role }, t('team.role'), t(`roles.${role}`))} />
-      ) : (
-        <Badge tone={member.role === 'owner' ? 'violet' : member.role === 'admin' ? 'blue' : 'gray'}>{t(`roles.${member.role}`)}</Badge>
-      )}
-      {canManage && access && member.role === 'member' && <MemberAccess member={member} config={access} update={actions.update} />}
-      {editable && (
-        <div className="flex gap-0.5">
-          <SetPasswordButton member={member} setPassword={actions.setPassword} />
-          <IconButton label={t('team.remove')} onClick={() => setConfirm(true)}><UserMinus /></IconButton>
+      </div>
+      <div className="col-span-2 flex flex-wrap items-center gap-2 pl-10 sm:contents">
+        {editable ? (
+          <RoleSelect value={member.role} actorRole={actorRole} className="h-8 w-[150px]" ariaLabel={t('setup.members.role')}
+            onChange={(role) => change({ role }, t('team.role'), t(`roles.${role}`))} />
+        ) : (
+          <span><Badge tone={member.role === 'owner' ? 'violet' : member.role === 'admin' ? 'blue' : 'gray'}>{t(`roles.${member.role}`)}</Badge></span>
+        )}
+        {/* Owners and admins have full access, so there is nothing to pick for them. */}
+        {canManage && access && member.role === 'member'
+          ? <MemberAccess member={member} config={access} update={actions.update} />
+          : <><span className="hidden text-xs text-muted-foreground sm:block">{member.role !== 'member' ? t('setup.members.fullAccess') : ''}</span><span className="hidden sm:block" /></>}
+        <div className="ml-auto flex justify-end gap-0.5 sm:ml-0">
+          {editable && <SetPasswordButton member={member} setPassword={actions.setPassword} />}
+          {editable && <IconButton label={t('team.remove')} onClick={() => setConfirm(true)}><UserMinus /></IconButton>}
         </div>
-      )}
+      </div>
       <ConfirmDialog
         open={confirm}
         onOpenChange={setConfirm}

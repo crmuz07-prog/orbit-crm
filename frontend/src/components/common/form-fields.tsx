@@ -98,13 +98,15 @@ interface SelectBoxProps {
   options: Option[]
   emptyLabel?: string
   className?: string
+  /** Name for screen readers when no visible label sits next to it (rows in a table). */
+  ariaLabel?: string
 }
 
 /** Select whose empty value is `""`; pass `emptyLabel` to make "nothing selected" a choice. */
-export function SelectBox({ value, onChange, options, emptyLabel, className }: SelectBoxProps) {
+export function SelectBox({ value, onChange, options, emptyLabel, className, ariaLabel }: SelectBoxProps) {
   return (
     <Select value={value || NONE} onValueChange={(v) => onChange(v === NONE ? '' : v)}>
-      <SelectTrigger className={className}>
+      <SelectTrigger className={className} aria-label={ariaLabel} title={ariaLabel}>
         <SelectValue placeholder={emptyLabel ?? '—'} />
       </SelectTrigger>
       <SelectContent>

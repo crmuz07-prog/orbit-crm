@@ -19,7 +19,6 @@ export const access: Locale<typeof en> = {
     deleteDesc: 'Aʼzolar ish maydonida jamoasiz qoladi.', empty: 'Hozircha jamoa yoʻq',
   },
   owner: { label: 'Masʼul', unassigned: 'Biriktirilmagan', me: 'Men', all: 'Barcha menejerlar' },
-  settingsTabs: { account: 'Hisob', team: 'Jamoa va huquqlar', sales: 'Savdo jarayoni', workspace: 'Ish maydoni' },
   noAccess: { title: 'Bu boʻlimga kirish huquqi yoʻq', desc: 'Kirish rolingizni oʻzgartirish uchun administratorga murojaat qiling.' },
   crash: { title: 'Nimadir xato ketdi', desc: 'Sahifani koʻrsatib boʻlmadi. Odatda qayta yuklash yordam beradi.', reload: 'Qayta yuklash' },
   exportCsv: 'CSV eksport', exported: 'Eksport yuklab olindi',

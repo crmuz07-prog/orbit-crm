@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/043-split-window-record-pages.md](docs/prompts/043-split-window-record-pages.md)
+Latest: [docs/prompts/044-settings-redesign-and-stage-delete.md](docs/prompts/044-settings-redesign-and-stage-delete.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -48,3 +48,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [041 — Smaller page gutter](docs/prompts/041-smaller-page-gutter.md)
 - [042 — Linked records inside the info panel](docs/prompts/042-linked-records-in-info-panel.md)
 - [043 — Company and contact: the window split in two](docs/prompts/043-split-window-record-pages.md)
+- [044 — Settings redesign; won/lost stages deletable](docs/prompts/044-settings-redesign-and-stage-delete.md)

@@ -75,6 +75,8 @@ export const pipelinesApi = {
   create: (name: string) => http<Pipeline>('POST', '/pipelines', { name }),
   update: (id: string, patch: Partial<Pick<Pipeline, 'name' | 'position' | 'is_default'>>) => http<Pipeline>('PATCH', `/pipelines/${id}`, patch),
   remove: (id: string) => http<void>('DELETE', `/pipelines/${id}`),
+  /** Deletes a stage; its deals first move to `moveTo` (a stage of the same pipeline). */
+  removeStage: (id: string, moveTo?: string) => http<void>('DELETE', `/pipelines/stages/${id}${moveTo ? `?move_to=${encodeURIComponent(moveTo)}` : ''}`),
 }
 
 export const historyApi = {

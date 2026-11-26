@@ -41,7 +41,7 @@ function NoLeads() {
       <EmptyState icon={Instagram} title={t('instagram.empty')} description={t('instagram.emptyDesc')} action={isAdmin && (
         <div className="flex flex-wrap justify-center gap-2">
           <Button onClick={() => simulate.mutate('message')} disabled={simulate.isPending}><MessageCircle /> {t('instagram.simulateMessage')}</Button>
-          <Button variant="outline" asChild><Link to="/settings"><Settings2 /> {t('instagram.openSettings')}</Link></Button>
+          <Button variant="outline" asChild><Link to="/settings?s=instagram"><Settings2 /> {t('instagram.openSettings')}</Link></Button>
         </div>
       )} />
     </Card>

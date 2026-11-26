@@ -6,10 +6,32 @@ import { CredentialsCard } from '@/components/common/credentials-card'
 import { emptyLogin, LOGIN_RULES, LoginFields } from '@/components/common/login-fields'
 import { useFormErrors } from '@/hooks/useFormErrors'
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import type { NewLogin, Role } from '@/lib/types'
 import { RoleSelect } from './RoleSelect'
 import type { TeamActions } from './useTeam'
+
+/** "Add user" in the team card header: the provisioning form in a dialog instead of always open above the list. */
+export function AddMemberDialog({ add, actorRole }: { add: TeamActions['add']; actorRole: Role }) {
+  const { t } = useTranslation()
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <Button size="sm" onClick={() => setOpen(true)}><UserPlus /> {t('setup.members.add')}</Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>{t('setup.members.addTitle')}</DialogTitle>
+            <DialogDescription>{t('setup.members.addDesc')}</DialogDescription>
+          </DialogHeader>
+          {/* Remounted on every open: no half-typed login or old credentials from the last time. */}
+          {open && <AddMemberForm add={add} actorRole={actorRole} />}
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}
 
 /** ERP-style provisioning: the admin creates the login and hands over a temporary password. */
 export function AddMemberForm({ add, actorRole }: { add: TeamActions['add']; actorRole: Role }) {

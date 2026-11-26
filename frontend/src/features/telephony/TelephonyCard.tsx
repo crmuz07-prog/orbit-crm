@@ -77,13 +77,12 @@ export function TelephonyCard() {
           <summary className="cursor-pointer font-medium">{t('telephony.payload')}</summary>
           <pre className="mt-3 overflow-x-auto text-xs text-muted-foreground">{EXAMPLE}</pre>
         </details>
-        <div className="space-y-3 border-t border-foreground/[0.06] pt-3">
-          <div>
-            <p className="font-medium">{t('telephony.simulator')}</p>
-            <p className="text-sm text-muted-foreground">{t('telephony.simulatorDesc')}</p>
-          </div>
-          <CallSimulator />
-        </div>
+        {/* A test tool, not everyday configuration: folded away like the payload example. */}
+        <details className="glass-subtle rounded-xl p-3 text-sm">
+          <summary className="cursor-pointer font-medium">{t('setup.simulator')}</summary>
+          <p className="mt-1 text-muted-foreground">{t('telephony.simulatorDesc')}</p>
+          <div className="mt-3"><CallSimulator /></div>
+        </details>
       </CardContent>
       <ConfirmDialog
         open={confirm}

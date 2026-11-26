@@ -7,7 +7,7 @@ from app.core.errors import DomainError
 from app.models import Company, Contact, Deal
 from app.models.base import OwnedMixin
 from app.schemas.pipelines import EventOut, PipelineIn, PipelineOut, PipelinePatch, StageMovementOut, StageTimeOut
-from app.services import crud, history, pipelines
+from app.services import crud, history, pipelines, stages
 from app.services.permissions import Module
 from app.services.visibility import ensure_visible
 
@@ -44,6 +44,12 @@ def update_pipeline(pipeline_id: str, payload: PipelinePatch, ctx: AdminCtx) -> 
 @router.delete("/pipelines/{pipeline_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_pipeline(pipeline_id: str, ctx: AdminCtx) -> None:
     pipelines.delete(ctx.db, ctx.workspace_id, pipeline_id)
+
+
+@router.delete("/pipelines/stages/{stage_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_stage(stage_id: str, ctx: AdminCtx, move_to: str | None = Query(default=None, max_length=36)) -> None:
+    """Deletes a stage; its deals first move to `move_to` (a stage of the same pipeline), each with a feed line."""
+    stages.delete_stage(ctx.db, ctx.workspace_id, stage_id, move_to, ctx.user.id)
 
 
 @router.get("/events", response_model=list[EventOut])

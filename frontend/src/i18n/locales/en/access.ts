@@ -16,7 +16,6 @@ export const access = {
     deleteDesc: 'Members stay in the workspace without a team.', empty: 'No teams yet',
   },
   owner: { label: 'Owner', unassigned: 'Unassigned', me: 'Me', all: 'All managers' },
-  settingsTabs: { account: 'Account', team: 'Team & access', sales: 'Sales process', workspace: 'Workspace' },
   noAccess: { title: 'No access to this section', desc: 'Ask an administrator to change your access role.' },
   crash: { title: 'Something went wrong', desc: 'The page could not be displayed. Reloading usually fixes it.', reload: 'Reload' },
   exportCsv: 'Export CSV', exported: 'Export downloaded',

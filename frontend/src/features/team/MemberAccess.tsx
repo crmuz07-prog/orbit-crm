@@ -14,11 +14,11 @@ export function MemberAccess({ member, config, update }: { member: TeamMember; c
   const roleName = (id: string) => labels.role(config.roles.find((r) => r.id === id)?.name ?? '')
   const teamName = (id: string) => config.teams.find((team) => team.id === id)?.name ?? t('access.noTeam')
   return (
-    <div className="flex w-full flex-wrap gap-2 pl-12 sm:w-auto sm:pl-0">
-      <SelectBox className="h-8 w-40" value={member.access_role_id ?? defaultRole?.id ?? ''} onChange={(id) => change({ access_role_id: id || null }, t('confirm.member.accessRole'), roleName(id))}
+    <>
+      <SelectBox className="h-8 w-[150px]" ariaLabel={t('setup.members.access')} value={member.access_role_id ?? defaultRole?.id ?? ''} onChange={(id) => change({ access_role_id: id || null }, t('confirm.member.accessRole'), roleName(id))}
         options={config.roles.map((r) => ({ value: r.id, label: labels.role(r.name) }))} />
-      <SelectBox className="h-8 w-36" value={member.team_id ?? ''} emptyLabel={t('access.noTeam')} onChange={(id) => change({ team_id: id || null }, t('confirm.member.team'), teamName(id))}
+      <SelectBox className="h-8 w-[140px]" ariaLabel={t('setup.members.team')} value={member.team_id ?? ''} emptyLabel={t('access.noTeam')} onChange={(id) => change({ team_id: id || null }, t('confirm.member.team'), teamName(id))}
         options={config.teams.map((team) => ({ value: team.id, label: team.name }))} />
-    </div>
+    </>
   )
 }
