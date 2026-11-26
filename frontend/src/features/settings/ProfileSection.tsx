@@ -1,8 +1,9 @@
-import { useState, type FormEvent, type ReactNode } from 'react'
+import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useAuth } from '@/auth/AuthProvider'
 import { PersonAvatar } from '@/components/common/avatars'
+import { SettingRow } from '@/components/common/setting-row'
 import { FieldError } from '@/components/common/form-fields'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -15,19 +16,6 @@ import { authApi } from '@/lib/api'
 import { rules } from '@/lib/validation'
 import { PasswordDialog } from './PasswordDialog'
 import { LanguageSwitch, ThemeSwitch } from './preferences'
-
-/** One setting per row: what it is (and a short why) on the left, its control on the right. */
-function SettingRow({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
-  return (
-    <div className="grid gap-2 border-t border-foreground/[0.06] px-4 py-3 sm:grid-cols-[260px_minmax(0,1fr)] sm:items-center">
-      <div>
-        <p className="text-sm font-medium">{label}</p>
-        {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
-      </div>
-      <div className="flex min-w-0 flex-wrap items-center gap-2 sm:justify-end">{children}</div>
-    </div>
-  )
-}
 
 /** The display name, edited in place: Save / Cancel appear only once it changes; Enter saves, Esc restores. */
 function NameRow() {

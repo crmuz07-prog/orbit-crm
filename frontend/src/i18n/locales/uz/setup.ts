@@ -35,7 +35,7 @@ export const setup = {
       moveTo: 'Bitimlarni oʻtkazish', pick: 'Bosqichni tanlang', action: 'Oʻtkazish va oʻchirish', done: 'Bosqich oʻchirildi',
       last: 'Bu voronkadagi yagona {{kind}} — oʻchirishdan oldin yana bittasini qoʻshing.',
     },
-    members: { fullAccess: 'Toʻliq huquq', add: 'Foydalanuvchi qoʻshish', addTitle: 'Yangi foydalanuvchi', addDesc: 'Login yarating va vaqtinchalik parolni bering; birinchi kirishda u parolni oʻzgartiradi.',
+    members: { edit: 'Sozlash', roleHint: 'Egasi va administrator hamma narsani koʻradi va sozlaydi; aʼzo — tanlangan huquqlar boʻyicha ishlaydi.', accessHint: 'Aʼzo nimani koʻrishi va qila olishi — «Rollar va huquqlar» boʻlimida sozlanadi.', fullAccessHint: 'Egasi va administratorda doim toʻliq huquq.', teamHint: 'Jamoa rahbari oʻz jamoasining bitim va mijozlarini koʻradi.', passwordHint: 'Parolini unutgan boʻlsa — vaqtinchalik parol bering; keyingi kirishda u oʻzgartiradi.', fullAccess: 'Toʻliq huquq', add: 'Foydalanuvchi qoʻshish', addTitle: 'Yangi foydalanuvchi', addDesc: 'Login yarating va vaqtinchalik parolni bering; birinchi kirishda u parolni oʻzgartiradi.',
       role: 'Tizim roli', access: 'Huquqlar', team: 'Savdo jamoasi' },
     data: {
       importTitle: 'Excel’dan import', importDesc: 'Lidlar, kontaktlar va kompaniyalar .xlsx yoki .csv fayldan — saqlashdan oldin koʻrib chiqasiz.',

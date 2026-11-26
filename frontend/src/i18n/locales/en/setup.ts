@@ -35,7 +35,7 @@ export const setup = {
       moveTo: 'Move deals to', pick: 'Choose a stage', action: 'Move and delete', done: 'Stage deleted',
       last: 'This is the only {{kind}} of the pipeline — add another one before deleting it.',
     },
-    members: { fullAccess: 'Full access', add: 'Add user', addTitle: 'New user', addDesc: 'Create the login and hand over the temporary password; they change it at first sign-in.',
+    members: { edit: 'Manage', roleHint: 'Owners and admins see and configure everything; members work within their access role.', accessHint: 'What a member sees and may do — set up under “Roles and access”.', fullAccessHint: 'Owners and admins always have full access.', teamHint: 'A team lead sees the deals and clients of their team.', passwordHint: 'Forgot it? Issue a temporary password; they change it at the next sign-in.', fullAccess: 'Full access', add: 'Add user', addTitle: 'New user', addDesc: 'Create the login and hand over the temporary password; they change it at first sign-in.',
       role: 'System role', access: 'Access', team: 'Sales team' },
     data: {
       importTitle: 'Import from Excel', importDesc: 'Leads, contacts and companies from an .xlsx or .csv file, with a preview before anything is saved.',
