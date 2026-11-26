@@ -44,6 +44,14 @@ export const process = {
     },
   },
   reports: {
+    insight: {
+      description: 'Tanlangan davrdagi lidlar: qayerdan keldi, qaysi bosqichda, kim ishlayapti, nega rad etildi.',
+      openSub: 'Jarayonda {{count}} ta', sold: 'Sotildi', soldSub: 'Konversiya {{p}}', soldSum: 'Konversiya {{p}} · {{sum}}',
+      lostSub: 'Lidlarning {{p}}', followUp: 'Aloqa kerak', followUpSub: 'Vazifasiz {{none}} · bugun {{today}}',
+      warningsSub: 'Maydonlarda qizil belgilangan', reasons: 'Rad etish sabablari', reasonsDesc: 'Nega lidlar rad etildi',
+      reasonsEmpty: 'Bu davrda rad etilgan lid yoʻq', slices: 'Kesimlar', slicesDesc: 'Lidlarni bitta belgi boʻyicha guruhlab koʻring',
+      share: 'Ulush', noSalesHint: 'Bu davrda sotuv yoʻq — sotuv va konversiya ustunlari yashirilgan.',
+    },
     nav: 'Hisobotlar', title: 'Lidlar hisoboti', description: 'Tanlangan davr boʻyicha voronka, manbalar va menejerlar — jadvaldagi hisobot kabi, jonli.',
     from: 'Dan', to: 'Gacha', presets: { today: 'Bugun', week: '7 kun', month: '30 kun', quarter: '90 kun' },
     total: 'Lidlar', won: 'Sotuv', lost: 'Rad etildi', open: 'Jarayonda', conversion: 'Konversiya', warnings: 'Eʼtibor kerak', overdue: 'Muddati oʻtgan aloqalar',

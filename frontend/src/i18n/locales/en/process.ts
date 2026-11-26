@@ -44,6 +44,14 @@ export const process = {
     },
   },
   reports: {
+    insight: {
+      description: 'Leads in the chosen period: where they came from, which stage, who works them, why they were lost.',
+      openSub: '{{count}} in progress', sold: 'Sold', soldSub: 'Conversion {{p}}', soldSum: 'Conversion {{p}} · {{sum}}',
+      lostSub: '{{p}} of leads', followUp: 'Need a follow-up', followUpSub: 'No task {{none}} · today {{today}}',
+      warningsSub: 'Flagged red in fields', reasons: 'Lost reasons', reasonsDesc: 'Why leads were lost',
+      reasonsEmpty: 'No lost leads in this period', slices: 'Breakdowns', slicesDesc: 'Group the leads by one attribute',
+      share: 'Share', noSalesHint: 'No sales in this period — the sales and conversion columns are hidden.',
+    },
     nav: 'Reports', title: 'Lead report', description: 'Funnel, sources and managers for the chosen period — like your spreadsheet report, live.',
     from: 'From', to: 'To', presets: { today: 'Today', week: '7 days', month: '30 days', quarter: '90 days' },
     total: 'Leads', won: 'Won', lost: 'Lost', open: 'In progress', conversion: 'Conversion', warnings: 'Need attention', overdue: 'Overdue contacts',
