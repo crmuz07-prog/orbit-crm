@@ -21,7 +21,7 @@ export const record: Locale<typeof en> = {
     set: '«{{field}}» maydoniga «{{value}}» qiymatini oʻrnatdi', cleared: '«{{field}}» maydonini tozaladi', moved: 'bitimni «{{from}}» bosqichidan «{{to}}» bosqichiga oʻtkazdi',
     system: 'Tizim', noTasks: 'Rejalashtirilgan vazifa yoʻq — tavsiya qilamiz:', addTask: 'qoʻshish', empty: 'Hozircha hech narsa yoʻq. Pastda izoh yozing yoki qoʻngʻiroqni kiriting.',
   },
-  card: { main: 'Asosiy', stageTimes: 'Bosqichlardagi vaqt', saved: 'Saqlandi', edit: 'Tahrirlash uchun bosing', none: 'Kiritilmagan' },
+  card: { linked: 'Bogʻlanganlar', main: 'Asosiy', stageTimes: 'Bosqichlardagi vaqt', saved: 'Saqlandi', edit: 'Tahrirlash uchun bosing', none: 'Kiritilmagan' },
   feedFields: {
     title: 'Nomi', amount: 'Byudjet', currency: 'Valyuta', company_id: 'Kompaniya', contact_id: 'Kontakt', owner_id: 'Masʼul', priority: 'Muhimlik',
     source: 'Manba', expected_close_date: 'Kutilgan yopilish', lost_reason: 'Yoʻqotish sababi', name: 'Nomi', domain: 'Sayt', industry: 'Soha',

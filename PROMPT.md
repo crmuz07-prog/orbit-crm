@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/050-reports-compact.md](docs/prompts/050-reports-compact.md)
+Latest: [docs/prompts/051-deal-card-like-company.md](docs/prompts/051-deal-card-like-company.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -55,3 +55,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [048 — Users: a calm list, one dialog per person](docs/prompts/048-compact-users-page.md)
 - [049 — A dashboard that fits the workspace's data](docs/prompts/049-dashboard-that-fits-the-data.md)
 - [050 — Reports: one screen of answers](docs/prompts/050-reports-compact.md)
+- [051 — The deal card like the company and contact cards](docs/prompts/051-deal-card-like-company.md)

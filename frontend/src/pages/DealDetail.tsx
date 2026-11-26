@@ -5,7 +5,7 @@ import { Handshake, Pencil, RotateCcw, ThumbsDown, Trophy } from 'lucide-react'
 import { BackLink } from '@/components/common/record'
 import { DeleteRecordButton, RecordNotFound } from '@/components/common/record-actions'
 import { RecordSkeleton } from '@/components/common/states'
-import { AssociationCards } from '@/features/deals/AssociationCards'
+import { DealLinksSection } from '@/features/deals/DealLinksSection'
 import { LostReasonDialog } from '@/features/deals/LostReasonDialog'
 import { useMoveDeal } from '@/features/deals/useMoveDeal'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
@@ -13,7 +13,7 @@ import { DealInfo } from '@/features/record/DealInfo'
 import { LeadSource } from '@/features/record/LeadSource'
 import { InfoHeader, RecordCard } from '@/features/record/RecordCard'
 import { StageSelector } from '@/features/record/StageSelector'
-import { StageTimesWidget } from '@/features/record/StageTimesWidget'
+import { StageTimesSection } from '@/features/record/StageTimesSection'
 import { useAccess } from '@/hooks/useAccess'
 import { useCrm } from '@/hooks/useData'
 import { useDealStages } from '@/hooks/usePipelines'
@@ -75,10 +75,11 @@ export default function DealDetailPage() {
               <StageSelector deal={deal} onPick={pick} readOnly={!can('deals', 'edit')} />
             </InfoHeader>
             <DealInfo deal={deal} lost={!!stage?.is_lost} />
+            <DealLinksSection deal={deal} />
+            <StageTimesSection deal={deal} />
             <LeadSource dealId={deal.id} />
           </>
         }
-        widgets={<><StageTimesWidget deal={deal} /><AssociationCards deal={deal} /></>}
       />
       <LostReasonDialog open={!!lostTarget} onOpenChange={(open) => !open && setLostTarget(null)}
         onConfirm={(reason) => { if (lostTarget) moveDeal(deal, lostTarget, reason); setLostTarget(null) }} />

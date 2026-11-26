@@ -23,7 +23,7 @@ export const record: Locale<typeof en> = {
     set: 'для поля «{{field}}» установлено значение «{{value}}»', cleared: 'очистил(а) поле «{{field}}»', moved: 'перевёл(а) сделку с этапа «{{from}}» на «{{to}}»',
     system: 'Система', noTasks: 'Нет запланированных задач, рекомендуем', addTask: 'добавить', empty: 'Пока пусто. Напишите примечание или внесите звонок ниже.',
   },
-  card: { main: 'Основное', stageTimes: 'Время сделки на этапах', saved: 'Сохранено', edit: 'Нажмите, чтобы изменить', none: 'Не указано' },
+  card: { linked: 'Связи', main: 'Основное', stageTimes: 'Время сделки на этапах', saved: 'Сохранено', edit: 'Нажмите, чтобы изменить', none: 'Не указано' },
   feedFields: {
     title: 'Название', amount: 'Бюджет', currency: 'Валюта', company_id: 'Компания', contact_id: 'Контакт', owner_id: 'Ответственный', priority: 'Приоритет',
     source: 'Источник', expected_close_date: 'Ожидаемое закрытие', lost_reason: 'Причина отказа', name: 'Название', domain: 'Сайт', industry: 'Отрасль',

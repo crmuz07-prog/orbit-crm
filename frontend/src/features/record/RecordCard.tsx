@@ -27,10 +27,7 @@ function TasksHint({ activities, links }: { activities: Activity[]; links: Links
   )
 }
 
-// Heights below are "the window": 100vh minus the 3.5rem top bar and the page gutter above and below it. Tailwind
-// only sees complete class names, so the value is written out in each class rather than built from a constant.
-const CAPPED = 'lg:max-h-[calc(100vh_-_3.5rem_-_2*var(--gutter))]'
-
+// "The window" below: 100vh minus the 3.5rem top bar and the page gutter above and below it.
 /** Centre column: the feed scrolls (newest at the bottom, next to the composer, as in amoCRM). */
 function FeedPanel({ link, recordId, activities, links, className }: { link: RecordLink; recordId: string; activities: Activity[]; links: Links; className?: string }) {
   const { can } = useAccess()
@@ -60,10 +57,8 @@ function FeedPanel({ link, recordId, activities, links, className }: { link: Rec
 }
 
 interface Props {
-  /** Left panel: header and properties of the record. */
+  /** Left panel: header, properties and linked records of the record. */
   info: ReactNode
-  /** Right column widgets (time in stages, related records). */
-  widgets?: ReactNode
   link: RecordLink
   recordId: string
   activities: Activity[]
@@ -71,23 +66,17 @@ interface Props {
 }
 
 /**
- * The record card shared by deals, companies and contacts.
- * Without widgets (company, contact) the page is the window split in two — info | feed — at every size from `sm` up:
- * both halves always fill the window and scroll inside themselves as the record grows; the page never scrolls.
- * With widgets (deal) the columns size to their content and the widgets follow (beside the feed at `2xl`).
+ * The record card shared by deals, companies and contacts: the window split in two — info | feed — at every size from
+ * `sm`. Both halves always fill the window and scroll inside themselves as the record grows; the page never scrolls.
+ * Linked records, time in stages and lead source live in the info panel, not in cards under it.
  */
-export function RecordCard({ info, widgets, link, recordId, activities, links }: Props) {
-  const split = !widgets
+export function RecordCard({ info, link, recordId, activities, links }: Props) {
   return (
-    <div className={cn('grid grid-cols-1 gap-3',
-      split
-        ? 'sm:h-[calc(100vh_-_3.5rem_-_2*var(--gutter))] sm:grid-cols-[minmax(240px,2fr)_minmax(0,3fr)] sm:grid-rows-[minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)] 2xl:grid-cols-[360px_minmax(0,1fr)]'
-        : 'lg:grid-cols-[340px_minmax(0,1fr)] 2xl:grid-cols-[360px_minmax(0,1fr)_300px]')}>
-      <aside className={cn('glass flex min-h-0 flex-col overflow-hidden rounded-2xl', !split && CAPPED)}>
+    <div className="grid grid-cols-1 gap-3 sm:h-[calc(100vh_-_3.5rem_-_2*var(--gutter))] sm:grid-cols-[minmax(240px,2fr)_minmax(0,3fr)] sm:grid-rows-[minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)] 2xl:grid-cols-[360px_minmax(0,1fr)]">
+      <aside className="glass flex min-h-0 flex-col overflow-hidden rounded-2xl">
         <div className="min-h-0 flex-1 overflow-y-auto">{info}</div>
       </aside>
-      <FeedPanel link={link} recordId={recordId} activities={activities} links={links} className={split ? 'sm:min-h-0' : CAPPED} />
-      {widgets && <aside className="grid content-start items-start gap-3 sm:grid-cols-2 lg:col-span-2 2xl:col-span-1 2xl:grid-cols-1">{widgets}</aside>}
+      <FeedPanel link={link} recordId={recordId} activities={activities} links={links} className="sm:min-h-0" />
     </div>
   )
 }

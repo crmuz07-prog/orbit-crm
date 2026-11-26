@@ -18,7 +18,7 @@ export const record = {
     set: 'set «{{field}}» to «{{value}}»', cleared: 'cleared «{{field}}»', moved: 'moved the deal from «{{from}}» to «{{to}}»',
     system: 'System', noTasks: 'No planned tasks — we recommend to', addTask: 'add one', empty: 'Nothing here yet. Write a note or log a call below.',
   },
-  card: { main: 'Main', stageTimes: 'Time in stages', saved: 'Saved', edit: 'Click to edit', none: 'Not set' },
+  card: { linked: 'Linked', main: 'Main', stageTimes: 'Time in stages', saved: 'Saved', edit: 'Click to edit', none: 'Not set' },
   feedFields: {
     title: 'Name', amount: 'Budget', currency: 'Currency', company_id: 'Company', contact_id: 'Contact', owner_id: 'Owner', priority: 'Priority',
     source: 'Source', expected_close_date: 'Expected close', lost_reason: 'Lost reason', name: 'Name', domain: 'Website', industry: 'Industry',
