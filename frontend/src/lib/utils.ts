@@ -75,6 +75,8 @@ export function relativeDay(iso: string) {
 }
 
 export const timeAgo = (iso: string) => formatDistanceToNowStrict(toDate(iso), { addSuffix: true, locale: dateLocale() })
+/** "2 days" — how long since, without "ago" (e.g. "2 days late"). */
+export const timeSince = (iso: string) => formatDistanceToNowStrict(toDate(iso), { locale: dateLocale() })
 
 export const monthLabel = (date: Date) => format(date, 'LLL', { locale: dateLocale() })
 

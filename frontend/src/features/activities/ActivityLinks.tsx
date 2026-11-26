@@ -6,8 +6,11 @@ import { fullName, timeAgo } from '@/lib/utils'
 import { DueLabel } from './DueLabel'
 
 /** Meta line under an activity: due date / age and links to the related records. */
-/** `current`: the record page this line is shown on — linking to it again (or repeating its name) is noise. */
-export function ActivityMeta({ activity: a, showType, current }: { activity: Activity; showType?: boolean; current?: RecordLink }) {
+/**
+ * `current`: the record page this line is shown on — linking to it again (or repeating its name) is noise.
+ * `hideTime`: the deadline is shown elsewhere on the line (task list).
+ */
+export function ActivityMeta({ activity: a, showType, current, hideTime }: { activity: Activity; showType?: boolean; current?: RecordLink; hideTime?: boolean }) {
   const { t } = useTranslation()
   const { dealById, companyById, contactById } = useCrm()
   const deal = a.deal_id ? dealById.get(a.deal_id) : undefined
@@ -34,7 +37,7 @@ export function ActivityMeta({ activity: a, showType, current }: { activity: Act
   return (
     <>
       {showType && <span>{t(`enums.activity.${a.type}`)}</span>}
-      {a.due_at && !a.done ? <DueLabel activity={a} /> : <span>{timeAgo(a.due_at ?? a.created_at)}</span>}
+      {!hideTime && (a.due_at && !a.done ? <DueLabel activity={a} /> : <span>{timeAgo(a.due_at ?? a.created_at)}</span>)}
       {links.map((r) => <Link key={r.key} to={r.to ?? ''} className={r.className}>{r.name}</Link>)}
     </>
   )

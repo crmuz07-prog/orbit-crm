@@ -1,10 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { MotionList } from '@/components/common/motion-list'
-import { ActivityMeta } from '@/features/activities/ActivityLinks'
-import { ActivityRow } from '@/features/activities/ActivityRow'
 import { BUCKETS, bucketOf } from '@/lib/tasks'
 import type { Activity } from '@/lib/types'
 import { cn, toDate } from '@/lib/utils'
+import { TaskRow } from './TaskRow'
 
 const dueTime = (a: Activity) => (a.due_at ? toDate(a.due_at).getTime() : Number.MAX_SAFE_INTEGER)
 
@@ -21,7 +20,7 @@ export function TaskList({ tasks, grouped = true }: { tasks: Activity[]; grouped
           {t(`tasks.buckets.${g.b}`)} · {g.rows.length}
         </h3>
       )}
-      <MotionList items={g.rows} className="divide-y divide-foreground/[0.06]" render={(a) => <ActivityRow activity={a} meta={<ActivityMeta activity={a} />} />} />
+      <MotionList items={g.rows} className="divide-y divide-foreground/[0.06]" render={(a) => <TaskRow task={a} />} />
     </section>
   ))
 }

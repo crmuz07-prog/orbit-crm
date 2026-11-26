@@ -49,7 +49,7 @@ export default function TasksPage() {
     <Page title={t('activities.title')} description={t('activities.description')} actions={newTask}>
       <div className="mb-2 flex flex-wrap items-center gap-2">
         <SearchInput value={query} onChange={setQuery} placeholder={t('tasks.search')} />
-        <SelectBox value={owner} onChange={setOwner} emptyLabel={t('owner.all')} options={members.map((m) => ({ value: m.user_id, label: m.full_name }))} className="w-40" />
+        <SelectBox value={owner} onChange={setOwner} emptyLabel={t('owner.all')} options={members.map((m) => ({ value: m.user_id, label: m.full_name }))} className="w-44" />
         <SelectBox value={type} onChange={setType} emptyLabel={t('activities.allTypes')} options={TYPES.map((v) => ({ value: v, label: t(`enums.activity.${v}`) }))} className="w-36" />
         <Tabs value={view} onValueChange={(v) => setView(v as (typeof VIEWS)[number])} className="ml-auto">
           <TabsList>

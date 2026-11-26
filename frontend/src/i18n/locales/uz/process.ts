@@ -8,6 +8,7 @@ export const process = {
     deleteDesc: { deals: 'Ularning kontakt, kompaniya va faoliyatlari saqlanadi; faoliyatlar bogʻlanmagan boʻlib qoladi.', contacts: 'Ularning bitim va faoliyatlari saqlanadi, lekin bogʻlanmagan boʻlib qoladi.', companies: 'Ularning kontakt, bitim va faoliyatlari saqlanadi, lekin bogʻlanmagan boʻlib qoladi.' },
   },
   tasks: {
+    row: { late: '{{when}} kechikdi', tomorrow: 'Ertaga {{time}}', toTomorrow: 'Ertaga', toTomorrowHint: 'Muddatni ertaga shu vaqtga koʻchirish', moved: 'Ertaga koʻchirildi', undo: 'Qaytarish', call: 'Qoʻngʻiroq qilish' },
     complete: { title: 'Vazifani yakunlash', placeholder: 'Natija — nima kelishildi, keyin nima qilinadi (ixtiyoriy)', action: 'Bajarildi', result: 'Natija' },
     move: { title: 'Vazifa muddati {{when}} boʻlsinmi?', action: 'Koʻchirish', done: 'Vazifa muddati oʻzgardi' },
     presets: { open: 'Barcha ochiq', mine: 'Mening vazifalarim', overdue: 'Muddati oʻtgan', today: 'Bugun', tomorrow: 'Ertaga', done: 'Bajarilgan' },

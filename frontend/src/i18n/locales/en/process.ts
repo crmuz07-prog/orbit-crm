@@ -8,6 +8,7 @@ export const process = {
     deleteDesc: { deals: 'Their contacts, companies and activities are kept; the activities are unlinked.', contacts: 'Their deals and activities are kept but unlinked.', companies: 'Their contacts, deals and activities are kept but unlinked.' },
   },
   tasks: {
+    row: { late: '{{when}} late', tomorrow: 'Tomorrow {{time}}', toTomorrow: 'Tomorrow', toTomorrowHint: 'Move the deadline to tomorrow, same time', moved: 'Moved to tomorrow', undo: 'Undo', call: 'Call' },
     complete: { title: 'Complete the task', placeholder: 'Result — what was agreed, what happens next (optional)', action: 'Done', result: 'Result' },
     move: { title: 'Move the task to {{when}}?', action: 'Move', done: 'Task rescheduled' },
     presets: { open: 'All open', mine: 'My tasks', overdue: 'Overdue', today: 'Today', tomorrow: 'Tomorrow', done: 'Completed' },
