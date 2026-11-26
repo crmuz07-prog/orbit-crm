@@ -1,6 +1,6 @@
 # Current prompt
 
-Latest: [docs/prompts/041-smaller-page-gutter.md](docs/prompts/041-smaller-page-gutter.md)
+Latest: [docs/prompts/042-linked-records-in-info-panel.md](docs/prompts/042-linked-records-in-info-panel.md)
 
 History:
 - [001 — initial CRM (React + Supabase)](docs/prompts/001-initial-crm.md)
@@ -46,3 +46,4 @@ Engineering rules: [CLAUDE.md](CLAUDE.md)
 - [039 — A reminder opens what it is about](docs/prompts/039-reminder-opens-record.md)
 - [040 — Company and contact cards: dense side widgets](docs/prompts/040-dense-side-cards.md)
 - [041 — Smaller page gutter](docs/prompts/041-smaller-page-gutter.md)
+- [042 — Linked records inside the info panel](docs/prompts/042-linked-records-in-info-panel.md)

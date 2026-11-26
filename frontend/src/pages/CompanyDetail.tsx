@@ -2,12 +2,13 @@ import { Building2, Pencil, Phone } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { PersonAvatar } from '@/components/common/avatars'
-import { AddButton, BackLink, DenseEmpty, ListCard, RowLink } from '@/components/common/record'
+import { BackLink, RowLink } from '@/components/common/record'
 import { DeleteRecordButton, RecordNotFound } from '@/components/common/record-actions'
 import { RecordSkeleton } from '@/components/common/states'
-import { DealsListCard } from '@/features/deals/DealsListCard'
+import { LinkedDeals } from '@/features/deals/LinkedDeals'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { CompanyInfo } from '@/features/record/ClientInfo'
+import { LinkedSection } from '@/features/record/LinkedSection'
 import { InfoHeader, RecordCard } from '@/features/record/RecordCard'
 import { useCrm } from '@/hooks/useData'
 import { dealStatus, sumAmount } from '@/lib/metrics'
@@ -62,21 +63,17 @@ export default function CompanyDetailPage() {
             </div>
           </InfoHeader>
           <CompanyInfo company={company} />
-        </>
-      }
-      widgets={
-        <>
-          <DealsListCard deals={companyDeals} onAdd={addDeal} />
-          <ListCard
-            dense
+          <LinkedDeals deals={companyDeals} onAdd={addDeal} />
+          <LinkedSection
             title={t('companies.people', { count: people.length })}
-            action={<AddButton label={t('common.add')} onClick={addContact} />}
+            addLabel={t('common.add')}
+            onAdd={addContact}
             items={people}
-            empty={<DenseEmpty>{t('companies.noPeople')}</DenseEmpty>}
+            empty={t('companies.noPeople')}
             render={(c) => (
               <RowLink dense to={`/contacts/${c.id}`}>
                 <PersonAvatar name={fullName(c)} size="xs" />
-                <span className="min-w-0 flex-1 truncate text-sm">
+                <span className="min-w-0 flex-1 truncate text-[13px]">
                   <span className="font-medium">{fullName(c)}</span>
                   {(c.title ?? c.phone ?? c.email) && <span className="text-muted-foreground"> · {c.title ?? c.phone ?? c.email}</span>}
                 </span>

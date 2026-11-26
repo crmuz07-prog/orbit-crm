@@ -7,7 +7,7 @@ import { RecordSkeleton } from '@/components/common/states'
 import { IconButton } from '@/components/common/icon-button'
 import { Button } from '@/components/ui/button'
 import { Tooltip } from '@/components/ui/tooltip'
-import { DealsListCard } from '@/features/deals/DealsListCard'
+import { LinkedDeals } from '@/features/deals/LinkedDeals'
 import { useEntityModal } from '@/features/entity-modal/EntityModalProvider'
 import { ContactInfo } from '@/features/record/ClientInfo'
 import { InfoHeader, RecordCard } from '@/features/record/RecordCard'
@@ -49,9 +49,9 @@ export default function ContactDetailPage() {
             {company && contact.title && <p className="truncate text-sm text-muted-foreground">{contact.title} {t('contacts.at')} <span className="font-medium text-foreground">{company.name}</span></p>}
           </InfoHeader>
           <ContactInfo contact={contact} />
+          <LinkedDeals deals={deals.filter((d) => d.contact_id === id)} onAdd={() => openModal({ kind: 'deal', initial: links })} />
         </>
       }
-      widgets={<DealsListCard deals={deals.filter((d) => d.contact_id === id)} onAdd={() => openModal({ kind: 'deal', initial: links })} />}
     />
   )
 }

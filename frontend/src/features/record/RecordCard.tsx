@@ -8,6 +8,7 @@ import { useAccess } from '@/hooks/useAccess'
 import { useCrm } from '@/hooks/useData'
 import type { Activity, RecordLink } from '@/lib/types'
 import { Feed } from './Feed'
+import { cn } from '@/lib/utils'
 
 type Links = { deal_id?: string | null; company_id?: string | null; contact_id?: string | null }
 
@@ -69,7 +70,7 @@ interface Props {
 /** The record card shared by deals, companies and contacts: info | feed | widgets. */
 export function RecordCard({ info, widgets, link, recordId, activities, links }: Props) {
   return (
-    <div className="grid grid-cols-1 gap-3 lg:grid-cols-[340px_minmax(0,1fr)] 2xl:grid-cols-[360px_minmax(0,1fr)_300px]">
+    <div className={cn('grid grid-cols-1 gap-3 lg:grid-cols-[340px_minmax(0,1fr)]', widgets ? '2xl:grid-cols-[360px_minmax(0,1fr)_300px]' : '2xl:grid-cols-[360px_minmax(0,1fr)]')}>
       <aside className="glass flex flex-col overflow-hidden rounded-2xl lg:max-h-[calc(100vh_-_3.5rem_-_2*var(--gutter))]">
         <div className="flex-1 overflow-y-auto">{info}</div>
       </aside>
@@ -96,10 +97,21 @@ export function InfoHeader({ back, title, shortId, actions, children }: { back: 
   )
 }
 
-export function InfoSection({ title, children }: { title?: string; children: ReactNode }) {
+/** The small uppercase heading of an info-panel section, with an optional action (e.g. "+") on the right. */
+export function SectionHeading({ title, action, className }: { title?: string; action?: ReactNode; className?: string }) {
+  if (!title && !action) return null
+  return (
+    <div className={cn('mb-1 flex min-h-7 items-center justify-between gap-2', className)}>
+      {title && <h3 className="truncate text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{title}</h3>}
+      {action}
+    </div>
+  )
+}
+
+export function InfoSection({ title, action, children }: { title?: string; action?: ReactNode; children: ReactNode }) {
   return (
     <section className="px-4 py-2.5">
-      {title && <h3 className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{title}</h3>}
+      <SectionHeading title={title} action={action} />
       {children}
     </section>
   )
